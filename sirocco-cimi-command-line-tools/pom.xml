@@ -20,7 +20,7 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
    USA
 
-   $Id$
+   $Id: pom.xml 1786 2012-11-05 19:49:20Z dangtran $
 
 -->
 
@@ -29,21 +29,21 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.ow2.sirocco.cloudmanager</groupId>
-		<artifactId>sirocco-cloudmanager-apis</artifactId>
+		<groupId>org.ow2.sirocco.cimi</groupId>
+		<artifactId>sirocco-cimi-client</artifactId>
 		<version>0.5.3-SNAPSHOT</version>
 	</parent>
 	
-	<groupId>org.ow2.sirocco.apis</groupId>
-	<artifactId>sirocco-command-line-tools</artifactId>
+	<groupId>org.ow2.sirocco.cimi</groupId>
+	<artifactId>sirocco-cimi-command-line-tools</artifactId>
 	<packaging>jar</packaging>
-	<name>SIROCCO ::  API :: Command Line Tools</name>
-
+	<name>SIROCCO ::  CIMI :: Command line tools</name>
+	
 
 	<dependencies>
 		<dependency>
-			<groupId>org.ow2.sirocco.apis</groupId>
-			<artifactId>sirocco-api-java-sdk</artifactId>
+			<groupId>org.ow2.sirocco.cimi</groupId>
+			<artifactId>sirocco-cimi-java-sdk</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

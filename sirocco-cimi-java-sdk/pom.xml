@@ -3,7 +3,7 @@
 <!--
 
    SIROCCO
-   Copyright (C) 2010 France Telecom
+   Copyright (C) 2012 France Telecom
    Contact: sirocco@ow2.org
 
    This library is free software; you can redistribute it and/or
@@ -21,31 +21,32 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
    USA
 
-   $Id$
-
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.ow2.sirocco.cloudmanager</groupId>
-		<artifactId>sirocco-cloudmanager-apis</artifactId>
+		<groupId>org.ow2.sirocco.cimi</groupId>
+		<artifactId>sirocco-cimi-client</artifactId>
 		<version>0.5.3-SNAPSHOT</version>
 	</parent>
 	
-	<groupId>org.ow2.sirocco.apis</groupId>
-	<artifactId>sirocco-api-java-sdk</artifactId>
+	<groupId>org.ow2.sirocco.cimi</groupId>
+	<artifactId>sirocco-cimi-java-sdk</artifactId>
 	<packaging>jar</packaging>
-	<name>SIROCCO ::  API :: Java :: SDK</name>
+	<name>SIROCCO ::  CIMI :: Java :: SDK</name>
 
+	<properties>
+		<sirocco-cimi-library.version>0.5.3-SNAPSHOT </sirocco-cimi-library.version>
+        </properties>
 
 
 	<dependencies>
 		<dependency>
 			<groupId>org.ow2.sirocco.apis</groupId>
 			<artifactId>sirocco-rest-cimi-apis</artifactId>
-			<version>${project.version}</version>
+			<version>${sirocco-cimi-library.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.sun.jersey</groupId>
