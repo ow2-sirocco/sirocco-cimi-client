@@ -69,7 +69,7 @@ public class MachineCreateCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        if (this.templateId == null && (this.configId == null && this.imageId == null)) {
+        if (this.templateId == null && (this.configId == null || this.imageId == null)) {
             throw new CimiException("You need to specify either a template id or both a config id and an image id");
         }
         MachineCreate machineCreate = new MachineCreate();
