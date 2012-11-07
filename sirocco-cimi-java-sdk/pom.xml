@@ -56,6 +56,10 @@
 					<groupId>com.sun.jersey.contribs</groupId>
 					<artifactId>jersey-spring</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.ow2.sirocco.cloudmanager</groupId>
+					<artifactId>sirocco-cloudmanager-core-api</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
