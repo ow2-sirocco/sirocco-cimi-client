@@ -51,9 +51,9 @@
 
 
 	<scm>
-		<connection>scm:svn:svn://svn.forge.objectweb.org/svnroot/sirocco/cimiclient/trunk</connection>
-		<developerConnection>scm:svn:svn+ssh://dangtran@svn.forge.objectweb.org/svnroot/sirocco/cimiclient/trunk</developerConnection>
-		<url>http://websvn.ow2.org/listing.php?repname=sirocco&amp;path=/cimiclient/trunk/</url>
+		<connection>scm:git:git://gitorious.ow2.org/ow2-sirocco/sirocco-cimi-client.git</connection>
+                <developerConnection>scm:git:git@gitorious.ow2.org:ow2-sirocco/sirocco-cimi-client.git</developerConnection>
+                <url>http://gitorious.ow2.org/ow2-sirocco/sirocco-cimi-client/trees</url>
 	</scm>
 
 </project>
