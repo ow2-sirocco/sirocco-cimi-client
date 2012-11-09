@@ -47,6 +47,8 @@ public class MachineStopCommand implements Command {
         Machine machine = Machine.getMachineByReference(cimiClient, this.machineId);
         Job job = machine.stop();
         System.out.println("Stopping machine " + this.machineId);
-        JobListCommand.printJob(job);
+        if (job != null) {
+            JobListCommand.printJob(job);
+        }
     }
 }

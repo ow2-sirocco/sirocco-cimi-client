@@ -47,6 +47,8 @@ public class MachineStartCommand implements Command {
         Machine machine = Machine.getMachineByReference(cimiClient, this.machineId);
         Job job = machine.start();
         System.out.println("Starting machine " + this.machineId);
-        JobListCommand.printJob(job);
+        if (job != null) {
+            JobListCommand.printJob(job);
+        }
     }
 }

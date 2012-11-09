@@ -47,6 +47,8 @@ public class SystemStartCommand implements Command {
         System system = System.getSystemByReference(cimiClient, this.systemId);
         Job job = system.start();
         java.lang.System.out.println("Starting system " + this.systemId);
-        JobListCommand.printJob(job);
+        if (job != null) {
+            JobListCommand.printJob(job);
+        }
     }
 }

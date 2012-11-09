@@ -47,6 +47,8 @@ public class SystemStopCommand implements Command {
         System system = System.getSystemByReference(cimiClient, this.systemId);
         Job job = system.stop();
         java.lang.System.out.println("Stopping system " + this.systemId);
-        JobListCommand.printJob(job);
+        if (job != null) {
+            JobListCommand.printJob(job);
+        }
     }
 }

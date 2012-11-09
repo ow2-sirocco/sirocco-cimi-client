@@ -299,7 +299,11 @@ public class CimiClient {
             .post(ClientResponse.class);
         this.handleResponseStatus(response);
         if (response.getStatus() == 202) {
-            return response.getEntity(CimiJob.class);
+            if (response.getLength() > 0
+                || (response.getType().equals(MediaType.APPLICATION_XML_TYPE) || response.getType().equals(
+                    MediaType.APPLICATION_JSON_TYPE))) {
+                return response.getEntity(CimiJob.class);
+            }
         }
         return null;
     }
