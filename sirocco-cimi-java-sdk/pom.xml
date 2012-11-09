@@ -38,14 +38,14 @@
 	<name>SIROCCO ::  CIMI :: Java :: SDK</name>
 
 	<properties>
-		<sirocco-cimi-library.version>0.5.3-SNAPSHOT </sirocco-cimi-library.version>
+		<sirocco-cimi-library.version>0.6.0-SNAPSHOT </sirocco-cimi-library.version>
         </properties>
 
 
 	<dependencies>
 		<dependency>
-			<groupId>org.ow2.sirocco.apis</groupId>
-			<artifactId>sirocco-rest-cimi-apis</artifactId>
+			<groupId>org.ow2.sirocco.cimi</groupId>
+			<artifactId>sirocco-cimi-api-server-impl</artifactId>
 			<version>${sirocco-cimi-library.version}</version>
 			<exclusions>
 				<exclusion>
