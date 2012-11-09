@@ -29,13 +29,13 @@ case "`uname`" in
   CYGWIN*) cygwin=true;
 esac
 
-if [ -z "$SIROCCO_TOOLS_HOME" ];  then
-  echo "Please set SIROCCO_TOOLS_HOME"
+if [ -z "$CIMICLIENT_TOOLS_HOME" ];  then
+  echo "Please set CIMICLIENT_TOOLS_HOME"
   exit 1
 fi
 
 
-CLASSPATH="$SIROCCO_TOOLS_HOME/lib/*"
+CLASSPATH="$CIMICLIENT_TOOLS_HOME/lib/*"
 
 if $cygwin; then
   CLASSPATH=`cygpath --path -w "$CLASSPATH"`

@@ -35,11 +35,11 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 
 public class Client {
-    private static String SIROCCO_USERNAME_ENV_NAME = "SIROCCO_USERNAME";
+    private static String SIROCCO_USERNAME_ENV_NAME = "CIMICLIENT_USERNAME";
 
-    private static String SIROCCO_PASSWORD_ENV_NAME = "SIROCCO_PASSWORD";
+    private static String SIROCCO_PASSWORD_ENV_NAME = "CIMICLIENT_PASSWORD";
 
-    private static String SIROCCO_ENDPOINT_URL_ENV_NAME = "SIROCCO_ENDPOINT_URL";
+    private static String SIROCCO_ENDPOINT_URL_ENV_NAME = "CIMICLIENT_ENDPOINT_URL";
 
     @Parameter(names = "-debug", description = "turn on debug mode", required = false)
     private boolean debug;
