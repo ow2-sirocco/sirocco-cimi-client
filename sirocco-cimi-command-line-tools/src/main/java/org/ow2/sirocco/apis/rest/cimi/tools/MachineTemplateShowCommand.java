@@ -30,7 +30,6 @@ import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineTemplate;
-import org.ow2.sirocco.apis.rest.cimi.sdk.NetworkInterface;
 import org.ow2.sirocco.apis.rest.cimi.sdk.QueryParams;
 
 import com.beust.jcommander.Parameter;
@@ -87,8 +86,8 @@ public class MachineTemplateShowCommand implements Command {
         StringBuffer sb = new StringBuffer();
         if (machineTemplate.getNetworkInterface() != null) {
             int i = 0;
-            for (NetworkInterface nic : machineTemplate.getNetworkInterface()) {
-                sb.append("NIC#" + (i++) + ": " + nic.getType() + "  ");
+            for (MachineTemplate.NetworkInterface nic : machineTemplate.getNetworkInterface()) {
+                sb.append("NIC#" + (i++) + ": " + nic.getNetworkType() + "  ");
             }
         }
         table.addCell(sb.toString());

@@ -48,6 +48,13 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
         Active, Passive, Disabled
     }
 
+    /**
+     * NIC type
+     */
+    public static enum Type {
+        PUBLIC, PRIVATE
+    }
+
     public MachineNetworkInterface() {
         super(null, new CimiMachineNetworkInterface());
     }
@@ -73,11 +80,15 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
     }
 
     public Network getNetwork() {
-        return new Network(this.cimiClient, this.cimiObject.getNetwork());
+        return this.cimiObject.getNetwork() != null ? new Network(this.cimiClient, this.cimiObject.getNetwork()) : null;
     }
 
     public State getState() {
         return State.valueOf(this.cimiObject.getState());
+    }
+
+    public Type getType() {
+        return Type.valueOf(this.cimiObject.getNetworkType());
     }
 
     public String getMacAddress() {

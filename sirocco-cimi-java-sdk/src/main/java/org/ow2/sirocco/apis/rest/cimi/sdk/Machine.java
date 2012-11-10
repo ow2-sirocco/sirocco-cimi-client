@@ -32,11 +32,9 @@ import java.util.Map.Entry;
 
 import org.ow2.sirocco.apis.rest.cimi.domain.ActionType;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiAction;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiAddress;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachine;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineNetworkInterface;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineNetworkInterfaceAddress;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineCollection;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineNetworkInterfaceAddressCollectionRoot;
@@ -81,30 +79,17 @@ public class Machine extends Resource<CimiMachine> {
         return this.cimiObject.getMemory();
     }
 
-    public List<NetworkInterface> getNetworkInterface() throws CimiException {
-        List<NetworkInterface> nics = new ArrayList<NetworkInterface>();
+    public List<MachineNetworkInterface> getNetworkInterfaces() throws CimiException {
+        List<MachineNetworkInterface> nics = new ArrayList<MachineNetworkInterface>();
         if (this.cimiObject.getNetworkInterfaces() != null && this.cimiObject.getNetworkInterfaces().getArray() != null) {
             for (CimiMachineNetworkInterface cimiNic : this.cimiObject.getNetworkInterfaces().getArray()) {
                 if (cimiNic.getAddresses().getArray() == null) {
                     CimiMachineNetworkInterfaceAddressCollectionRoot addresses = this.cimiClient.getRequest(
                         this.cimiClient.extractPath(cimiNic.getAddresses().getHref()),
-                        CimiMachineNetworkInterfaceAddressCollectionRoot.class, null);
+                        CimiMachineNetworkInterfaceAddressCollectionRoot.class, QueryParams.build().setExpand("address"));
                     cimiNic.setAddresses(addresses);
-                    if (addresses.getArray() != null) {
-                        for (CimiMachineNetworkInterfaceAddress nicAddr : addresses.getArray()) {
-                            CimiAddress cimiAddress = this.cimiClient.getCimiObjectByReference(nicAddr.getAddress().getHref(),
-                                CimiAddress.class);
-                            nicAddr.setAddress(cimiAddress);
-                        }
-                    }
                 }
-                String ip = "";
-                if (cimiNic.getAddresses().getArray() != null && cimiNic.getAddresses().getArray().length > 0) {
-                    ip = cimiNic.getAddresses().getArray()[0].getAddress().getIp();
-                }
-                NetworkInterface nic = new NetworkInterface(
-                    cimiNic.getNetworkType().equalsIgnoreCase("public") ? NetworkInterface.Type.PUBLIC
-                        : NetworkInterface.Type.PRIVATE, ip);
+                MachineNetworkInterface nic = new MachineNetworkInterface(this.cimiClient, cimiNic);
                 nics.add(nic);
             }
         }

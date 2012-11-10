@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.ow2.sirocco.apis.rest.cimi.domain.CimiAddress;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineConfiguration;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineImage;
@@ -43,6 +44,38 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
  * Set of hardware and software settings required to create a Machine
  */
 public class MachineTemplate extends Resource<CimiMachineTemplate> {
+    public static class NetworkInterface {
+        private Network network;
+
+        private List<Address> addresses;
+
+        private String networkType;
+
+        public Network getNetwork() {
+            return this.network;
+        }
+
+        public void setNetwork(final Network network) {
+            this.network = network;
+        }
+
+        public List<Address> getAddresses() {
+            return this.addresses;
+        }
+
+        public void setAddresses(final List<Address> addresses) {
+            this.addresses = addresses;
+        }
+
+        public String getNetworkType() {
+            return this.networkType;
+        }
+
+        public void setNetworkType(final String networkType) {
+            this.networkType = networkType;
+        }
+    }
+
     private MachineImage machineImage;
 
     private MachineConfiguration machineConfig;
@@ -117,11 +150,19 @@ public class MachineTemplate extends Resource<CimiMachineTemplate> {
         List<NetworkInterface> nics = new ArrayList<NetworkInterface>();
         if (this.cimiObject.getListNetworkInterfaces() != null) {
             for (CimiMachineTemplateNetworkInterface cimiNic : this.cimiObject.getListNetworkInterfaces()) {
-                String ip = "";
+                NetworkInterface nic = new NetworkInterface();
+                List<Address> addresses = new ArrayList<Address>();
                 if (cimiNic.getAddresses() != null && cimiNic.getAddresses().length > 0) {
-                    ip = cimiNic.getAddresses()[0].getIp();
+                    for (CimiAddress addr : cimiNic.getAddresses()) {
+                        addresses.add(new Address(this.cimiClient, addr));
+                    }
                 }
-                NetworkInterface nic = new NetworkInterface(NetworkInterface.Type.valueOf(cimiNic.getNetworkType()), ip);
+                nic.setAddresses(addresses);
+                nic.setNetworkType(cimiNic.getNetworkType());
+                if (cimiNic.getNetwork() != null) {
+                    nic.setNetwork(new Network(this.cimiClient, cimiNic.getNetwork()));
+                }
+
                 nics.add(nic);
             }
         }
@@ -132,7 +173,18 @@ public class MachineTemplate extends Resource<CimiMachineTemplate> {
         List<CimiMachineTemplateNetworkInterface> templateNics = new ArrayList<CimiMachineTemplateNetworkInterface>();
         for (NetworkInterface nic : nics) {
             CimiMachineTemplateNetworkInterface templateNic = new CimiMachineTemplateNetworkInterface();
-            templateNic.setNetworkType(nic.getType().toString());
+            templateNic.setNetworkType(nic.getNetworkType());
+            if (nic.getAddresses() != null) {
+                CimiAddress[] addresses = new CimiAddress[nic.getAddresses().size()];
+                int i = 0;
+                for (Address addr : nic.getAddresses()) {
+                    addresses[i++] = addr.cimiObject;
+                }
+                templateNic.setAddresses(addresses);
+            }
+            if (nic.getNetwork() != null) {
+                templateNic.setNetwork(nic.getNetwork().cimiObject);
+            }
             templateNics.add(templateNic);
         }
         this.cimiObject.setListNetworkInterfaces(templateNics);

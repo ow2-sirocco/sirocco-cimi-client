@@ -31,7 +31,6 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CreateResult;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineTemplate;
-import org.ow2.sirocco.apis.rest.cimi.sdk.NetworkInterface;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -76,10 +75,12 @@ public class MachineTemplateCreateCommand implements Command {
         }
         machineTemplate.setMachineConfigRef(this.machineConfigId);
         machineTemplate.setMachineImageRef(this.machineImageId);
-        List<NetworkInterface> nics = new ArrayList<NetworkInterface>();
+        List<MachineTemplate.NetworkInterface> nics = new ArrayList<MachineTemplate.NetworkInterface>();
         if (this.nicTypes != null) {
             for (String nicType : this.nicTypes) {
-                nics.add(new NetworkInterface(NetworkInterface.Type.valueOf(nicType), ""));
+                MachineTemplate.NetworkInterface nic = new MachineTemplate.NetworkInterface();
+                nic.setNetworkType(nicType);
+                nics.add(nic);
             }
         }
         machineTemplate.setNetworkInterface(nics);

@@ -30,7 +30,7 @@ import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Machine;
-import org.ow2.sirocco.apis.rest.cimi.sdk.NetworkInterface;
+import org.ow2.sirocco.apis.rest.cimi.sdk.MachineNetworkInterface;
 import org.ow2.sirocco.apis.rest.cimi.sdk.QueryParams;
 
 import com.beust.jcommander.Parameter;
@@ -94,8 +94,10 @@ public class MachineShowCommand implements Command {
 
         table.addCell("IP addresses");
         sb = new StringBuffer();
-        for (NetworkInterface nic : machine.getNetworkInterface()) {
-            sb.append(nic.getType() + "=" + nic.getIp() + " ");
+        for (MachineNetworkInterface nic : machine.getNetworkInterfaces()) {
+            if (!nic.getAddresses().isEmpty()) {
+                sb.append(nic.getType() + "=" + nic.getAddresses().get(0).getIp() + " ");
+            }
         }
         table.addCell(sb.toString());
 

@@ -80,7 +80,11 @@ public class MachineNetworkInterfaceListCommand implements Command {
                 sb.append(address.getIp() + " ");
             }
             table.addCell(sb.toString());
-            table.addCell(nic.getNetwork().getId());
+            if (nic.getNetwork() != null) {
+                table.addCell(nic.getNetwork().getId());
+            } else {
+                table.addCell("");
+            }
         }
         System.out.println(table.render());
     }
