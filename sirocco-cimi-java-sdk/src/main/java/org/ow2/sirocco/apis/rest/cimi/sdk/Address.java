@@ -47,11 +47,11 @@ public class Address extends Resource<CimiAddress> {
     }
 
     public String getIp() {
-        return this.cimiObject.getId();
+        return this.cimiObject.getIp();
     }
 
     public void setIp(final String ip) {
-        this.cimiObject.setId(ip);
+        this.cimiObject.setIp(ip);
     }
 
     public String getHostname() {
