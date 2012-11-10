@@ -50,7 +50,8 @@ public class Client {
     private static Command commands[] = {new MachineCreateCommand(), new MachineShowCommand(), new MachineListCommand(),
         new MachineDeleteCommand(), new MachineUpdateCommand(), new MachineStartCommand(), new MachineStopCommand(),
         new MachineVolumeCreateCommand(), new MachineVolumeDeleteCommand(), new MachineVolumeListCommand(),
-        new MachineVolumeShowCommand(), new MachineImageCreateCommand(), new MachineImageUpdateCommand(),
+        new MachineVolumeShowCommand(), new DiskListCommand(), new DiskShowCommand(), new MachineNetworkInterfaceListCommand(),
+        new MachineNetworkInterfaceShowCommand(), new MachineImageCreateCommand(), new MachineImageUpdateCommand(),
         new MachineImageShowCommand(), new MachineImageListCommand(), new MachineImageDeleteCommand(),
         new MachineConfigCreateCommand(), new MachineConfigUpdateCommand(), new MachineConfigShowCommand(),
         new MachineConfigListCommand(), new MachineConfigDeleteCommand(), new MachineTemplateCreateCommand(),
@@ -68,17 +69,17 @@ public class Client {
     private Client(final String[] args) {
         String userName = System.getenv(Client.SIROCCO_USERNAME_ENV_NAME);
         if (userName == null) {
-            System.err.println("SIROCCO_USERNAME environment variable not set");
+            System.err.println(Client.SIROCCO_USERNAME_ENV_NAME + " environment variable not set");
             System.exit(1);
         }
         String password = System.getenv(Client.SIROCCO_PASSWORD_ENV_NAME);
         if (password == null) {
-            System.err.println("SIROCCO_PASSWORD environment variable not set");
+            System.err.println(Client.SIROCCO_PASSWORD_ENV_NAME + " environment variable not set");
             System.exit(1);
         }
         String endpointUrl = System.getenv(Client.SIROCCO_ENDPOINT_URL_ENV_NAME);
         if (endpointUrl == null) {
-            System.err.println("SIROCCO_ENDPOINT_URL environment variable not set");
+            System.err.println(Client.SIROCCO_ENDPOINT_URL_ENV_NAME + " environment variable not set");
             System.exit(1);
         }
 
