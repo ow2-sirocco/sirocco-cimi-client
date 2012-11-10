@@ -35,9 +35,15 @@ import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
 import org.ow2.sirocco.apis.rest.cimi.domain.NestedJob;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiJobCollectionRoot;
 
+/**
+ * Task performed by a CIMI provider
+ */
 public class Job extends Resource<CimiJob> {
     public final int DEFAULT_POLL_PERIOD_IN_SECONDS = 10;
 
+    /**
+     * Job status
+     */
     public static enum Status {
         RUNNING, SUCCESS, FAILED, CANCELLED
     };

@@ -31,6 +31,9 @@ import org.ow2.sirocco.apis.rest.cimi.domain.CimiAddress;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiAddressCollection;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiAddressCollectionRoot;
 
+/**
+ * IP address, and its associated metadata, for a particular Network
+ */
 public class Address extends Resource<CimiAddress> {
     public static final String TYPE_URI = "http://schemas.dmtf.org/cimi/1/Address";
 

@@ -31,6 +31,10 @@ import org.ow2.sirocco.apis.rest.cimi.domain.CimiCredentialTemplate;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineTemplate;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiVolumeTemplate;
 
+/**
+ * Component of a SystemTemplate. For each component descriptor, the
+ * corresponding component is created when a System instance is created.
+ */
 public class ComponentDescriptor {
     private CimiComponentDescriptor cimiComponentDescriptor;
 

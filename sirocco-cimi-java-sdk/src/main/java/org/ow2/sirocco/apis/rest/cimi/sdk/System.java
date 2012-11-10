@@ -38,7 +38,14 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiSystemCollectionRoot
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiSystemMachineCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
+/**
+ * Resource that combines one or more Machines, Volumes and Networks and that
+ * can be operated and managed as a single unit
+ */
 public class System extends Resource<CimiSystem> {
+    /**
+     * System state
+     */
     public static enum State {
         CREATING, CREATED, STARTING, STARTED, STOPPING, STOPPED, PAUSING, PAUSED, SUSPENDING, SUSPENDED, MIXED, DELETING, DELETED, ERROR
     }

@@ -26,6 +26,19 @@ package org.ow2.sirocco.apis.rest.cimi.sdk;
 
 import java.util.Map;
 
+/**
+ * Authentification plugin interface
+ */
 public interface AuthPlugin {
+    /**
+     * Generate authentication-related HTTP headers that will be included in all
+     * HTTP requests sent to the CIMI provider
+     * 
+     * @param user user name
+     * @param password password
+     * @return a map of HTTP headers
+     * @throws CimiException raised by the plugin if the the authentication
+     *         cannot proceed
+     */
     Map<String, String> authenticate(String user, String password) throws CimiException;
 }

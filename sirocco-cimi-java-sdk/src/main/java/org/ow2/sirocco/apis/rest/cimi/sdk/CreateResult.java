@@ -24,6 +24,11 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.sdk;
 
+/**
+ * Helper class representing the result of a CIMI resource creation
+ * 
+ * @param <E>
+ */
 public class CreateResult<E> {
     final Job job;
 

@@ -34,6 +34,9 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeTemplateCollec
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeTemplateCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
+/**
+ * Set of hardware and software settings required to create a Volume
+ */
 public class VolumeTemplate extends Resource<CimiVolumeTemplate> {
     private VolumeImage volumeImage;
 

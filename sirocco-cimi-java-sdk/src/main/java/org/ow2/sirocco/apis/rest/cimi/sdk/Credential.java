@@ -34,6 +34,10 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiCredentialCollection
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiCredentialCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
+/**
+ * Information required to create the initial administrative superuser of a
+ * Machine
+ */
 public class Credential extends Resource<CimiCredential> {
     public static final String TYPE_URI = "http://schemas.dmtf.org/cimi/1/Credential";
 

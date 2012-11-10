@@ -34,9 +34,17 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeCollection;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
+/**
+ * Unit of persistent storage at either the block or the file-system level. A
+ * Volume can be attached to a Machine and persists independently from the life
+ * of the Machine(s) it is attached to
+ */
 public class Volume extends Resource<CimiVolume> {
     public static final String TYPE_URI = "http://schemas.dmtf.org/cimi/1/Volume";
 
+    /**
+     * Volume state
+     */
     public static enum State {
         CREATING, AVAILABLE, DELETING, DELETED, ERROR
     }

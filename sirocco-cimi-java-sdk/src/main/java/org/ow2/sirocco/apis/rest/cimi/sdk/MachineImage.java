@@ -37,11 +37,20 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineImageCollecti
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineImageCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
+/**
+ * Machine image used to instantiate a Machine
+ */
 public class MachineImage extends Resource<CimiMachineImage> {
+    /**
+     * MachineImage state
+     */
     public static enum State {
         CREATING, AVAILABLE, DELETING, ERROR
     }
 
+    /**
+     * MachineImage type
+     */
     public static enum Type {
         IMAGE, SNAPSHOT, PARTIAL_SNAPSHOT
     }

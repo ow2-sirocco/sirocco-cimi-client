@@ -42,6 +42,10 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 
+/**
+ * Root handle representing a session with a CIMI provider and through which all
+ * operations can be invoked on CIMI entities
+ */
 public class CimiClient {
     public static final MediaType DEFAULT_MEDIA_TYPE = MediaType.APPLICATION_JSON_TYPE;
 
@@ -59,6 +63,9 @@ public class CimiClient {
 
     private static final String DEFAULT_CIMICLIENT_AUTH_PLUGIN_CLASS = "org.ow2.sirocco.apis.rest.cimi.sdk.auth.BasicAuthPlugin";
 
+    /**
+     * Contains options for connecting to a CIMI provider
+     */
     public static class Options {
         private boolean debug;
 
@@ -68,15 +75,31 @@ public class CimiClient {
 
         }
 
+        /**
+         * Returns a new set of default options
+         * 
+         * @return
+         */
         public static Options build() {
             return new Options();
         }
 
+        /**
+         * Turns on logging of HTTP messages on standard output
+         * 
+         * @param debug true if logging is desired
+         * @return Options object
+         */
         public Options setDebug(final boolean debug) {
             this.debug = debug;
             return this;
         }
 
+        /**
+         * Sets the media type used for HTTP requests and responses
+         * 
+         * @param mediaType either XML or JSON
+         */
         public void setMediaType(final MediaType mediaType) {
             this.mediaType = mediaType;
         }
@@ -262,10 +285,25 @@ public class CimiClient {
         this.webResource = client.resource(this.cloudEntryPoint.getBaseURI());
     }
 
+    /**
+     * Changes the media type used for HTTP requests and responses
+     * 
+     * @param mediaType either XML or JSON
+     */
     public void setMediaType(final MediaType mediaType) {
         this.mediaType = mediaType;
     }
 
+    /**
+     * Login to a CIMI provider with some credentials
+     * 
+     * @param cimiEndpointUrl URL of the CIMI provider endpoint
+     * @param userName user name
+     * @param password password
+     * @param options options
+     * @return
+     * @throws CimiException raised if login operation fails
+     */
     public static CimiClient login(final String cimiEndpointUrl, final String userName, final String password,
         final Options... options) throws CimiException {
         return new CimiClient(cimiEndpointUrl, userName, password, options);

@@ -30,6 +30,9 @@ import java.util.Map;
 
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineCreate;
 
+/**
+ * Helper class to create a Machine
+ */
 public class MachineCreate {
     CimiMachineCreate cimiMachineCreate;
 

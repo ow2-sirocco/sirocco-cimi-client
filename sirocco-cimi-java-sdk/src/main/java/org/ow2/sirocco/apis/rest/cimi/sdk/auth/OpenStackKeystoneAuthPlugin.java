@@ -41,6 +41,10 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 
+/**
+ * Plugin implementing token-based authentication through the OpenStack Keystone
+ * service
+ */
 public class OpenStackKeystoneAuthPlugin implements AuthPlugin {
 
     private static class AuthInfo {
@@ -145,9 +149,4 @@ public class OpenStackKeystoneAuthPlugin implements AuthPlugin {
         return Collections.singletonMap("X-Auth-Token", tokenId);
     }
 
-    public static void main(final String args[]) throws Exception {
-        OpenStackKeystoneAuthPlugin auth = new OpenStackKeystoneAuthPlugin();
-
-        System.out.println(auth.authenticate("admin:admin", "admin"));
-    }
 }

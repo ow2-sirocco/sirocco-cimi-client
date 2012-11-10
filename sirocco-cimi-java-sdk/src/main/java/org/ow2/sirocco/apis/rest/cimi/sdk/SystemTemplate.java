@@ -35,6 +35,11 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiSystemTemplateCollec
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiSystemTemplateCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
+/**
+ * Set of hardware and software settings required to create a System. A
+ * SystemTemplate consists of a list component descriptors, each descriptor
+ * describing how to create a System component that can be any CIMI resource
+ */
 public class SystemTemplate extends Resource<CimiSystemTemplate> {
     public SystemTemplate() {
         super(null, new CimiSystemTemplate());

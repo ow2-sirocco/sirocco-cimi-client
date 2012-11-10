@@ -30,6 +30,9 @@ import java.util.Map;
 
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiVolumeCreate;
 
+/**
+ * Helper class used to create a Volume
+ */
 public class VolumeCreate {
     CimiVolumeCreate cimiVolumeCreate;
 

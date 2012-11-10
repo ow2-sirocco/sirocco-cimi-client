@@ -34,6 +34,9 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeConfigurationC
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeConfigurationCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
+/**
+ * Set of hardware settings used to create a Volume
+ */
 public class VolumeConfiguration extends Resource<CimiVolumeConfiguration> {
 
     public VolumeConfiguration() {

@@ -31,9 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.domain.CimiNetwork;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiNetworkCollection;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiNetworkCollectionRoot;
 
+/**
+ * L2 Network
+ */
 public class Network extends Resource<CimiNetwork> {
     public static final String TYPE_URI = "http://schemas.dmtf.org/cimi/1/Network";
 
+    /**
+     * Network state
+     */
     public static enum State {
         CREATING, STARTING, STARTED, STOPPING, STOPPED, DELETING, DELETED, ERROR
     }

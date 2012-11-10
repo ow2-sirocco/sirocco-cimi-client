@@ -30,6 +30,9 @@ import java.util.Map;
 
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiCredentialCreate;
 
+/**
+ * Helper class used to create a Credential
+ */
 public class CredentialCreate {
     CimiCredentialCreate cimiCredentialsCreate;
 

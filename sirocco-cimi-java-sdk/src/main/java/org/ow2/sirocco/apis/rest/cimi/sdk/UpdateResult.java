@@ -24,6 +24,11 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.sdk;
 
+/**
+ * Helper class representing the result of an update operation
+ * 
+ * @param <E>
+ */
 public class UpdateResult<E> {
     final Job job;
 

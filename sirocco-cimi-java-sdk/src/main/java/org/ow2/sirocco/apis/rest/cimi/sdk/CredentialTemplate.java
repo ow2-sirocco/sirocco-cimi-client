@@ -34,6 +34,9 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiCredentialTemplateCo
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiCredentialTemplateCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
+/**
+ * Configuration values for realizing a Credential resource
+ */
 public class CredentialTemplate extends Resource<CimiCredentialTemplate> {
     public CredentialTemplate() {
         super(null, new CimiCredentialTemplate());

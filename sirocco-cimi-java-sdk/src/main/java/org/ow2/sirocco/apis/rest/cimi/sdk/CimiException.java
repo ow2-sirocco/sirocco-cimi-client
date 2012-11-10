@@ -25,6 +25,9 @@
 
 package org.ow2.sirocco.apis.rest.cimi.sdk;
 
+/**
+ * CIMI exception class
+ */
 public class CimiException extends Exception {
     private static final long serialVersionUID = 1L;
 

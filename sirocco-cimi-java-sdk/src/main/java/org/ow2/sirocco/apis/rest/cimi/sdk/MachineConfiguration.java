@@ -37,7 +37,13 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineConfiguration
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineConfigurationCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
+/**
+ * Hardware resource settings (CPU, memory, disk) of a to-be-created Machine
+ */
 public class MachineConfiguration extends Resource<CimiMachineConfiguration> {
+    /**
+     * Disk specification
+     */
     public static class Disk {
         public int capacity;
 

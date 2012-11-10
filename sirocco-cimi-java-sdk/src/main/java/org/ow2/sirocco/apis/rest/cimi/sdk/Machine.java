@@ -43,9 +43,15 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineNetworkInterf
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineNetworkInterfaceCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
+/**
+ * Instantiated compute resource that encapsulates both CPU and Memory
+ */
 public class Machine extends Resource<CimiMachine> {
     public static final String TYPE_URI = "http://schemas.dmtf.org/cimi/1/Machine";
 
+    /**
+     * Machine state
+     */
     public static enum State {
         CREATING, STARTING, STARTED, STOPPING, STOPPED, PAUSING, PAUSED, SUSPENDING, SUSPENDED, DELETING, DELETED, ERROR
     }

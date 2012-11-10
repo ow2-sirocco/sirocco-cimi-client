@@ -35,7 +35,13 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeImageCollectio
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeImageCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
+/**
+ * Image that can be placed on a pre-loaded Volume
+ */
 public class VolumeImage extends Resource<CimiVolumeImage> {
+    /**
+     * VolumeImage state
+     */
     public static enum State {
         CREATING, AVAILABLE, DELETING, DELETED, ERROR
     }

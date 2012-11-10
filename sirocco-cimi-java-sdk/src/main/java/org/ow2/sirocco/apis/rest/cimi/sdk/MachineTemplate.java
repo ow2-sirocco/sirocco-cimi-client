@@ -39,6 +39,9 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineTemplateColle
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineTemplateCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
+/**
+ * Set of hardware and software settings required to create a Machine
+ */
 public class MachineTemplate extends Resource<CimiMachineTemplate> {
     private MachineImage machineImage;
 

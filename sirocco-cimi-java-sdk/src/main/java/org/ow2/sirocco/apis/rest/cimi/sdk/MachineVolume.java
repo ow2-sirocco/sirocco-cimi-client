@@ -35,6 +35,9 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineVolumeCollect
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineVolumeCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
+/**
+ * Represents the attachment of a Volume to a Machine
+ */
 public class MachineVolume extends Resource<CimiMachineVolume> {
     public static final String TYPE_URI = "http://schemas.dmtf.org/cimi/1/MachineVolume";
 

@@ -129,7 +129,8 @@
 				<version>2.8</version>
 				<configuration>
 					<quiet>true</quiet>
-					<windowtitle>${project.name}</windowtitle>
+					<windowtitle>Sirocco CIMI Java SDK</windowtitle>
+					<doctitle>Sirocco CIMI Java SDK</doctitle>
 					<use>yes</use>
 					<overview>${project.build.sourceDirectory}/overview.html</overview>
 					<linksource>yes</linksource>

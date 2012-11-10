@@ -32,6 +32,9 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 
 import com.sun.jersey.core.util.Base64;
 
+/**
+ * Plugin implementing HTTP Basic authentication
+ */
 public class BasicAuthPlugin implements AuthPlugin {
 
     @Override

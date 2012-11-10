@@ -27,6 +27,9 @@ package org.ow2.sirocco.apis.rest.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Helper class used to specify query parameters when retrieving CIMI resources
+ */
 public class QueryParams {
     private int first = -1;
 

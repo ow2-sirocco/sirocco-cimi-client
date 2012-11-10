@@ -26,6 +26,9 @@ package org.ow2.sirocco.apis.rest.cimi.sdk;
 
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiSystemMachine;
 
+/**
+ * Represents a Machine within a System
+ */
 public class SystemMachine extends Resource<CimiSystemMachine> {
     private Machine machine;
 
