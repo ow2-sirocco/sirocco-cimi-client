@@ -96,7 +96,7 @@ public class VolumeConfiguration extends Resource<CimiVolumeConfiguration> {
         }
         CimiVolumeConfigurationCollection volumeConfigCollection = client.getRequest(
             client.extractPath(client.cloudEntryPoint.getVolumeConfigs().getHref()),
-            CimiVolumeConfigurationCollectionRoot.class, null);
+            CimiVolumeConfigurationCollectionRoot.class);
         String addRef = Helper.findOperation("add", volumeConfigCollection);
         if (addRef == null) {
             throw new CimiException("Unsupported operation");
@@ -109,7 +109,7 @@ public class VolumeConfiguration extends Resource<CimiVolumeConfiguration> {
         return new CreateResult<VolumeConfiguration>(job, createdVolumeConfiguration);
     }
 
-    public static List<VolumeConfiguration> getVolumeConfigurations(final CimiClient client, final QueryParams queryParams)
+    public static List<VolumeConfiguration> getVolumeConfigurations(final CimiClient client, final QueryParams... queryParams)
         throws CimiException {
         if (client.cloudEntryPoint.getVolumeConfigs() == null) {
             throw new CimiException("Unsupported operation");
@@ -128,9 +128,9 @@ public class VolumeConfiguration extends Resource<CimiVolumeConfiguration> {
         return result;
     }
 
-    public static VolumeConfiguration getVolumeConfigurationByReference(final CimiClient client, final String ref)
-        throws CimiException {
-        return new VolumeConfiguration(client, client.getCimiObjectByReference(ref, CimiVolumeConfiguration.class));
+    public static VolumeConfiguration getVolumeConfigurationByReference(final CimiClient client, final String ref,
+        final QueryParams... queryParams) throws CimiException {
+        return new VolumeConfiguration(client, client.getCimiObjectByReference(ref, CimiVolumeConfiguration.class, queryParams));
     }
 
 }

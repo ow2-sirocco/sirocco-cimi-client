@@ -133,7 +133,7 @@ public class System extends Resource<CimiSystem> {
             throw new CimiException("Unsupported operation");
         }
         CimiSystemCollection systemCollection = client.getRequest(
-            client.extractPath(client.cloudEntryPoint.getSystems().getHref()), CimiSystemCollectionRoot.class, null);
+            client.extractPath(client.cloudEntryPoint.getSystems().getHref()), CimiSystemCollectionRoot.class);
         String addRef = Helper.findOperation("add", systemCollection);
         if (addRef == null) {
             throw new CimiException("Unsupported operation");
@@ -144,7 +144,7 @@ public class System extends Resource<CimiSystem> {
         return new CreateResult<System>(job, system);
     }
 
-    public static List<System> getSystems(final CimiClient client, final QueryParams queryParams) throws CimiException {
+    public static List<System> getSystems(final CimiClient client, final QueryParams... queryParams) throws CimiException {
         if (client.cloudEntryPoint.getSystems() == null) {
             throw new CimiException("Unsupported operation");
         }
@@ -160,13 +160,7 @@ public class System extends Resource<CimiSystem> {
         return result;
     }
 
-    public static System getSystemByReference(final CimiClient client, final String ref) throws CimiException {
-        System result = new System(client, client.getCimiObjectByReference(ref, CimiSystem.class, QueryParams.build()
-            .setExpand("machines")));
-        return result;
-    }
-
-    public static System getSystemByReference(final CimiClient client, final String ref, final QueryParams queryParams)
+    public static System getSystemByReference(final CimiClient client, final String ref, final QueryParams... queryParams)
         throws CimiException {
         System result = new System(client, client.getCimiObjectByReference(ref, CimiSystem.class, queryParams));
         return result;

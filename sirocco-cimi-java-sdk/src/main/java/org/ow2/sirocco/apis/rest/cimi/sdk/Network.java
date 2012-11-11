@@ -65,7 +65,7 @@ public class Network extends Resource<CimiNetwork> {
         this.cimiObject.setNetworkType(networkType);
     }
 
-    public static List<Network> getNetworks(final CimiClient client, final QueryParams queryParams) throws CimiException {
+    public static List<Network> getNetworks(final CimiClient client, final QueryParams... queryParams) throws CimiException {
         if (client.cloudEntryPoint.getNetworks() == null) {
             throw new CimiException("Unsupported operation");
         }
@@ -81,7 +81,8 @@ public class Network extends Resource<CimiNetwork> {
         return result;
     }
 
-    public static Network getNetworkByReference(final CimiClient client, final String id) throws CimiException {
-        return new Network(client, client.getCimiObjectByReference(id, CimiNetwork.class));
+    public static Network getNetworkByReference(final CimiClient client, final String id, final QueryParams... queryParams)
+        throws CimiException {
+        return new Network(client, client.getCimiObjectByReference(id, CimiNetwork.class, queryParams));
     }
 }

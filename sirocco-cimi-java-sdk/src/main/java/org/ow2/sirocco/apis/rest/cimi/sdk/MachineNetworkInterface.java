@@ -31,6 +31,7 @@ import java.util.List;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineNetworkInterface;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineNetworkInterfaceAddress;
+import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineNetworkInterfaceAddressCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineNetworkInterfaceCollection;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineNetworkInterfaceCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
@@ -68,7 +69,15 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
         super(cimiClient, cimiMachineNetworkInterface);
     }
 
-    public List<Address> getAddresses() {
+    public List<Address> getAddresses() throws CimiException {
+        String href = this.cimiObject.getAddresses().getHref();
+        if (href == null) {
+            href = this.cimiObject.getAddresses().getId();
+        }
+        CimiMachineNetworkInterfaceAddressCollectionRoot addresses = this.cimiClient.getRequest(this.cimiClient
+            .extractPath(href), CimiMachineNetworkInterfaceAddressCollectionRoot.class, QueryParams.build()
+            .setExpand("address"));
+        this.cimiObject.setAddresses(addresses);
         List<Address> result = new ArrayList<Address>();
         if (this.cimiObject.getAddresses().getArray() != null) {
             for (CimiMachineNetworkInterfaceAddress addr : this.cimiObject.getAddresses().getArray()) {
@@ -128,7 +137,7 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
     }
 
     public static List<MachineNetworkInterface> getMachineNetworkInterfaces(final CimiClient client, final String machineId,
-        final QueryParams queryParams) throws CimiException {
+        final QueryParams... queryParams) throws CimiException {
         Machine machine = Machine.getMachineByReference(client, machineId);
         if (machine.cimiObject.getNetworkInterfaces() == null) {
             throw new CimiException("Unsupported operation");
@@ -136,7 +145,7 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
 
         CimiMachineNetworkInterfaceCollection machineNetworkInterfaceCollection = client.getRequest(
             client.extractPath(machine.cimiObject.getNetworkInterfaces().getHref()),
-            CimiMachineNetworkInterfaceCollectionRoot.class, queryParams.setExpand("addresses"));
+            CimiMachineNetworkInterfaceCollectionRoot.class, queryParams);
         List<MachineNetworkInterface> result = new ArrayList<MachineNetworkInterface>();
 
         if (machineNetworkInterfaceCollection.getCollection() != null) {
@@ -148,10 +157,10 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
         return result;
     }
 
-    public static MachineNetworkInterface getMachineNetworkInterfaceByReference(final CimiClient client, final String ref)
-        throws CimiException {
+    public static MachineNetworkInterface getMachineNetworkInterfaceByReference(final CimiClient client, final String ref,
+        final QueryParams... queryParams) throws CimiException {
         return new MachineNetworkInterface(client, client.getCimiObjectByReference(ref, CimiMachineNetworkInterface.class,
-            QueryParams.build().setExpand("addresses")));
+            queryParams));
     }
 
 }

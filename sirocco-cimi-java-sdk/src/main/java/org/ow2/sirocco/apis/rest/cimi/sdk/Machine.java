@@ -63,10 +63,6 @@ public class Machine extends Resource<CimiMachine> {
         super(cimiClient, cimiMachine);
     }
 
-    public CimiMachine getCimiMachine() {
-        return this.cimiObject;
-    }
-
     public State getState() {
         return State.valueOf(this.cimiObject.getState());
     }
@@ -145,7 +141,7 @@ public class Machine extends Resource<CimiMachine> {
             throw new CimiException("Unsupported operation");
         }
         CimiMachineCollection machinesCollection = client.getRequest(
-            client.extractPath(client.cloudEntryPoint.getMachines().getHref()), CimiMachineCollectionRoot.class, null);
+            client.extractPath(client.cloudEntryPoint.getMachines().getHref()), CimiMachineCollectionRoot.class);
         String addRef = Helper.findOperation("add", machinesCollection);
         if (addRef == null) {
             throw new CimiException("Unsupported operation");
@@ -180,7 +176,7 @@ public class Machine extends Resource<CimiMachine> {
         return new UpdateResult<Machine>(job, machineConfig);
     }
 
-    public static List<Machine> getMachines(final CimiClient client, final QueryParams queryParams) throws CimiException {
+    public static List<Machine> getMachines(final CimiClient client, final QueryParams... queryParams) throws CimiException {
         if (client.cloudEntryPoint.getMachines() == null) {
             throw new CimiException("Unsupported operation");
         }
@@ -196,20 +192,16 @@ public class Machine extends Resource<CimiMachine> {
         return result;
     }
 
-    public static Machine getMachineByReference(final CimiClient client, final String ref, final QueryParams queryParams)
+    public static Machine getMachineByReference(final CimiClient client, final String ref, final QueryParams... queryParams)
         throws CimiException {
         Machine result = new Machine(client, client.getCimiObjectByReference(ref, CimiMachine.class, queryParams));
         if (result.cimiObject.getNetworkInterfaces() != null) {
             String machineNicsRef = result.cimiObject.getNetworkInterfaces().getHref();
             CimiMachineNetworkInterfaceCollectionRoot nics = client.getRequest(client.extractPath(machineNicsRef),
-                CimiMachineNetworkInterfaceCollectionRoot.class, null);
+                CimiMachineNetworkInterfaceCollectionRoot.class);
             result.cimiObject.getNetworkInterfaces().setArray(nics.getArray());
         }
         return result;
-    }
-
-    public static Machine getMachineByReference(final CimiClient client, final String ref) throws CimiException {
-        return Machine.getMachineByReference(client, ref, null);
     }
 
 }

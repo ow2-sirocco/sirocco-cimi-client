@@ -105,7 +105,7 @@ public class Volume extends Resource<CimiVolume> {
             throw new CimiException("Unsupported operation");
         }
         CimiVolumeCollection volumeCollection = client.getRequest(
-            client.extractPath(client.cloudEntryPoint.getVolumes().getHref()), CimiVolumeCollectionRoot.class, null);
+            client.extractPath(client.cloudEntryPoint.getVolumes().getHref()), CimiVolumeCollectionRoot.class);
         String addRef = Helper.findOperation("add", volumeCollection);
         if (addRef == null) {
             throw new CimiException("Unsupported operation");
@@ -116,7 +116,7 @@ public class Volume extends Resource<CimiVolume> {
         return new CreateResult<Volume>(job, volume);
     }
 
-    public static List<Volume> getVolumes(final CimiClient client, final QueryParams queryParams) throws CimiException {
+    public static List<Volume> getVolumes(final CimiClient client, final QueryParams... queryParams) throws CimiException {
         if (client.cloudEntryPoint.getVolumes() == null) {
             throw new CimiException("Unsupported operation");
         }
@@ -132,8 +132,9 @@ public class Volume extends Resource<CimiVolume> {
         return result;
     }
 
-    public static Volume getVolumeByReference(final CimiClient client, final String ref) throws CimiException {
-        return new Volume(client, client.getCimiObjectByReference(ref, CimiVolume.class));
+    public static Volume getVolumeByReference(final CimiClient client, final String ref, final QueryParams... queryParams)
+        throws CimiException {
+        return new Volume(client, client.getCimiObjectByReference(ref, CimiVolume.class, queryParams));
     }
 
 }

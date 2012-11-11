@@ -59,15 +59,16 @@ public class MachineNetworkInterfaceListCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         List<MachineNetworkInterface> nics = MachineNetworkInterface.getMachineNetworkInterfaces(cimiClient, this.machineId,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, null));
+            CommandHelper.buildQueryParams(this.first, this.last, this.filter, "addresses"));
 
-        Table table = new Table(6);
+        Table table = new Table(7);
         table.addCell("ID");
         table.addCell("Name");
         table.addCell("Description");
         table.addCell("State");
         table.addCell("Addresses");
         table.addCell("Network");
+        table.addCell("Network Type");
 
         for (MachineNetworkInterface nic : nics) {
             table.addCell(nic.getId());
@@ -85,6 +86,7 @@ public class MachineNetworkInterfaceListCommand implements Command {
             } else {
                 table.addCell("");
             }
+            table.addCell(nic.getType().toString());
         }
         System.out.println(table.render());
     }

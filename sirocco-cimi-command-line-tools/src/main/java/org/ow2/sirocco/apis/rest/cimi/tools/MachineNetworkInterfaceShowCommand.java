@@ -31,6 +31,7 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.Address;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineNetworkInterface;
+import org.ow2.sirocco.apis.rest.cimi.sdk.QueryParams;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -47,11 +48,12 @@ public class MachineNetworkInterfaceShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        MachineNetworkInterface nic = MachineNetworkInterface.getMachineNetworkInterfaceByReference(cimiClient, this.nicId);
+        MachineNetworkInterface nic = MachineNetworkInterface.getMachineNetworkInterfaceByReference(cimiClient, this.nicId,
+            QueryParams.build().setExpand("addresses"));
         MachineNetworkInterfaceShowCommand.printMachineNetworkInterface(nic);
     }
 
-    public static void printMachineNetworkInterface(final MachineNetworkInterface nic) {
+    public static void printMachineNetworkInterface(final MachineNetworkInterface nic) throws CimiException {
         Table table = new Table(2);
         table.addCell("Attribute");
         table.addCell("Value");
@@ -70,7 +72,13 @@ public class MachineNetworkInterfaceShowCommand implements Command {
         table.addCell(sb.toString());
 
         table.addCell("network");
-        table.addCell(nic.getNetwork().getId());
+        if (nic.getNetwork() != null) {
+            table.addCell(nic.getNetwork().getId());
+        } else {
+            table.addCell("");
+        }
+        table.addCell("network type");
+        table.addCell(nic.getType().toString());
 
         table.addCell("description");
         table.addCell(nic.getDescription());

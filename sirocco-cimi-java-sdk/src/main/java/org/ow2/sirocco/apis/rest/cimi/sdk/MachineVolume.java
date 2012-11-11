@@ -101,15 +101,14 @@ public class MachineVolume extends Resource<CimiMachineVolume> {
     }
 
     public static List<MachineVolume> getMachineVolumes(final CimiClient client, final String machineId,
-        final QueryParams queryParams) throws CimiException {
+        final QueryParams... queryParams) throws CimiException {
         Machine machine = Machine.getMachineByReference(client, machineId);
         if (machine.cimiObject.getVolumes() == null) {
             throw new CimiException("Unsupported operation");
         }
 
         CimiMachineVolumeCollection machineVolumeCollection = client.getRequest(
-            client.extractPath(machine.cimiObject.getVolumes().getHref()), CimiMachineVolumeCollectionRoot.class,
-            queryParams.setExpand("volume"));
+            client.extractPath(machine.cimiObject.getVolumes().getHref()), CimiMachineVolumeCollectionRoot.class, queryParams);
         List<MachineVolume> result = new ArrayList<MachineVolume>();
 
         if (machineVolumeCollection.getCollection() != null) {
@@ -120,9 +119,9 @@ public class MachineVolume extends Resource<CimiMachineVolume> {
         return result;
     }
 
-    public static MachineVolume getMachineVolumeByReference(final CimiClient client, final String ref) throws CimiException {
-        return new MachineVolume(client, client.getCimiObjectByReference(ref, CimiMachineVolume.class, QueryParams.build()
-            .setExpand("volume")));
+    public static MachineVolume getMachineVolumeByReference(final CimiClient client, final String ref,
+        final QueryParams... queryParams) throws CimiException {
+        return new MachineVolume(client, client.getCimiObjectByReference(ref, CimiMachineVolume.class, queryParams));
     }
 
 }

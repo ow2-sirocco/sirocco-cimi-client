@@ -115,7 +115,7 @@ public class Job extends Resource<CimiJob> {
         this.waitForCompletion(timeout, period, unit);
     }
 
-    public static List<Job> getJobs(final CimiClient client, final QueryParams queryParams) throws CimiException {
+    public static List<Job> getJobs(final CimiClient client, final QueryParams... queryParams) throws CimiException {
         if (client.cloudEntryPoint.getJobs() == null) {
             throw new CimiException("Unsupported operation");
         }
@@ -132,8 +132,9 @@ public class Job extends Resource<CimiJob> {
         return result;
     }
 
-    public static Job getJobByReference(final CimiClient client, final String ref) throws CimiException {
-        return new Job(client, client.getCimiObjectByReference(ref, CimiJob.class));
+    public static Job getJobByReference(final CimiClient client, final String ref, final QueryParams... queryParams)
+        throws CimiException {
+        return new Job(client, client.getCimiObjectByReference(ref, CimiJob.class, queryParams));
     }
 
 }

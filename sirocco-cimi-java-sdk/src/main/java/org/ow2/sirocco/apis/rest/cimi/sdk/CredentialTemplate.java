@@ -99,7 +99,7 @@ public class CredentialTemplate extends Resource<CimiCredentialTemplate> {
         }
         CimiCredentialTemplateCollection credentialTemplateCollection = client.getRequest(
             client.extractPath(client.cloudEntryPoint.getCredentialTemplates().getHref()),
-            CimiCredentialTemplateCollectionRoot.class, null);
+            CimiCredentialTemplateCollectionRoot.class);
         String addRef = Helper.findOperation("add", credentialTemplateCollection);
         if (addRef == null) {
             throw new CimiException("Unsupported operation");
@@ -112,7 +112,7 @@ public class CredentialTemplate extends Resource<CimiCredentialTemplate> {
         return new CreateResult<CredentialTemplate>(job, credTemplate);
     }
 
-    public static List<CredentialTemplate> getCredentialTemplates(final CimiClient client, final QueryParams queryParams)
+    public static List<CredentialTemplate> getCredentialTemplates(final CimiClient client, final QueryParams... queryParams)
         throws CimiException {
         if (client.cloudEntryPoint.getCredentialTemplates() == null) {
             throw new CimiException("Unsupported operation");
@@ -131,9 +131,9 @@ public class CredentialTemplate extends Resource<CimiCredentialTemplate> {
         return result;
     }
 
-    public static CredentialTemplate getCredentialTemplateByReference(final CimiClient client, final String ref)
-        throws CimiException {
-        return new CredentialTemplate(client, client.getCimiObjectByReference(ref, CimiCredentialTemplate.class));
+    public static CredentialTemplate getCredentialTemplateByReference(final CimiClient client, final String ref,
+        final QueryParams... queryParams) throws CimiException {
+        return new CredentialTemplate(client, client.getCimiObjectByReference(ref, CimiCredentialTemplate.class, queryParams));
     }
 
 }

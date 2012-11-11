@@ -83,8 +83,7 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
             throw new CimiException("Unsupported operation");
         }
         CimiSystemTemplateCollection systemTemplateCollection = client.getRequest(
-            client.extractPath(client.cloudEntryPoint.getSystemTemplates().getHref()), CimiSystemTemplateCollectionRoot.class,
-            null);
+            client.extractPath(client.cloudEntryPoint.getSystemTemplates().getHref()), CimiSystemTemplateCollectionRoot.class);
         String addRef = Helper.findOperation("add", systemTemplateCollection);
         if (addRef == null) {
             throw new CimiException("Unsupported operation");
@@ -97,7 +96,7 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
         return new CreateResult<SystemTemplate>(job, createdSystemTemplate);
     }
 
-    public static List<SystemTemplate> getSystemTemplates(final CimiClient client, final QueryParams queryParams)
+    public static List<SystemTemplate> getSystemTemplates(final CimiClient client, final QueryParams... queryParams)
         throws CimiException {
         if (client.cloudEntryPoint.getSystemTemplates() == null) {
             throw new CimiException("Unsupported operation");
@@ -116,8 +115,9 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
         return result;
     }
 
-    public static SystemTemplate getSystemTemplateByReference(final CimiClient client, final String ref) throws CimiException {
-        return new SystemTemplate(client, client.getCimiObjectByReference(ref, CimiSystemTemplate.class));
+    public static SystemTemplate getSystemTemplateByReference(final CimiClient client, final String ref,
+        final QueryParams... queryParams) throws CimiException {
+        return new SystemTemplate(client, client.getCimiObjectByReference(ref, CimiSystemTemplate.class, queryParams));
     }
 
 }

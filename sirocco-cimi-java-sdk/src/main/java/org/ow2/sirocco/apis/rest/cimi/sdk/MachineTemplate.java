@@ -216,9 +216,9 @@ public class MachineTemplate extends Resource<CimiMachineTemplate> {
         if (client.cloudEntryPoint.getMachineTemplates() == null) {
             throw new CimiException("Unsupported operation");
         }
-        CimiMachineTemplateCollection machineTemplateCollection = client.getRequest(
-            client.extractPath(client.cloudEntryPoint.getMachineTemplates().getHref()),
-            CimiMachineTemplateCollectionRoot.class, null);
+        CimiMachineTemplateCollection machineTemplateCollection = client
+            .getRequest(client.extractPath(client.cloudEntryPoint.getMachineTemplates().getHref()),
+                CimiMachineTemplateCollectionRoot.class);
         String addRef = Helper.findOperation("add", machineTemplateCollection);
         if (addRef == null) {
             throw new CimiException("Unsupported operation");
@@ -260,7 +260,7 @@ public class MachineTemplate extends Resource<CimiMachineTemplate> {
         return new UpdateResult<MachineTemplate>(job, machineTemplate);
     }
 
-    public static List<MachineTemplate> getMachineTemplates(final CimiClient client, final QueryParams queryParams)
+    public static List<MachineTemplate> getMachineTemplates(final CimiClient client, final QueryParams... queryParams)
         throws CimiException {
         if (client.cloudEntryPoint.getMachineTemplates() == null) {
             throw new CimiException("Unsupported operation");
@@ -279,12 +279,8 @@ public class MachineTemplate extends Resource<CimiMachineTemplate> {
         return result;
     }
 
-    public static MachineTemplate getMachineTemplateByReference(final CimiClient client, final String ref) throws CimiException {
-        return new MachineTemplate(client, client.getCimiObjectByReference(ref, CimiMachineTemplate.class));
-    }
-
     public static MachineTemplate getMachineTemplateByReference(final CimiClient client, final String ref,
-        final QueryParams queryParams) throws CimiException {
+        final QueryParams... queryParams) throws CimiException {
         return new MachineTemplate(client, client.getCimiObjectByReference(ref, CimiMachineTemplate.class, queryParams));
     }
 

@@ -87,7 +87,7 @@ public class Disk extends Resource<CimiMachineDisk> {
         return new CreateResult<Disk>(job, createdMachineDisk);
     }
 
-    public static List<Disk> getMachineDisks(final CimiClient client, final String machineId, final QueryParams queryParams)
+    public static List<Disk> getMachineDisks(final CimiClient client, final String machineId, final QueryParams... queryParams)
         throws CimiException {
         Machine machine = Machine.getMachineByReference(client, machineId);
         if (machine.cimiObject.getDisks() == null) {
@@ -95,7 +95,7 @@ public class Disk extends Resource<CimiMachineDisk> {
         }
 
         CimiMachineDiskCollection machineDiskCollection = client.getRequest(
-            client.extractPath(machine.cimiObject.getDisks().getHref()), CimiMachineDiskCollectionRoot.class, null);
+            client.extractPath(machine.cimiObject.getDisks().getHref()), CimiMachineDiskCollectionRoot.class);
         List<Disk> result = new ArrayList<Disk>();
 
         if (machineDiskCollection.getCollection() != null) {
@@ -106,8 +106,9 @@ public class Disk extends Resource<CimiMachineDisk> {
         return result;
     }
 
-    public static Disk getMachineDiskByReference(final CimiClient client, final String ref) throws CimiException {
-        return new Disk(client, client.getCimiObjectByReference(ref, CimiMachineDisk.class, null));
+    public static Disk getMachineDiskByReference(final CimiClient client, final String ref, final QueryParams... queryParams)
+        throws CimiException {
+        return new Disk(client, client.getCimiObjectByReference(ref, CimiMachineDisk.class, queryParams));
     }
 
 }

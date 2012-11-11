@@ -116,9 +116,8 @@ public class MachineImage extends Resource<CimiMachineImage> {
         if (client.cloudEntryPoint.getMachineImages() == null) {
             throw new CimiException("Unsupported operation");
         }
-        CimiMachineImageCollection machineImagesCollection = client
-            .getRequest(client.extractPath(client.cloudEntryPoint.getMachineImages().getHref()),
-                CimiMachineImageCollectionRoot.class, null);
+        CimiMachineImageCollection machineImagesCollection = client.getRequest(
+            client.extractPath(client.cloudEntryPoint.getMachineImages().getHref()), CimiMachineImageCollectionRoot.class);
         String addRef = Helper.findOperation("add", machineImagesCollection);
         if (addRef == null) {
             throw new CimiException("Unsupported operation");
@@ -157,7 +156,7 @@ public class MachineImage extends Resource<CimiMachineImage> {
         return new UpdateResult<MachineImage>(job, machineImage);
     }
 
-    public static List<MachineImage> getMachineImages(final CimiClient client, final QueryParams queryParams)
+    public static List<MachineImage> getMachineImages(final CimiClient client, final QueryParams... queryParams)
         throws CimiException {
         if (client.cloudEntryPoint.getMachineImages() == null) {
             throw new CimiException("Unsupported operation");
@@ -176,8 +175,9 @@ public class MachineImage extends Resource<CimiMachineImage> {
         return result;
     }
 
-    public static MachineImage getMachineImageByReference(final CimiClient client, final String ref) throws CimiException {
-        return new MachineImage(client, client.getCimiObjectByReference(ref, CimiMachineImage.class));
+    public static MachineImage getMachineImageByReference(final CimiClient client, final String ref,
+        final QueryParams... queryParams) throws CimiException {
+        return new MachineImage(client, client.getCimiObjectByReference(ref, CimiMachineImage.class, queryParams));
     }
 
 }

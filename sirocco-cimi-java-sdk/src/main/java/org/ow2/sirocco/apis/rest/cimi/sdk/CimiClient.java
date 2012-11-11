@@ -309,20 +309,20 @@ public class CimiClient {
         return new CimiClient(cimiEndpointUrl, userName, password, options);
     }
 
-    <U> U getRequest(final String path, final Class<U> clazz, final QueryParams queryParams) throws CimiException {
+    <U> U getRequest(final String path, final Class<U> clazz, final QueryParams... queryParams) throws CimiException {
         WebResource service = this.webResource.path(path);
-        if (queryParams != null) {
-            if (queryParams.getExpand() != null) {
-                service = service.queryParam(CimiClient.CIMI_QUERY_EXPAND_KEYWORD, queryParams.getExpand());
+        if (queryParams.length > 0) {
+            if (queryParams[0].getExpand() != null) {
+                service = service.queryParam(CimiClient.CIMI_QUERY_EXPAND_KEYWORD, queryParams[0].getExpand());
             }
-            for (String filter : queryParams.getFilters()) {
+            for (String filter : queryParams[0].getFilters()) {
                 service = service.queryParam(CimiClient.CIMI_QUERY_FILTER_KEYWORD, filter);
             }
-            if (queryParams.getFirst() != -1) {
-                service = service.queryParam(CimiClient.CIMI_QUERY_FIRST_KEYWORD, Integer.toString(queryParams.getFirst()));
+            if (queryParams[0].getFirst() != -1) {
+                service = service.queryParam(CimiClient.CIMI_QUERY_FIRST_KEYWORD, Integer.toString(queryParams[0].getFirst()));
             }
-            if (queryParams.getLast() != -1) {
-                service = service.queryParam(CimiClient.CIMI_QUERY_LAST_KEYWORD, Integer.toString(queryParams.getLast()));
+            if (queryParams[0].getLast() != -1) {
+                service = service.queryParam(CimiClient.CIMI_QUERY_LAST_KEYWORD, Integer.toString(queryParams[0].getLast()));
             }
         }
         ClientResponse response = this.addAuthenticationHeaders(service).accept(this.mediaType).get(ClientResponse.class);
@@ -400,13 +400,8 @@ public class CimiClient {
     }
 
     <U extends CimiObjectCommonAbstract> U getCimiObjectByReference(final String ref, final Class<U> clazz,
-        final QueryParams queryParams) throws CimiException {
+        final QueryParams... queryParams) throws CimiException {
         return this.getRequest(this.extractPath(ref), clazz, queryParams);
-    }
-
-    <U extends CimiObjectCommonAbstract> U getCimiObjectByReference(final String ref, final Class<U> clazz)
-        throws CimiException {
-        return this.getRequest(this.extractPath(ref), clazz, null);
     }
 
 }
