@@ -62,10 +62,6 @@ public class Volume extends Resource<CimiVolume> {
         return State.valueOf(this.cimiObject.getState());
     }
 
-    public void setType(final String type) {
-        this.cimiObject.setType(type);
-    }
-
     public String getType() {
         return this.cimiObject.getType();
     }
@@ -74,16 +70,8 @@ public class Volume extends Resource<CimiVolume> {
         return this.cimiObject.getCapacity();
     }
 
-    public void setCapacity(final int capacity) {
-        this.cimiObject.setCapacity(capacity);
-    }
-
     public boolean getBootable() {
         return this.cimiObject.getBootable();
-    }
-
-    public void setBootable(final boolean bootable) {
-        this.cimiObject.setBootable(bootable);
     }
 
     public Job delete() throws CimiException {

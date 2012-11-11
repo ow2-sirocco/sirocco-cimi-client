@@ -50,7 +50,7 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
         this.cimiObject.setHref(id);
     }
 
-    public SystemTemplate(final CimiClient cimiClient, final CimiSystemTemplate cimiObject) {
+    SystemTemplate(final CimiClient cimiClient, final CimiSystemTemplate cimiObject) {
         super(cimiClient, cimiObject);
     }
 

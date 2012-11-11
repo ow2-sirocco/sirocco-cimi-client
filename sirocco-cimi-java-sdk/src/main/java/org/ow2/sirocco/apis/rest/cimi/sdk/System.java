@@ -59,10 +59,6 @@ public class System extends Resource<CimiSystem> {
         super(cimiClient, cimiSystem);
     }
 
-    public CimiSystem getCimiSystem() {
-        return this.cimiObject;
-    }
-
     public State getState() {
         return State.valueOf(this.cimiObject.getState());
     }

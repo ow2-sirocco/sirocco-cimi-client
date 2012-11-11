@@ -44,7 +44,7 @@ public class Job extends Resource<CimiJob> {
     /**
      * Job status
      */
-    public static enum Status {
+    public static enum State {
         RUNNING, SUCCESS, FAILED, CANCELLED
     };
 
@@ -52,14 +52,24 @@ public class Job extends Resource<CimiJob> {
         super(cimiClient, cimiJob);
     }
 
-    public Status getState() {
-        return Status.valueOf(this.cimiObject.getStatus());
+    /**
+     * State of the job
+     */
+    public State getState() {
+        return State.valueOf(this.cimiObject.getStatus());
     }
 
+    /**
+     * A reference to the top-level resource upon which the operation is being
+     * performed
+     */
     public String getTargetResourceRef() {
         return this.cimiObject.getTargetResource().getHref();
     }
 
+    /**
+     * A list of references to resources that have been impacted by this Job
+     */
     public String[] getAffectedResourceRefs() {
         String result[] = new String[this.cimiObject.getAffectedResources() != null ? this.cimiObject.getAffectedResources().length
             : 0];
@@ -69,37 +79,62 @@ public class Job extends Resource<CimiJob> {
         return result;
     }
 
+    /**
+     * Type of action being performed.
+     */
     public String getAction() {
         return this.cimiObject.getAction();
     }
 
+    /**
+     * Human-readable string that provides information about the status of the
+     * Job.
+     */
     public String getStatusMessage() {
         return this.cimiObject.getStatusMessage();
     }
 
+    /**
+     * Last time that the status of the Job changed
+     */
     public Date getTimeOfStatusChange() {
         return this.cimiObject.getTimeOfStatusChange();
     }
 
+    /**
+     * True if the Job can be cancelled
+     */
     public Boolean getIsCancellable() {
         return this.cimiObject.getIsCancellable();
     }
 
+    /**
+     * Subordinate Job resources
+     */
     public NestedJob[] getNestedJobs() {
         return this.cimiObject.getNestedJobs();
     }
 
-    public CimiJob getCimiJob() {
-        return this.cimiObject;
-    }
-
+    /**
+     * Waits for the current Job to be completed. This method polls until which
+     * ever happens first: (1) the timeout happens, (2) the Job is no longer
+     * running
+     * 
+     * @param timeout timeout until which this method polls for the Job status
+     * @param period subsequent wait for Job checks take place at approximately
+     *        regular intervals separated by the specified period
+     * @param unit time unit in which timeout and period are specified
+     * @throws CimiException
+     * @throws TimeoutException raised if the timeout happens
+     * @throws InterruptedException raised if the method is interrupted
+     */
     public void waitForCompletion(final long timeout, final long period, final TimeUnit unit) throws CimiException,
         TimeoutException, InterruptedException {
         long endTime = java.lang.System.nanoTime() + unit.toNanos(timeout);
         long periodInMilliseconds = TimeUnit.MILLISECONDS.convert(period, unit);
         while (true) {
             this.cimiObject = this.cimiClient.getCimiObjectByReference(this.getId(), CimiJob.class);
-            if (this.getState() != Job.Status.RUNNING) {
+            if (this.getState() != Job.State.RUNNING) {
                 break;
             }
             if (java.lang.System.nanoTime() > endTime) {
@@ -109,12 +144,31 @@ public class Job extends Resource<CimiJob> {
         }
     }
 
+    /**
+     * Waits for the current Job to be completed. This method polls until which
+     * ever happens first: (1) the timeout happens, (2) the Job is no longer
+     * running
+     * 
+     * @param timeout timeout until which this method polls for the Job status
+     * @param unit time unit in which the timeout is specified
+     * @throws CimiException
+     * @throws TimeoutException raised if the timeout happens
+     * @throws InterruptedException raised if the method is interrupted
+     */
     public void waitForCompletion(final long timeout, final TimeUnit unit) throws CimiException, TimeoutException,
         InterruptedException {
         long period = unit.convert(this.DEFAULT_POLL_PERIOD_IN_SECONDS, TimeUnit.SECONDS);
         this.waitForCompletion(timeout, period, unit);
     }
 
+    /**
+     * Retrieves the collection of Jobs
+     * 
+     * @param client client handle
+     * @param queryParams optional query parameters
+     * @return a list of Job resources
+     * @throws CimiException
+     */
     public static List<Job> getJobs(final CimiClient client, final QueryParams... queryParams) throws CimiException {
         if (client.cloudEntryPoint.getJobs() == null) {
             throw new CimiException("Unsupported operation");
@@ -132,6 +186,15 @@ public class Job extends Resource<CimiJob> {
         return result;
     }
 
+    /**
+     * Retrieves a Job resource from its reference
+     * 
+     * @param client client handle
+     * @param ref reference to the Job
+     * @param queryParams optional query parameters
+     * @return the Job resource
+     * @throws CimiException
+     */
     public static Job getJobByReference(final CimiClient client, final String ref, final QueryParams... queryParams)
         throws CimiException {
         return new Job(client, client.getCimiObjectByReference(ref, CimiJob.class, queryParams));

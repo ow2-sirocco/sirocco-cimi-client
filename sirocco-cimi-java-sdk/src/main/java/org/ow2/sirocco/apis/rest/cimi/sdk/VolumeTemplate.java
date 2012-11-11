@@ -55,7 +55,7 @@ public class VolumeTemplate extends Resource<CimiVolumeTemplate> {
         super(null, cimiObject);
     }
 
-    public VolumeTemplate(final CimiClient cimiClient, final CimiVolumeTemplate cimiObject) {
+    VolumeTemplate(final CimiClient cimiClient, final CimiVolumeTemplate cimiObject) {
         super(cimiClient, cimiObject);
         if (cimiObject.getVolumeImage() != null) {
             this.volumeImage = new VolumeImage(cimiClient, cimiObject.getVolumeImage());

@@ -42,7 +42,8 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineNetworkInterf
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
 /**
- * Instantiated compute resource that encapsulates both CPU and Memory
+ * Instantiated compute resource that encapsulates CPU and Memory and local
+ * storage
  */
 public class Machine extends Resource<CimiMachine> {
     public static final String TYPE_URI = "http://schemas.dmtf.org/cimi/1/Machine";

@@ -95,7 +95,7 @@ public class MachineTemplate extends Resource<CimiMachineTemplate> {
         super(null, cimiObject);
     }
 
-    public MachineTemplate(final CimiClient cimiClient, final CimiMachineTemplate cimiObject) {
+    MachineTemplate(final CimiClient cimiClient, final CimiMachineTemplate cimiObject) {
         super(cimiClient, cimiObject);
         this.machineImage = new MachineImage(cimiClient, cimiObject.getMachineImage());
         this.machineConfig = new MachineConfiguration(cimiClient, cimiObject.getMachineConfig());

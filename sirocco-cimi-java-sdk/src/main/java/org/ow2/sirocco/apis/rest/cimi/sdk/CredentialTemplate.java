@@ -47,11 +47,11 @@ public class CredentialTemplate extends Resource<CimiCredentialTemplate> {
         this.cimiObject.setHref(id);
     }
 
-    public CredentialTemplate(final CimiCredentialTemplate cimiObject) {
+    CredentialTemplate(final CimiCredentialTemplate cimiObject) {
         super(null, cimiObject);
     }
 
-    public CredentialTemplate(final CimiClient cimiClient, final CimiCredentialTemplate cimiObject) {
+    CredentialTemplate(final CimiClient cimiClient, final CimiCredentialTemplate cimiObject) {
         super(cimiClient, cimiObject);
     }
 

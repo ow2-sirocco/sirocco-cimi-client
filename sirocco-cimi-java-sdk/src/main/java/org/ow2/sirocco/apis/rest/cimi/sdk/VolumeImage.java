@@ -30,7 +30,6 @@ import java.util.List;
 
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiVolumeImage;
-import org.ow2.sirocco.apis.rest.cimi.domain.ImageLocation;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeImageCollection;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeImageCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
@@ -71,22 +70,8 @@ public class VolumeImage extends Resource<CimiVolumeImage> {
         return this.cimiObject.getImageLocation().getHref();
     }
 
-    public void setImageLocation(final String imageLocation) {
-        ImageLocation loc = new ImageLocation();
-        loc.setHref(imageLocation);
-        this.cimiObject.setImageLocation(loc);
-    }
-
-    public void setState(final State state) {
-        this.cimiObject.setState(state.toString());
-    }
-
     public boolean getBootable() {
         return this.cimiObject.getBootable();
-    }
-
-    public void setBootable(final boolean bootable) {
-        this.cimiObject.setBootable(bootable);
     }
 
     public Job delete() throws CimiException {

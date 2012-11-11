@@ -68,10 +68,6 @@ public class MachineImage extends Resource<CimiMachineImage> {
         super(cimiClient, cimiMachineImage);
     }
 
-    public CimiMachineImage getCimiMachineImage() {
-        return this.cimiObject;
-    }
-
     public State getState() {
         return State.valueOf(this.cimiObject.getState());
     }
@@ -88,10 +84,6 @@ public class MachineImage extends Resource<CimiMachineImage> {
         ImageLocation loc = new ImageLocation();
         loc.setHref(imageLocation);
         this.cimiObject.setImageLocation(loc);
-    }
-
-    public void setState(final State state) {
-        this.cimiObject.setState(state.toString());
     }
 
     public void setType(final Type type) {

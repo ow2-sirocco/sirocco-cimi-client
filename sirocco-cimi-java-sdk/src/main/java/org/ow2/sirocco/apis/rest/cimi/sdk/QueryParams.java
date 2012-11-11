@@ -42,42 +42,74 @@ public class QueryParams {
     private QueryParams() {
     }
 
+    /**
+     * Returns new query parameter container
+     */
     public static QueryParams build() {
         return new QueryParams();
     }
 
+    /**
+     * (1-based) ordinal position of the first entity of the collection to
+     * return
+     */
     public QueryParams setFirst(final int first) {
         this.first = first;
         return this;
     }
 
+    /**
+     * (1-based) ordinal position of the last entity of the collection to return
+     */
     public QueryParams setLast(final int last) {
         this.last = last;
         return this;
     }
 
+    /**
+     * Adds a filter to reduce the number of entities to return
+     * 
+     * @param filter expression as defined in DMTF CIMI 1.0 specification,
+     *        section 4.1.6.1
+     * @return
+     */
     public QueryParams addFilter(final String filter) {
         this.filters.add(filter);
         return this;
     }
 
+    /**
+     * Comma-seperated list of reference attributes to be expanded
+     */
     public QueryParams setExpand(final String expand) {
         this.expand = expand;
         return this;
     }
 
+    /**
+     * Value of "first" query parameter
+     */
     public int getFirst() {
         return this.first;
     }
 
+    /**
+     * Value of "last" query parameter
+     */
     public int getLast() {
         return this.last;
     }
 
+    /**
+     * List of filter expressions
+     */
     public List<String> getFilters() {
         return this.filters;
     }
 
+    /**
+     * Value of "expand" query parameter
+     */
     public String getExpand() {
         return this.expand;
     }
