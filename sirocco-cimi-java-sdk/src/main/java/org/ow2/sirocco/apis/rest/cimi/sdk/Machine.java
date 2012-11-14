@@ -34,9 +34,11 @@ import org.ow2.sirocco.apis.rest.cimi.domain.ActionType;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiAction;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachine;
+import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineDisk;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineNetworkInterface;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineCollection;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineCollectionRoot;
+import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineDiskCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineNetworkInterfaceAddressCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineNetworkInterfaceCollectionRoot;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
@@ -76,8 +78,31 @@ public class Machine extends Resource<CimiMachine> {
         return this.cimiObject.getMemory();
     }
 
+    public List<Disk> getDisks() throws CimiException {
+        List<Disk> disks = new ArrayList<Disk>();
+        if (this.cimiObject.getDisks() == null || this.cimiObject.getDisks().getArray() == null) {
+            CimiMachineDiskCollectionRoot cimiDisks = this.cimiClient.getRequest(
+                this.cimiClient.extractPath(this.cimiObject.getDisks().getHref()), CimiMachineDiskCollectionRoot.class);
+            this.cimiObject.setDisks(cimiDisks);
+        }
+        for (CimiMachineDisk cimiDisk : this.cimiObject.getDisks().getArray()) {
+            disks.add(new Disk(this.cimiClient, cimiDisk));
+        }
+        return disks;
+    }
+
     public List<MachineNetworkInterface> getNetworkInterfaces() throws CimiException {
         List<MachineNetworkInterface> nics = new ArrayList<MachineNetworkInterface>();
+
+        if (this.cimiObject.getNetworkInterfaces() == null || this.cimiObject.getNetworkInterfaces().getArray() == null) {
+            String machineNicsRef = this.cimiObject.getNetworkInterfaces().getHref();
+            if (machineNicsRef != null) {
+                CimiMachineNetworkInterfaceCollectionRoot cimiNics = this.cimiClient.getRequest(
+                    this.cimiClient.extractPath(machineNicsRef), CimiMachineNetworkInterfaceCollectionRoot.class);
+                this.cimiObject.getNetworkInterfaces().setArray(cimiNics.getArray());
+            }
+        }
+
         if (this.cimiObject.getNetworkInterfaces() != null && this.cimiObject.getNetworkInterfaces().getArray() != null) {
             for (CimiMachineNetworkInterface cimiNic : this.cimiObject.getNetworkInterfaces().getArray()) {
                 if (cimiNic.getAddresses().getArray() == null) {
@@ -196,12 +221,6 @@ public class Machine extends Resource<CimiMachine> {
     public static Machine getMachineByReference(final CimiClient client, final String ref, final QueryParams... queryParams)
         throws CimiException {
         Machine result = new Machine(client, client.getCimiObjectByReference(ref, CimiMachine.class, queryParams));
-        if (result.cimiObject.getNetworkInterfaces() != null) {
-            String machineNicsRef = result.cimiObject.getNetworkInterfaces().getHref();
-            CimiMachineNetworkInterfaceCollectionRoot nics = client.getRequest(client.extractPath(machineNicsRef),
-                CimiMachineNetworkInterfaceCollectionRoot.class);
-            result.cimiObject.getNetworkInterfaces().setArray(nics.getArray());
-        }
         return result;
     }
 
