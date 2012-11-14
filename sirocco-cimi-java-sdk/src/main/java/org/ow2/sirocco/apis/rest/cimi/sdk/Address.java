@@ -130,7 +130,8 @@ public class Address extends Resource<CimiAddress> {
         return result;
     }
 
-    public static Address getAddressByReference(final CimiClient client, final String id) throws CimiException {
-        return new Address(client, client.getCimiObjectByReference(id, CimiAddress.class));
+    public static Address getAddressByReference(final CimiClient client, final String id, final QueryParams params)
+        throws CimiException {
+        return new Address(client, client.getCimiObjectByReference(id, CimiAddress.class, params));
     }
 }

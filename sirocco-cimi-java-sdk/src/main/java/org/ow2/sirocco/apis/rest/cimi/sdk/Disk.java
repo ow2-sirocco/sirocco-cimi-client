@@ -95,7 +95,7 @@ public class Disk extends Resource<CimiMachineDisk> {
         }
 
         CimiMachineDiskCollection machineDiskCollection = client.getRequest(
-            client.extractPath(machine.cimiObject.getDisks().getHref()), CimiMachineDiskCollectionRoot.class);
+            client.extractPath(machine.cimiObject.getDisks().getHref()), CimiMachineDiskCollectionRoot.class, queryParams);
         List<Disk> result = new ArrayList<Disk>();
 
         if (machineDiskCollection.getCollection() != null) {
