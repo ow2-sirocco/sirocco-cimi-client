@@ -315,6 +315,9 @@ public class CimiClient {
             if (queryParams[0].getExpand() != null) {
                 service = service.queryParam(CimiClient.CIMI_QUERY_EXPAND_KEYWORD, queryParams[0].getExpand());
             }
+            if (queryParams[0].getSelect() != null) {
+                service = service.queryParam(CimiClient.CIMI_QUERY_SELECT_KEYWORD, queryParams[0].getSelect());
+            }
             for (String filter : queryParams[0].getFilters()) {
                 service = service.queryParam(CimiClient.CIMI_QUERY_FILTER_KEYWORD, filter);
             }

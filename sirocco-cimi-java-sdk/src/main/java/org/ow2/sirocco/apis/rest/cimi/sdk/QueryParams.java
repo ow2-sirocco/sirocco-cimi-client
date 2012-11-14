@@ -30,6 +30,9 @@ import java.util.List;
 /**
  * Helper class used to specify query parameters when retrieving CIMI resources
  */
+/**
+ * @author dangtran
+ */
 public class QueryParams {
     private int first = -1;
 
@@ -38,6 +41,8 @@ public class QueryParams {
     private List<String> filters = new ArrayList<String>();
 
     private String expand = null;
+
+    private String select = null;
 
     private QueryParams() {
     }
@@ -112,6 +117,20 @@ public class QueryParams {
      */
     public String getExpand() {
         return this.expand;
+    }
+
+    /**
+     * Value of "select" query parameter
+     */
+    public String getSelect() {
+        return this.select;
+    }
+
+    /**
+     * Comma-separated list of attributes to be retrieved
+     */
+    public void setSelect(final String select) {
+        this.select = select;
     }
 
 }
