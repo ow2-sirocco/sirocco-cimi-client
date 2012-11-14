@@ -48,7 +48,7 @@ public class SystemStopCommand implements Command {
         Job job = system.stop();
         java.lang.System.out.println("Stopping system " + this.systemId);
         if (job != null) {
-            JobListCommand.printJob(job);
+            JobShowCommand.printJob(job, new ResourceSelectExpandParams());
         }
     }
 }

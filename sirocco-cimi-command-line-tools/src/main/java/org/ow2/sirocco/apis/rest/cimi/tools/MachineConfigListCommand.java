@@ -31,21 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineConfiguration;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list machine config")
 public class MachineConfigListCommand implements Command {
-    public static String COMMAND_NAME = "machineconfig-list";
+    public static final String COMMAND_NAME = "machineconfig-list";
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "cpu", "memory", "disks");
 
     @Override
     public String getName() {
@@ -55,31 +49,30 @@ public class MachineConfigListCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         List<MachineConfiguration> machineConfigs = MachineConfiguration.getMachineConfigurations(cimiClient,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, null));
+            this.listParams.buildQueryParams());
 
-        Table table = new Table(6);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("Description");
-        table.addCell("Cpu");
-        table.addCell("Memory (KB)");
-        table.addCell("Disks (KB)");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties", "cpu", "memory", "disks", "cpuArch");
 
         for (MachineConfiguration machineConfig : machineConfigs) {
-            table.addCell(machineConfig.getId());
-            table.addCell(machineConfig.getName());
-            table.addCell(machineConfig.getDescription());
-            table.addCell(Integer.toString(machineConfig.getCpu()));
-            table.addCell(Integer.toString(machineConfig.getMemory()));
-
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < machineConfig.getDisks().length; i++) {
-                if (i > 0) {
-                    sb.append(", ");
-                }
-                sb.append(machineConfig.getDisks()[i].capacity);
+            CommandHelper.printResourceCommonAttributes(table, machineConfig, this.listParams);
+            if (this.listParams.isSelected("cpu")) {
+                table.addCell(Integer.toString(machineConfig.getCpu()));
             }
-            table.addCell((sb.toString()));
+            if (this.listParams.isSelected("memory")) {
+                table.addCell(Integer.toString(machineConfig.getMemory()));
+            }
+
+            if (this.listParams.isSelected("disks")) {
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < machineConfig.getDisks().length; i++) {
+                    if (i > 0) {
+                        sb.append(", ");
+                    }
+                    sb.append(machineConfig.getDisks()[i].capacity + "KB");
+                }
+                table.addCell((sb.toString()));
+            }
         }
         System.out.println(table.render());
 

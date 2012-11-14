@@ -24,8 +24,6 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
-import java.util.Map;
-
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -33,11 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.Network;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show network")
 public class NetworkShowCommand implements Command {
     @Parameter(names = "-id", description = "id of the network", required = true)
     private String networkId;
+
+    @ParametersDelegate
+    private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
 
     @Override
     public String getName() {
@@ -46,43 +48,21 @@ public class NetworkShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Network net = Network.getNetworkByReference(cimiClient, this.networkId);
+        Network net = Network.getNetworkByReference(cimiClient, this.networkId, this.showParams.buildQueryParams());
+        NetworkShowCommand.printNetwork(net, this.showParams);
+    }
 
-        Table table = new Table(2);
-        table.addCell("Attribute");
-        table.addCell("Value");
+    public static void printNetwork(final Network net, final ResourceSelectExpandParams showParams) throws CimiException {
+        Table table = CommandHelper.createResourceShowTable(net, showParams);
 
-        table.addCell("id");
-        table.addCell(net.getId());
-
-        table.addCell("name");
-        table.addCell(net.getName());
-        table.addCell("description");
-        table.addCell(net.getDescription());
-
-        table.addCell("state");
-        table.addCell(net.getState().toString());
-
-        table.addCell("type");
-        table.addCell(net.getNetworkType());
-
-        table.addCell("created");
-        table.addCell(net.getCreated().toString());
-        table.addCell("updated");
-        if (net.getUpdated() != null) {
-            table.addCell(net.getUpdated().toString());
-        } else {
-            table.addCell("");
+        if (showParams.isSelected("state")) {
+            table.addCell("state");
+            table.addCell(net.getState().toString());
         }
-        table.addCell("properties");
-        StringBuffer sb = new StringBuffer();
-        if (net.getProperties() != null) {
-            for (Map.Entry<String, String> prop : net.getProperties().entrySet()) {
-                sb.append("(" + prop.getKey() + "," + prop.getValue() + ") ");
-            }
+        if (showParams.isSelected("networkType")) {
+            table.addCell("network type");
+            table.addCell(net.getNetworkType());
         }
-        table.addCell(sb.toString());
-
         System.out.println(table.render());
     }
 

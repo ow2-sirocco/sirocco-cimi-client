@@ -47,6 +47,8 @@ public class VolumeDeleteCommand implements Command {
         Volume volume = Volume.getVolumeByReference(cimiClient, this.volumeId);
         Job job = volume.delete();
         System.out.println("Volume " + this.volumeId + " being deleted");
-        JobListCommand.printJob(job);
+        if (job != null) {
+            JobShowCommand.printJob(job, new ResourceSelectExpandParams());
+        }
     }
 }

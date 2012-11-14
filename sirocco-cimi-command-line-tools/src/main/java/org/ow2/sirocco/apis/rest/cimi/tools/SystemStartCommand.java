@@ -48,7 +48,7 @@ public class SystemStartCommand implements Command {
         Job job = system.start();
         java.lang.System.out.println("Starting system " + this.systemId);
         if (job != null) {
-            JobListCommand.printJob(job);
+            JobShowCommand.printJob(job, new ResourceSelectExpandParams());
         }
     }
 }

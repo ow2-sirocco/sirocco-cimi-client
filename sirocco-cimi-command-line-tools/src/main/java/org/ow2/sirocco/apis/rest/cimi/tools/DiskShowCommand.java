@@ -24,8 +24,6 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
-import java.util.Map;
-
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -33,11 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.Disk;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show disk")
 public class DiskShowCommand implements Command {
     @Parameter(names = "-id", description = "id of the Disk", required = true)
     private String diskId;
+
+    @ParametersDelegate
+    private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
 
     @Override
     public String getName() {
@@ -46,43 +48,21 @@ public class DiskShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Disk disk = Disk.getMachineDiskByReference(cimiClient, this.diskId);
-        DiskShowCommand.printDisk(disk);
+        Disk disk = Disk.getMachineDiskByReference(cimiClient, this.diskId, this.showParams.buildQueryParams());
+        DiskShowCommand.printDisk(disk, this.showParams);
     }
 
-    public static void printDisk(final Disk disk) {
-        Table table = new Table(2);
-        table.addCell("Attribute");
-        table.addCell("Value");
+    public static void printDisk(final Disk disk, final ResourceSelectExpandParams showParams) throws CimiException {
+        Table table = CommandHelper.createResourceShowTable(disk, showParams);
 
-        table.addCell("id");
-        table.addCell(disk.getId());
-
-        table.addCell("capacity (KB)");
-        table.addCell(Integer.toString(disk.getCapacity()));
-
-        table.addCell("initial location");
-        table.addCell(disk.getInitialLocation());
-
-        table.addCell("description");
-        table.addCell(disk.getDescription());
-        if (disk.getCreated() != null) {
-            table.addCell("created");
-            table.addCell(disk.getCreated().toString());
+        if (showParams.isSelected("capacity")) {
+            table.addCell("capacity (KB)");
+            table.addCell(Integer.toString(disk.getCapacity()));
         }
-        if (disk.getUpdated() != null) {
-            table.addCell("updated");
-            table.addCell(disk.getUpdated().toString());
+        if (showParams.isSelected("initialLocation")) {
+            table.addCell("initial location");
+            table.addCell(disk.getInitialLocation());
         }
-        table.addCell("properties");
-        StringBuffer sb = new StringBuffer();
-        if (disk.getProperties() != null) {
-            for (Map.Entry<String, String> prop : disk.getProperties().entrySet()) {
-                sb.append("(" + prop.getKey() + "," + prop.getValue() + ") ");
-            }
-        }
-        table.addCell(sb.toString());
-
         System.out.println(table.render());
     }
 

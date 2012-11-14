@@ -75,7 +75,7 @@ public class MachineUpdateCommand implements Command {
         UpdateResult<Machine> result = Machine.updateMachine(cimiClient, this.machineId, attributeValues);
         if (result.getJob() != null) {
             System.out.println("Machine " + result.getJob().getTargetResourceRef() + " being updated");
-            JobListCommand.printJob(result.getJob());
+            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
         } else {
             System.out.println("Machine: " + this.machineId + " updated");
         }

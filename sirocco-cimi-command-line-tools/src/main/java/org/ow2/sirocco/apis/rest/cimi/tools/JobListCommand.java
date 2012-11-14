@@ -30,24 +30,15 @@ import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Job;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list jobs")
 public class JobListCommand implements Command {
     public static String COMMAND_NAME = "job-list";
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
-
-    @Parameter(names = "-expand", description = "job properties to expand", required = false)
-    private String expand;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "state", "action", "targetResource");
 
     @Override
     public String getName() {
@@ -56,44 +47,34 @@ public class JobListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws Exception {
-        List<Job> jobs = Job.getJobs(cimiClient,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, this.expand));
+        List<Job> jobs = Job.getJobs(cimiClient, this.listParams.buildQueryParams());
 
-        Table table = new Table(6);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("Description");
-        table.addCell("State");
-        table.addCell("Action");
-        table.addCell("Target entity ref");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties", "state", "targetResource", "action", "statusMessage", "timeOfStatusChange");
 
         for (Job job : jobs) {
-            table.addCell(job.getId());
-            table.addCell(job.getName());
-            table.addCell(job.getDescription());
-            table.addCell(job.getState().toString());
-            table.addCell(job.getAction());
-            table.addCell(job.getTargetResourceRef());
+            CommandHelper.printResourceCommonAttributes(table, job, this.listParams);
+            if (this.listParams.isSelected("state")) {
+                table.addCell(job.getState().toString());
+            }
+            if (this.listParams.isSelected("targetResource")) {
+                table.addCell(job.getTargetResourceRef());
+            }
+            if (this.listParams.isSelected("action")) {
+                table.addCell(job.getAction());
+            }
+            if (this.listParams.isSelected("statusMessage")) {
+                table.addCell(job.getStatusMessage());
+            }
+            if (this.listParams.isSelected("timeOfStatusChange")) {
+                if (job.getTimeOfStatusChange() != null) {
+                    table.addCell(job.getTimeOfStatusChange().toString());
+                } else {
+                    table.addCell("");
+                }
+            }
         }
         System.out.println(table.render());
     }
 
-    public static void printJob(final Job job) {
-        Table table = new Table(6);
-        table.addCell("Job ID");
-        table.addCell("Name");
-        table.addCell("Description");
-        table.addCell("State");
-        table.addCell("Action");
-        table.addCell("Target entity");
-
-        table.addCell(job.getId());
-        table.addCell(job.getName());
-        table.addCell(job.getDescription());
-        table.addCell(job.getState().toString());
-        table.addCell(job.getAction());
-        table.addCell(job.getTargetResourceRef());
-
-        System.out.println(table.render());
-    }
 }

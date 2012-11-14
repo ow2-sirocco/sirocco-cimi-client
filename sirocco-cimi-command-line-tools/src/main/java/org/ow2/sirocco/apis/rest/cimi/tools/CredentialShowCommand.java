@@ -24,8 +24,6 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
-import java.util.Map;
-
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -33,11 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.Credential;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show credential")
 public class CredentialShowCommand implements Command {
     @Parameter(names = "-id", description = "id of the credential", required = true)
     private String credentialId;
+
+    @ParametersDelegate
+    private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
 
     @Override
     public String getName() {
@@ -46,45 +48,21 @@ public class CredentialShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Credential cred = Credential.getCredentialByReference(cimiClient, this.credentialId);
-        CredentialShowCommand.printCredential(cred);
+        Credential cred = Credential
+            .getCredentialByReference(cimiClient, this.credentialId, this.showParams.buildQueryParams());
+        CredentialShowCommand.printCredential(cred, this.showParams);
     }
 
-    public static void printCredential(final Credential cred) {
-        Table table = new Table(2);
-        table.addCell("Attribute");
-        table.addCell("Value");
-
-        table.addCell("id");
-        table.addCell(cred.getId());
-
-        table.addCell("name");
-        table.addCell(cred.getName());
-        table.addCell("description");
-        table.addCell(cred.getDescription());
-        table.addCell("public key");
-        if (cred.getPublicKey() != null) {
-            table.addCell(cred.getPublicKey().substring(0, 10) + "...");
-        } else {
-            table.addCell("");
-        }
-        table.addCell("created");
-        table.addCell(cred.getCreated().toString());
-        table.addCell("updated");
-        if (cred.getUpdated() != null) {
-            table.addCell(cred.getUpdated().toString());
-        } else {
-            table.addCell("");
-        }
-        table.addCell("properties");
-        StringBuffer sb = new StringBuffer();
-        if (cred.getProperties() != null) {
-            for (Map.Entry<String, String> prop : cred.getProperties().entrySet()) {
-                sb.append("(" + prop.getKey() + "," + prop.getValue() + ") ");
+    public static void printCredential(final Credential cred, final ResourceSelectExpandParams showParams) throws CimiException {
+        Table table = CommandHelper.createResourceShowTable(cred, showParams);
+        if (showParams.isSelected("publicKey")) {
+            table.addCell("public key");
+            if (cred.getPublicKey() != null) {
+                table.addCell(cred.getPublicKey().substring(0, 10) + "...");
+            } else {
+                table.addCell("");
             }
         }
-        table.addCell(sb.toString());
-
         System.out.println(table.render());
     }
 

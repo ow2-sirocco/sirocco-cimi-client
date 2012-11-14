@@ -24,10 +24,19 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.Map;
+
+import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.QueryParams;
+import org.ow2.sirocco.apis.rest.cimi.sdk.Resource;
 
 public class CommandHelper {
     public static QueryParams buildQueryParams(final Integer first, final Integer last, final String filter, final String expand) {
+        return CommandHelper.buildQueryParams(first, last, filter, expand, null);
+    }
+
+    public static QueryParams buildQueryParams(final Integer first, final Integer last, final String filter,
+        final String expand, final String select) {
         QueryParams params = QueryParams.build();
         if (first != null) {
             params.setFirst(first);
@@ -41,6 +50,110 @@ public class CommandHelper {
         if (expand != null) {
             params.setExpand(expand);
         }
+        if (select != null) {
+            params.setSelect(select);
+        }
         return params;
     }
+
+    public static Table createResourceListTable(final ResourceListParams listParams, final String... attributes) {
+        int numAttr = listParams.isSelected(attributes);
+        Table table = new Table(numAttr);
+        for (String attribute : attributes) {
+            if (listParams.isSelected(attribute)) {
+                table.addCell(attribute);
+            }
+        }
+        return table;
+    }
+
+    public static Table createResourceShowTable(final Resource<?> resource, final ResourceSelectParam selectParam) {
+        Table table = new Table(2);
+        table.addCell("Attribute");
+        table.addCell("Value");
+
+        if (selectParam.isSelected("id")) {
+            table.addCell("id");
+            table.addCell(resource.getId());
+        }
+
+        if (selectParam.isSelected("name")) {
+            table.addCell("name");
+            table.addCell(resource.getName());
+        }
+
+        if (selectParam.isSelected("description")) {
+            table.addCell("description");
+            table.addCell(resource.getDescription());
+        }
+
+        if (selectParam.isSelected("created")) {
+            table.addCell("created");
+            if (resource.getCreated() != null) {
+                table.addCell(resource.getCreated().toString());
+            } else {
+                table.addCell("");
+            }
+        }
+        if (selectParam.isSelected("updated")) {
+            table.addCell("updated");
+            if (resource.getUpdated() != null) {
+                table.addCell(resource.getUpdated().toString());
+            } else {
+                table.addCell("");
+            }
+        }
+        if (selectParam.isSelected("properties")) {
+            table.addCell("properties");
+            StringBuffer sb = new StringBuffer();
+            if (resource.getProperties() != null) {
+                for (Map.Entry<String, String> prop : resource.getProperties().entrySet()) {
+                    sb.append("(" + prop.getKey() + "," + prop.getValue() + ") ");
+                }
+            }
+            table.addCell(sb.toString());
+        }
+        return table;
+    }
+
+    public static void printResourceCommonAttributes(final Table table, final Resource<?> resource,
+        final ResourceSelectParam selectParam) {
+        if (selectParam.isSelected("id")) {
+            table.addCell(resource.getId());
+        }
+        if (selectParam.isSelected("name")) {
+            if (resource.getName() != null) {
+                table.addCell(resource.getName());
+            } else {
+                table.addCell("");
+            }
+        }
+        if (selectParam.isSelected("description")) {
+            if (resource.getDescription() != null) {
+                table.addCell(resource.getDescription());
+            } else {
+                table.addCell("");
+            }
+        }
+        if (selectParam.isSelected("created")) {
+            table.addCell(resource.getCreated() != null ? resource.getCreated().toString() : "");
+        }
+        if (selectParam.isSelected("updated")) {
+            if (resource.getUpdated() != null) {
+                table.addCell(resource.getUpdated().toString());
+            } else {
+                table.addCell("");
+            }
+        }
+        if (selectParam.isSelected("properties")) {
+            StringBuffer sb = new StringBuffer();
+            if (resource.getProperties() != null) {
+                for (Map.Entry<String, String> prop : resource.getProperties().entrySet()) {
+                    sb.append("(" + prop.getKey() + "," + prop.getValue() + ") ");
+                }
+            }
+            table.addCell(sb.toString());
+        }
+    }
+
 }

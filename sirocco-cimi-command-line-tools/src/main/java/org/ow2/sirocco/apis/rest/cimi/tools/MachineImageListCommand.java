@@ -31,21 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineImage;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list machine images")
 public class MachineImageListCommand implements Command {
     public static String COMMAND_NAME = "machineimage-list";
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "state", "type", "imageLocation");
 
     @Override
     public String getName() {
@@ -54,20 +48,26 @@ public class MachineImageListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<MachineImage> machineImages = MachineImage.getMachineImages(cimiClient,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, null));
+        List<MachineImage> machineImages = MachineImage.getMachineImages(cimiClient, this.listParams.buildQueryParams());
 
-        Table table = new Table(4);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("Description");
-        table.addCell("Image location");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties", "state", "type", "imageLocation", "relatedImage");
 
         for (MachineImage machineImage : machineImages) {
-            table.addCell(machineImage.getId());
-            table.addCell(machineImage.getName());
-            table.addCell(machineImage.getDescription());
-            table.addCell(machineImage.getImageLocation());
+            CommandHelper.printResourceCommonAttributes(table, machineImage, this.listParams);
+            if (this.listParams.isSelected("state")) {
+                table.addCell(machineImage.getState().toString());
+            }
+            if (this.listParams.isSelected("type")) {
+                table.addCell(machineImage.getType().toString());
+            }
+            if (this.listParams.isSelected("imageLocation")) {
+                table.addCell(machineImage.getImageLocation());
+            }
+            if (this.listParams.isSelected("relatedImage")) {
+                // TODO
+            }
+
         }
         System.out.println(table.render());
     }

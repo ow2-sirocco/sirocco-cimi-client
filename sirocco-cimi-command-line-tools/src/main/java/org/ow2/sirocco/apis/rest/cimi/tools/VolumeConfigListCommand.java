@@ -31,21 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.VolumeConfiguration;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list volume config")
 public class VolumeConfigListCommand implements Command {
     public static String COMMAND_NAME = "volumeconfig-list";
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "capacity");
 
     @Override
     public String getName() {
@@ -55,21 +49,23 @@ public class VolumeConfigListCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         List<VolumeConfiguration> volumeConfigs = VolumeConfiguration.getVolumeConfigurations(cimiClient,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, null));
+            this.listParams.buildQueryParams());
 
-        Table table = new Table(5);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("Description");
-        table.addCell("Capacity (KB)");
-        table.addCell("Format");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties", "type", "format", "capacity");
 
         for (VolumeConfiguration volumeConfig : volumeConfigs) {
-            table.addCell(volumeConfig.getId());
-            table.addCell(volumeConfig.getName());
-            table.addCell(volumeConfig.getDescription());
-            table.addCell(Integer.toString(volumeConfig.getCapacity()));
-            table.addCell(volumeConfig.getFormat());
+            CommandHelper.printResourceCommonAttributes(table, volumeConfig, this.listParams);
+            if (this.listParams.isSelected("type")) {
+                table.addCell(volumeConfig.getType());
+            }
+            if (this.listParams.isSelected("format")) {
+                table.addCell(volumeConfig.getFormat());
+            }
+            if (this.listParams.isSelected("capacity")) {
+                table.addCell(Integer.toString(volumeConfig.getCapacity()) + "KB");
+            }
+
         }
         System.out.println(table.render());
 

@@ -31,24 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineTemplate;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list machine templates")
 public class MachineTemplateListCommand implements Command {
     public static String COMMAND_NAME = "machinetemplate-list";
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
-
-    @Parameter(names = "-expand", description = "expand machine properties", required = false)
-    private String expand;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "machineConfig", "machineImage");
 
     @Override
     public String getName() {
@@ -58,21 +49,22 @@ public class MachineTemplateListCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         List<MachineTemplate> machineTemplates = MachineTemplate.getMachineTemplates(cimiClient,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, this.expand));
+            this.listParams.buildQueryParams());
 
-        Table table = new Table(3);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("Description");
-        // table.addCell("Machine Config Id");
-        // table.addCell("Machine Image Id");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties", "machineConfig", "machineImage", "credential");
 
         for (MachineTemplate machineTemplate : machineTemplates) {
-            table.addCell(machineTemplate.getId());
-            table.addCell(machineTemplate.getName());
-            table.addCell(machineTemplate.getDescription());
-            // table.addCell(machineTemplate.getMachineConfig().getId());
-            // table.addCell(machineTemplate.getMachineImage().getId());
+            CommandHelper.printResourceCommonAttributes(table, machineTemplate, this.listParams);
+            if (this.listParams.isSelected("machineConfig")) {
+                table.addCell(machineTemplate.getMachineConfig().getId());
+            }
+            if (this.listParams.isSelected("machineImage")) {
+                table.addCell(machineTemplate.getMachineImage().getId());
+            }
+            if (this.listParams.isSelected("credential")) {
+                table.addCell(machineTemplate.getCredential().getId());
+            }
         }
         System.out.println(table.render());
     }

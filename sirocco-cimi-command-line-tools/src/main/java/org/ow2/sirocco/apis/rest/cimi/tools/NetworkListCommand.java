@@ -31,21 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Network;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list networks")
 public class NetworkListCommand implements Command {
     public static String COMMAND_NAME = "network-list";
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "state", "networkType");
 
     @Override
     public String getName() {
@@ -54,20 +48,19 @@ public class NetworkListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<Network> nets = Network.getNetworks(cimiClient,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, null));
+        List<Network> nets = Network.getNetworks(cimiClient, this.listParams.buildQueryParams());
 
-        Table table = new Table(4);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("State");
-        table.addCell("Type");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties", "state", "networkType");
 
         for (Network net : nets) {
-            table.addCell(net.getId());
-            table.addCell(net.getName());
-            table.addCell(net.getState().toString());
-            table.addCell(net.getNetworkType());
+            CommandHelper.printResourceCommonAttributes(table, net, this.listParams);
+            if (this.listParams.isSelected("state")) {
+                table.addCell(net.getState().toString());
+            }
+            if (this.listParams.isSelected("networkType")) {
+                table.addCell(net.getNetworkType());
+            }
         }
         System.out.println(table.render());
     }

@@ -24,8 +24,6 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
-import java.util.Map;
-
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -34,11 +32,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.MachineConfiguration.Disk;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show machine config")
 public class MachineConfigShowCommand implements Command {
     @Parameter(names = "-id", description = "id of the machine config", required = true)
     private String machineConfigId;
+
+    @ParametersDelegate
+    private ResourceSelectParam selectParam = new ResourceSelectParam();
 
     @Override
     public String getName() {
@@ -48,51 +50,31 @@ public class MachineConfigShowCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         MachineConfiguration machineConfig = MachineConfiguration.getMachineConfigurationByReference(cimiClient,
-            this.machineConfigId);
-        MachineConfigShowCommand.printMachineConfig(machineConfig);
+            this.machineConfigId, this.selectParam.buildQueryParams());
+        MachineConfigShowCommand.printMachineConfig(machineConfig, this.selectParam);
     }
 
-    public static void printMachineConfig(final MachineConfiguration machineConfig) {
-        Table table = new Table(2);
-        table.addCell("Attribute");
-        table.addCell("Value");
+    public static void printMachineConfig(final MachineConfiguration machineConfig, final ResourceSelectParam selectParam) {
+        Table table = CommandHelper.createResourceShowTable(machineConfig, selectParam);
 
-        table.addCell("id");
-        table.addCell(machineConfig.getId());
-
-        table.addCell("name");
-        table.addCell(machineConfig.getName());
-
-        table.addCell("description");
-        table.addCell(machineConfig.getDescription());
-        table.addCell("cpu");
-        table.addCell(Integer.toString(machineConfig.getCpu()));
-        table.addCell("memory (KB)");
-        table.addCell(Integer.toString(machineConfig.getMemory()));
-
-        for (int i = 0; i < machineConfig.getDisks().length; i++) {
-            Disk disk = machineConfig.getDisks()[i];
-            table.addCell("disk #" + i);
-            table.addCell("capacity=" + disk.capacity + "KB, format=" + disk.format + ", initialLocation="
-                + disk.initialLocation);
+        if (selectParam.isSelected("cpu")) {
+            table.addCell("cpu");
+            table.addCell(Integer.toString(machineConfig.getCpu()));
         }
 
-        table.addCell("created");
-        table.addCell(machineConfig.getCreated().toString());
-        table.addCell("updated");
-        if (machineConfig.getUpdated() != null) {
-            table.addCell(machineConfig.getUpdated().toString());
-        } else {
-            table.addCell("");
+        if (selectParam.isSelected("memory")) {
+            table.addCell("memory (KB)");
+            table.addCell(Integer.toString(machineConfig.getMemory()));
         }
-        table.addCell("properties");
-        StringBuffer sb = new StringBuffer();
-        if (machineConfig.getProperties() != null) {
-            for (Map.Entry<String, String> prop : machineConfig.getProperties().entrySet()) {
-                sb.append("(" + prop.getKey() + "," + prop.getValue() + ") ");
+
+        if (selectParam.isSelected("disks")) {
+            for (int i = 0; i < machineConfig.getDisks().length; i++) {
+                Disk disk = machineConfig.getDisks()[i];
+                table.addCell("disk #" + i);
+                table.addCell("capacity=" + disk.capacity + "KB, format=" + disk.format + ", initialLocation="
+                    + disk.initialLocation);
             }
         }
-        table.addCell(sb.toString());
 
         System.out.println(table.render());
     }

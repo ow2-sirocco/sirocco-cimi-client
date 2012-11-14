@@ -31,24 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Volume;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list volumes")
 public class VolumeListCommand implements Command {
     public static String COMMAND_NAME = "volume-list";
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
-
-    @Parameter(names = "-expand", description = "volume properties to expand", required = false)
-    private String expand;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "state", "capacity");
 
     @Override
     public String getName() {
@@ -57,24 +48,25 @@ public class VolumeListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<Volume> volumes = Volume.getVolumes(cimiClient,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, this.expand));
+        List<Volume> volumes = Volume.getVolumes(cimiClient, this.listParams.buildQueryParams());
 
-        Table table = new Table(6);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("Description");
-        table.addCell("State");
-        table.addCell("Capacity (MB)");
-        table.addCell("Bootable");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties", "state", "type", "capacity", "bootable");
 
         for (Volume volume : volumes) {
-            table.addCell(volume.getId());
-            table.addCell(volume.getName());
-            table.addCell(volume.getDescription());
-            table.addCell(volume.getState().toString());
-            table.addCell(Integer.toString(volume.getCapacity()));
-            table.addCell(Boolean.toString(volume.getBootable()));
+            CommandHelper.printResourceCommonAttributes(table, volume, this.listParams);
+            if (this.listParams.isSelected("state")) {
+                table.addCell(volume.getState().toString());
+            }
+            if (this.listParams.isSelected("type")) {
+                table.addCell(volume.getType());
+            }
+            if (this.listParams.isSelected("capacity")) {
+                table.addCell(Integer.toString(volume.getCapacity()) + "KB");
+            }
+            if (this.listParams.isSelected("bootable")) {
+                table.addCell(Boolean.toString(volume.getBootable()));
+            }
         }
         System.out.println(table.render());
     }

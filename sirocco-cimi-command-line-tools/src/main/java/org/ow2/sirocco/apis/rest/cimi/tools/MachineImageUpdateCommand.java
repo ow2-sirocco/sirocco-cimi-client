@@ -81,7 +81,7 @@ public class MachineImageUpdateCommand implements Command {
         UpdateResult<MachineImage> result = MachineImage.updateMachineImage(cimiClient, this.machineImageId, attributeValues);
         if (result.getJob() != null) {
             System.out.println("MachineImage " + result.getJob().getTargetResourceRef() + " being updated");
-            JobListCommand.printJob(result.getJob());
+            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
         } else {
             System.out.println("MachineImage: " + this.machineImageId + " updated");
         }

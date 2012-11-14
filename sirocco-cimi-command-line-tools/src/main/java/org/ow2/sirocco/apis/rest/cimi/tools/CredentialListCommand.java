@@ -31,21 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Credential;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list machine images")
 public class CredentialListCommand implements Command {
     public static String COMMAND_NAME = "credential-list";
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "name");
 
     @Override
     public String getName() {
@@ -54,23 +48,19 @@ public class CredentialListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<Credential> creds = Credential.getCredentials(cimiClient,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, null));
+        List<Credential> creds = Credential.getCredentials(cimiClient, this.listParams.buildQueryParams());
 
-        Table table = new Table(4);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("Description");
-        table.addCell("Public key");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties", "publicKey");
 
         for (Credential cred : creds) {
-            table.addCell(cred.getId());
-            table.addCell(cred.getName());
-            table.addCell(cred.getDescription());
-            if (cred.getPublicKey() != null) {
-                table.addCell(cred.getPublicKey().substring(0, 10) + "...");
-            } else {
-                table.addCell("");
+            CommandHelper.printResourceCommonAttributes(table, cred, this.listParams);
+            if (this.listParams.isSelected("publicKey")) {
+                if (cred.getPublicKey() != null) {
+                    table.addCell(cred.getPublicKey().substring(0, 10) + "...");
+                } else {
+                    table.addCell("");
+                }
             }
         }
         System.out.println(table.render());

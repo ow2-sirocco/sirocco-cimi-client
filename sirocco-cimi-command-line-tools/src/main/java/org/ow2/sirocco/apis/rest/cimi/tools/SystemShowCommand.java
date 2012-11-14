@@ -24,24 +24,22 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
-import java.util.Map;
-
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
-import org.ow2.sirocco.apis.rest.cimi.sdk.QueryParams;
 import org.ow2.sirocco.apis.rest.cimi.sdk.System;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show system")
 public class SystemShowCommand implements Command {
     @Parameter(names = "-id", description = "id of the system", required = true)
     private String systemId;
 
-    @Parameter(names = "-expand", description = "system properties to expand", required = false)
-    private String expand;
+    @ParametersDelegate
+    private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
 
     @Override
     public String getName() {
@@ -50,40 +48,17 @@ public class SystemShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        System system = System.getSystemByReference(cimiClient, this.systemId, QueryParams.build().setExpand(this.expand));
-        SystemShowCommand.printSystem(system);
+        System system = System.getSystemByReference(cimiClient, this.systemId, this.showParams.buildQueryParams());
+        SystemShowCommand.printSystem(system, this.showParams);
     }
 
-    public static void printSystem(final System system) {
-        Table table = new Table(2);
-        table.addCell("Attribute");
-        table.addCell("Value");
+    public static void printSystem(final System system, final ResourceSelectExpandParams showParams) throws CimiException {
+        Table table = CommandHelper.createResourceShowTable(system, showParams);
 
-        table.addCell("id");
-        table.addCell(system.getId());
-
-        table.addCell("name");
-        table.addCell(system.getName());
-        table.addCell("description");
-        table.addCell(system.getDescription());
-        table.addCell("status");
-        table.addCell(system.getState().toString());
-        table.addCell("created");
-        table.addCell(system.getCreated().toString());
-        table.addCell("updated");
-        if (system.getUpdated() != null) {
-            table.addCell(system.getUpdated().toString());
-        } else {
-            table.addCell("");
+        if (showParams.isSelected("state")) {
+            table.addCell("state");
+            table.addCell(system.getState().toString());
         }
-        table.addCell("properties");
-        StringBuffer sb = new StringBuffer();
-        if (system.getProperties() != null) {
-            for (Map.Entry<String, String> prop : system.getProperties().entrySet()) {
-                sb.append("(" + prop.getKey() + "," + prop.getValue() + ") ");
-            }
-        }
-        table.addCell(sb.toString());
 
         java.lang.System.out.println(table.render());
     }

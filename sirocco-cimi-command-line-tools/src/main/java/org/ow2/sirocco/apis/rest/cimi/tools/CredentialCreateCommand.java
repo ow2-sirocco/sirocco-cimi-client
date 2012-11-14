@@ -79,9 +79,9 @@ public class CredentialCreateCommand implements Command {
         CreateResult<Credential> result = Credential.createCredential(cimiClient, credentialCreate);
         if (result.getJob() != null) {
             System.out.println("Credential " + result.getJob().getTargetResourceRef() + " being created");
-            JobListCommand.printJob(result.getJob());
+            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
         } else {
-            CredentialShowCommand.printCredential(result.getResource());
+            CredentialShowCommand.printCredential(result.getResource(), new ResourceListParams());
         }
     }
 }

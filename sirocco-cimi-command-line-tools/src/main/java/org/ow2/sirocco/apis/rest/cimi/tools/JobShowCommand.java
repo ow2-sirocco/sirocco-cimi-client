@@ -24,19 +24,22 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
-import java.util.Map;
-
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Job;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "job machine")
 public class JobShowCommand implements Command {
     @Parameter(names = "-id", description = "id of the job", required = true)
     private String jobId;
+
+    @ParametersDelegate
+    private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
 
     @Override
     public String getName() {
@@ -45,43 +48,53 @@ public class JobShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws Exception {
-        Job job = Job.getJobByReference(cimiClient, this.jobId);
+        Job job = Job.getJobByReference(cimiClient, this.jobId, this.showParams.buildQueryParams());
+        JobShowCommand.printJob(job, this.showParams);
+    }
 
-        Table table = new Table(2);
-        table.addCell("Attribute");
-        table.addCell("Value");
+    public static void printJob(final Job job, final ResourceSelectExpandParams showParams) throws CimiException {
+        Table table = CommandHelper.createResourceShowTable(job, showParams);
 
-        table.addCell("id");
-        table.addCell(job.getId());
-
-        table.addCell("action");
-        table.addCell(job.getAction());
-        table.addCell("state");
-        table.addCell(job.getState().toString());
-        table.addCell("target entity");
-        table.addCell(job.getTargetResourceRef());
-        table.addCell("affected entity");
-        if (job.getAffectedResourceRefs().length > 0) {
-            table.addCell(job.getAffectedResourceRefs()[0]);
-        } else {
-            table.addCell("");
+        if (showParams.isSelected("state")) {
+            table.addCell("state");
+            table.addCell(job.getState().toString());
         }
-        table.addCell("created");
-        table.addCell(job.getCreated().toString());
-        table.addCell("updated");
-        if (job.getUpdated() != null) {
-            table.addCell(job.getUpdated().toString());
-        } else {
-            table.addCell("");
+        if (showParams.isSelected("action")) {
+            table.addCell("action");
+            table.addCell(job.getAction());
         }
-        table.addCell("properties");
-        StringBuffer sb = new StringBuffer();
-        if (job.getProperties() != null) {
-            for (Map.Entry<String, String> prop : job.getProperties().entrySet()) {
-                sb.append("(" + prop.getKey() + "," + prop.getValue() + ") ");
+        if (showParams.isSelected("targetResource")) {
+            table.addCell("target resource");
+            table.addCell(job.getTargetResourceRef());
+        }
+        if (showParams.isSelected("affectedResources")) {
+            table.addCell("affected resources");
+            if (job.getAffectedResourceRefs().length > 0) {
+                table.addCell(job.getAffectedResourceRefs()[0]);
+            } else {
+                table.addCell("");
             }
         }
-        table.addCell(sb.toString());
+        if (showParams.isSelected("statusMessage")) {
+            table.addCell("status message");
+            table.addCell(job.getStatusMessage());
+        }
+        if (showParams.isSelected("timeOfStatusChange")) {
+            table.addCell("time of status change");
+            if (job.getTimeOfStatusChange() != null) {
+                table.addCell(job.getTimeOfStatusChange().toString());
+            } else {
+                table.addCell("");
+            }
+        }
+        if (showParams.isSelected("parentJob")) {
+            table.addCell("parent job");
+            table.addCell("");
+        }
+        if (showParams.isSelected("nestedJobs")) {
+            table.addCell("nested jobs");
+            table.addCell("");
+        }
 
         System.out.println(table.render());
     }

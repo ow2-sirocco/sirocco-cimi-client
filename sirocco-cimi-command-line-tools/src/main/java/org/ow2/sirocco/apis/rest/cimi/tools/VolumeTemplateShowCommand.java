@@ -24,24 +24,22 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
-import java.util.Map;
-
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
-import org.ow2.sirocco.apis.rest.cimi.sdk.QueryParams;
 import org.ow2.sirocco.apis.rest.cimi.sdk.VolumeTemplate;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show volume template")
 public class VolumeTemplateShowCommand implements Command {
     @Parameter(names = "-id", description = "id of the volume template", required = true)
     private String volumeTemplateId;
 
-    @Parameter(names = "-expand", description = "template properties to expand", required = false)
-    private String expand;
+    @ParametersDelegate
+    private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
 
     @Override
     public String getName() {
@@ -51,50 +49,27 @@ public class VolumeTemplateShowCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         VolumeTemplate volumeTemplate = VolumeTemplate.getVolumeTemplateByReference(cimiClient, this.volumeTemplateId,
-            QueryParams.build().setExpand(this.expand));
-        VolumeTemplateShowCommand.printVolumeTemplate(volumeTemplate);
+            this.showParams.buildQueryParams());
+        VolumeTemplateShowCommand.printVolumeTemplate(volumeTemplate, this.showParams);
     }
 
-    public static void printVolumeTemplate(final VolumeTemplate volumeTemplate) {
-        Table table = new Table(2);
-        table.addCell("Attribute");
-        table.addCell("Value");
+    public static void printVolumeTemplate(final VolumeTemplate volumeTemplate, final ResourceSelectExpandParams showParams)
+        throws CimiException {
+        Table table = CommandHelper.createResourceShowTable(volumeTemplate, showParams);
 
-        table.addCell("id");
-        table.addCell(volumeTemplate.getId());
-
-        table.addCell("name");
-        table.addCell(volumeTemplate.getName());
-
-        table.addCell("description");
-        table.addCell(volumeTemplate.getDescription());
-
-        table.addCell("volume config id");
-        table.addCell(volumeTemplate.getVolumeConfig().getId());
-
-        table.addCell("volume image id");
-        if (volumeTemplate.getVolumeImage() != null) {
-            table.addCell(volumeTemplate.getVolumeImage().getId());
-        } else {
-            table.addCell("null");
+        if (showParams.isSelected("volumeConfig")) {
+            table.addCell("volume config");
+            table.addCell(volumeTemplate.getVolumeConfig().getId());
         }
 
-        table.addCell("created");
-        table.addCell(volumeTemplate.getCreated().toString());
-        table.addCell("updated");
-        if (volumeTemplate.getUpdated() != null) {
-            table.addCell(volumeTemplate.getUpdated().toString());
-        } else {
-            table.addCell("");
-        }
-        table.addCell("properties");
-        StringBuffer sb = new StringBuffer();
-        if (volumeTemplate.getProperties() != null) {
-            for (Map.Entry<String, String> prop : volumeTemplate.getProperties().entrySet()) {
-                sb.append("(" + prop.getKey() + "," + prop.getValue() + ") ");
+        if (showParams.isSelected("volumeImage")) {
+            table.addCell("volume image");
+            if (volumeTemplate.getVolumeImage() != null) {
+                table.addCell(volumeTemplate.getVolumeImage().getId());
+            } else {
+                table.addCell("");
             }
         }
-        table.addCell(sb.toString());
 
         System.out.println(table.render());
     }

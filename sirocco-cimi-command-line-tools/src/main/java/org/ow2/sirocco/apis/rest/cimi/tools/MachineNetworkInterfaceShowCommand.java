@@ -24,22 +24,23 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
-import java.util.Map;
-
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Address;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineNetworkInterface;
-import org.ow2.sirocco.apis.rest.cimi.sdk.QueryParams;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show nic")
 public class MachineNetworkInterfaceShowCommand implements Command {
     @Parameter(names = "-id", description = "id of the nic", required = true)
     private String nicId;
+
+    @ParametersDelegate
+    private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
 
     @Override
     public String getName() {
@@ -49,55 +50,41 @@ public class MachineNetworkInterfaceShowCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         MachineNetworkInterface nic = MachineNetworkInterface.getMachineNetworkInterfaceByReference(cimiClient, this.nicId,
-            QueryParams.build().setExpand("addresses"));
-        MachineNetworkInterfaceShowCommand.printMachineNetworkInterface(nic);
+            this.showParams.buildQueryParams().setExpand("addresses"));
+        MachineNetworkInterfaceShowCommand.printMachineNetworkInterface(nic, this.showParams);
     }
 
-    public static void printMachineNetworkInterface(final MachineNetworkInterface nic) throws CimiException {
-        Table table = new Table(2);
-        table.addCell("Attribute");
-        table.addCell("Value");
+    public static void printMachineNetworkInterface(final MachineNetworkInterface nic,
+        final ResourceSelectExpandParams showParams) throws CimiException {
+        Table table = CommandHelper.createResourceShowTable(nic, showParams);
 
-        table.addCell("id");
-        table.addCell(nic.getId());
-
-        table.addCell("state");
-        table.addCell(nic.getState().toString());
-
-        table.addCell("IP addresses");
-        StringBuffer sb = new StringBuffer();
-        for (Address address : nic.getAddresses()) {
-            sb.append(address.getIp() + " ");
+        if (showParams.isSelected("state")) {
+            table.addCell("state");
+            table.addCell(nic.getState().toString());
         }
-        table.addCell(sb.toString());
 
-        table.addCell("network");
-        if (nic.getNetwork() != null) {
-            table.addCell(nic.getNetwork().getId());
-        } else {
-            table.addCell("");
+        if (showParams.isSelected("addresses")) {
+            table.addCell("IP addresses");
+            StringBuffer sb = new StringBuffer();
+            for (Address address : nic.getAddresses()) {
+                sb.append(address.getIp() + " ");
+            }
+            table.addCell(sb.toString());
         }
-        table.addCell("network type");
-        table.addCell(nic.getType().toString());
 
-        table.addCell("description");
-        table.addCell(nic.getDescription());
-        if (nic.getCreated() != null) {
-            table.addCell("created");
-            table.addCell(nic.getCreated().toString());
-        }
-        if (nic.getUpdated() != null) {
-            table.addCell("updated");
-            table.addCell(nic.getUpdated().toString());
-        }
-        table.addCell("properties");
-        sb = new StringBuffer();
-        if (nic.getProperties() != null) {
-            for (Map.Entry<String, String> prop : nic.getProperties().entrySet()) {
-                sb.append("(" + prop.getKey() + "," + prop.getValue() + ") ");
+        if (showParams.isSelected("network")) {
+            table.addCell("network");
+            if (nic.getNetwork() != null) {
+                table.addCell(nic.getNetwork().getId());
+            } else {
+                table.addCell("");
             }
         }
-        table.addCell(sb.toString());
+
+        if (showParams.isSelected("networkType")) {
+            table.addCell("network type");
+            table.addCell(nic.getType().toString());
+        }
 
         System.out.println(table.render());
     }

@@ -102,7 +102,7 @@ public class MachineConfigUpdateCommand implements Command {
             this.machineConfigId, attributeValues);
         if (result.getJob() != null) {
             System.out.println("MachineConfig " + result.getJob().getTargetResourceRef() + " being updated");
-            JobListCommand.printJob(result.getJob());
+            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
         } else {
             System.out.println("MachineConfig: " + this.machineConfigId + " updated");
         }

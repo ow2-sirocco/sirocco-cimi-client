@@ -47,6 +47,6 @@ public class MachineDeleteCommand implements Command {
         Machine machine = Machine.getMachineByReference(cimiClient, this.machineId);
         Job job = machine.delete();
         System.out.println("Machine " + this.machineId + " being deleted");
-        JobListCommand.printJob(job);
+        JobShowCommand.printJob(job, new ResourceSelectExpandParams());
     }
 }

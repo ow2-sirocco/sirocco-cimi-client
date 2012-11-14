@@ -47,6 +47,6 @@ public class MachineVolumeDeleteCommand implements Command {
         MachineVolume machineVolume = MachineVolume.getMachineVolumeByReference(cimiClient, this.machineVolumeId);
         Job job = machineVolume.delete();
         System.out.println("MachineVolume " + this.machineVolumeId + " being deleted");
-        JobListCommand.printJob(job);
+        JobShowCommand.printJob(job, new ResourceSelectExpandParams());
     }
 }

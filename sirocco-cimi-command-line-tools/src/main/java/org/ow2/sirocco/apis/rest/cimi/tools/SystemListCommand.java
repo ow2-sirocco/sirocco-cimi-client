@@ -31,24 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.System;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list systems")
 public class SystemListCommand implements Command {
     public static String COMMAND_NAME = "system-list";
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
-
-    @Parameter(names = "-expand", description = "system properties to expand", required = false)
-    private String expand;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "state");
 
     @Override
     public String getName() {
@@ -57,20 +48,16 @@ public class SystemListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<System> systems = System.getSystems(cimiClient,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, this.expand));
+        List<System> systems = System.getSystems(cimiClient, this.listParams.buildQueryParams());
 
-        Table table = new Table(4);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("Description");
-        table.addCell("State");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties", "state");
 
         for (System system : systems) {
-            table.addCell(system.getId());
-            table.addCell(system.getName());
-            table.addCell(system.getDescription());
-            table.addCell(system.getState().toString());
+            CommandHelper.printResourceCommonAttributes(table, system, this.listParams);
+            if (this.listParams.isSelected("state")) {
+                table.addCell(system.getState().toString());
+            }
         }
         java.lang.System.out.println(table.render());
     }

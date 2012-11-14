@@ -80,7 +80,7 @@ public class VolumeCreateCommand implements Command {
             VolumeConfiguration volumeConfig = new VolumeConfiguration();
             volumeConfig.setCapacity(this.capacityMB * 1000);
             // XXX
-            volumeConfig.setType("http://schemas.dmtf.org/cimi/1/mapped");
+            volumeConfig.setType("");
             volumeTemplate.setVolumeConfig(volumeConfig);
             volumeCreate.setVolumeTemplate(volumeTemplate);
         }
@@ -95,9 +95,9 @@ public class VolumeCreateCommand implements Command {
         CreateResult<Volume> result = Volume.createVolume(cimiClient, volumeCreate);
         if (result.getJob() != null) {
             System.out.println("Volume " + result.getJob().getTargetResourceRef() + " being created");
-            JobListCommand.printJob(result.getJob());
+            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
         } else {
-            VolumeShowCommand.printVolume(result.getResource());
+            VolumeShowCommand.printVolume(result.getResource(), new ResourceSelectExpandParams());
         }
 
     }

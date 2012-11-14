@@ -24,25 +24,26 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
-import java.util.Map;
+import java.util.List;
 
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.Disk;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Machine;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineNetworkInterface;
-import org.ow2.sirocco.apis.rest.cimi.sdk.QueryParams;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show machine")
 public class MachineShowCommand implements Command {
     @Parameter(names = "-id", description = "id of the machine", required = true)
     private String machineId;
 
-    @Parameter(names = "-expand", description = "machine properties to expand", required = false)
-    private String expand;
+    @ParametersDelegate
+    private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
 
     @Override
     public String getName() {
@@ -51,55 +52,49 @@ public class MachineShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Machine machine = Machine.getMachineByReference(cimiClient, this.machineId, QueryParams.build().setExpand(this.expand));
-        MachineShowCommand.printMachine(machine);
+        Machine machine = Machine.getMachineByReference(cimiClient, this.machineId, this.showParams.buildQueryParams());
+        MachineShowCommand.printMachine(machine, this.showParams);
     }
 
-    public static void printMachine(final Machine machine) throws CimiException {
-        Table table = new Table(2);
-        table.addCell("Attribute");
-        table.addCell("Value");
+    public static void printMachine(final Machine machine, final ResourceSelectExpandParams showParams) throws CimiException {
+        Table table = CommandHelper.createResourceShowTable(machine, showParams);
 
-        table.addCell("id");
-        table.addCell(machine.getId());
-
-        table.addCell("name");
-        table.addCell(machine.getName());
-        table.addCell("description");
-        table.addCell(machine.getDescription());
-        table.addCell("status");
-        table.addCell(machine.getState().toString());
-        table.addCell("created");
-        table.addCell(machine.getCreated().toString());
-        table.addCell("updated");
-        if (machine.getUpdated() != null) {
-            table.addCell(machine.getUpdated().toString());
-        } else {
-            table.addCell("");
+        if (showParams.isSelected("state")) {
+            table.addCell("state");
+            table.addCell(machine.getState().toString());
         }
-        table.addCell("properties");
-        StringBuffer sb = new StringBuffer();
-        if (machine.getProperties() != null) {
-            for (Map.Entry<String, String> prop : machine.getProperties().entrySet()) {
-                sb.append("(" + prop.getKey() + "," + prop.getValue() + ") ");
+        if (showParams.isSelected("cpu")) {
+            table.addCell("cpu");
+            table.addCell(Integer.toString(machine.getCpu()));
+        }
+        if (showParams.isSelected("memory")) {
+            table.addCell("memory");
+            table.addCell(Integer.toString(machine.getMemory()));
+        }
+
+        if (showParams.isSelected("disks")) {
+            table.addCell("disks");
+            StringBuffer sb = new StringBuffer();
+            List<Disk> disks = machine.getDisks();
+            for (int i = 0; i < disks.size(); i++) {
+                if (i > 0) {
+                    sb.append(", ");
+                }
+                sb.append(disks.get(i).getCapacity());
             }
+            table.addCell((sb.toString()));
         }
-        table.addCell(sb.toString());
 
-        table.addCell("cpu");
-        table.addCell(Integer.toString(machine.getCpu()));
-
-        table.addCell("memory");
-        table.addCell(Integer.toString(machine.getMemory()));
-
-        table.addCell("IP addresses");
-        sb = new StringBuffer();
-        for (MachineNetworkInterface nic : machine.getNetworkInterfaces()) {
-            if (!nic.getAddresses().isEmpty()) {
-                sb.append(nic.getType() + "=" + nic.getAddresses().get(0).getIp() + " ");
+        if (showParams.isSelected("networkInterfaces")) {
+            table.addCell("IP addresses");
+            StringBuffer sb = new StringBuffer();
+            for (MachineNetworkInterface nic : machine.getNetworkInterfaces()) {
+                if (!nic.getAddresses().isEmpty()) {
+                    sb.append(nic.getType() + "=" + nic.getAddresses().get(0).getIp() + " ");
+                }
             }
+            table.addCell(sb.toString());
         }
-        table.addCell(sb.toString());
 
         System.out.println(table.render());
     }

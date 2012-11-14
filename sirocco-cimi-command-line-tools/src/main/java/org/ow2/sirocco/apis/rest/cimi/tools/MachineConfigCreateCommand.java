@@ -85,9 +85,9 @@ public class MachineConfigCreateCommand implements Command {
         CreateResult<MachineConfiguration> result = MachineConfiguration.createMachineConfiguration(cimiClient, machineConfig);
         if (result.getJob() != null) {
             System.out.println("MachineConfig " + result.getJob().getTargetResourceRef() + " being created");
-            JobListCommand.printJob(result.getJob());
+            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
         } else {
-            MachineConfigShowCommand.printMachineConfig(result.getResource());
+            MachineConfigShowCommand.printMachineConfig(result.getResource(), new ResourceSelectParam());
         }
     }
 

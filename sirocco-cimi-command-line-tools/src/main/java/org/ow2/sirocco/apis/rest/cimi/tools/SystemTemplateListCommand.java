@@ -31,21 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.SystemTemplate;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list system templates")
 public class SystemTemplateListCommand implements Command {
     public static String COMMAND_NAME = "systemtemplate-list";
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "description");
 
     @Override
     public String getName() {
@@ -54,18 +48,14 @@ public class SystemTemplateListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<SystemTemplate> systemTemplates = SystemTemplate.getSystemTemplates(cimiClient,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, null));
+        List<SystemTemplate> systemTemplates = SystemTemplate
+            .getSystemTemplates(cimiClient, this.listParams.buildQueryParams());
 
-        Table table = new Table(3);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("Description");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties");
 
         for (SystemTemplate systemTemplate : systemTemplates) {
-            table.addCell(systemTemplate.getId());
-            table.addCell(systemTemplate.getName());
-            table.addCell(systemTemplate.getDescription());
+            CommandHelper.printResourceCommonAttributes(table, systemTemplate, this.listParams);
         }
         System.out.println(table.render());
     }

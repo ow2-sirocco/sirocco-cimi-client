@@ -31,24 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.VolumeTemplate;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list volume templates")
 public class VolumeTemplateListCommand implements Command {
     public static String COMMAND_NAME = "volumetemplate-list";
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
-
-    @Parameter(names = "-expand", description = "template properties to expand", required = false)
-    private String expand;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "volumeConfig", "volumeImage");
 
     @Override
     public String getName() {
@@ -57,22 +48,20 @@ public class VolumeTemplateListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<VolumeTemplate> volumeTemplates = VolumeTemplate.getVolumeTemplates(cimiClient,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, this.expand));
+        List<VolumeTemplate> volumeTemplates = VolumeTemplate
+            .getVolumeTemplates(cimiClient, this.listParams.buildQueryParams());
 
-        Table table = new Table(3);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("Description");
-        // table.addCell("Volume Config Id");
-        // table.addCell("Volume Image Id");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties", "volumeConfig", "volumeImage");
 
         for (VolumeTemplate volumeTemplate : volumeTemplates) {
-            table.addCell(volumeTemplate.getId());
-            table.addCell(volumeTemplate.getName());
-            table.addCell(volumeTemplate.getDescription());
-            // table.addCell(volumeTemplate.getVolumeConfig().getId());
-            // table.addCell(volumeTemplate.getVolumeImage().getId());
+            CommandHelper.printResourceCommonAttributes(table, volumeTemplate, this.listParams);
+            if (this.listParams.isSelected("volumeConfig")) {
+                table.addCell(volumeTemplate.getVolumeConfig().getId());
+            }
+            if (this.listParams.isSelected("volumeImage")) {
+                table.addCell(volumeTemplate.getVolumeImage() != null ? volumeTemplate.getVolumeImage().getId() : "");
+            }
         }
         System.out.println(table.render());
     }

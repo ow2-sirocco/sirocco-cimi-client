@@ -33,6 +33,7 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.Disk;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list disks of a machine")
 public class DiskListCommand implements Command {
@@ -41,14 +42,8 @@ public class DiskListCommand implements Command {
     @Parameter(names = "-machine", description = "id of the machine", required = true)
     private String machineId;
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "capacity", "initialLocation");
 
     @Override
     public String getName() {
@@ -57,22 +52,19 @@ public class DiskListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<Disk> disks = Disk.getMachineDisks(cimiClient, this.machineId,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, null));
+        List<Disk> disks = Disk.getMachineDisks(cimiClient, this.machineId, this.listParams.buildQueryParams());
 
-        Table table = new Table(5);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("Description");
-        table.addCell("Capacity (KB)");
-        table.addCell("Initial location");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties", "capacity", "initialLocation");
 
         for (Disk disk : disks) {
-            table.addCell(disk.getId());
-            table.addCell(disk.getName());
-            table.addCell(disk.getDescription());
-            table.addCell(Integer.toString(disk.getCapacity()));
-            table.addCell(disk.getInitialLocation());
+            CommandHelper.printResourceCommonAttributes(table, disk, this.listParams);
+            if (this.listParams.isSelected("capacity")) {
+                table.addCell(Integer.toString(disk.getCapacity()) + "KB");
+            }
+            if (this.listParams.isSelected("initialLocation")) {
+                table.addCell(disk.getInitialLocation());
+            }
         }
         System.out.println(table.render());
     }

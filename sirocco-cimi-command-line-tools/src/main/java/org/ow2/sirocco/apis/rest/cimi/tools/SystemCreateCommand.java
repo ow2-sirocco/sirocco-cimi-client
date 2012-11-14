@@ -68,9 +68,9 @@ public class SystemCreateCommand implements Command {
         CreateResult<System> result = System.createSystem(cimiClient, systemCreate);
         if (result.getJob() != null) {
             java.lang.System.out.println("System " + result.getJob().getTargetResourceRef() + " being created");
-            JobListCommand.printJob(result.getJob());
+            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
         } else {
-            SystemShowCommand.printSystem(result.getResource());
+            SystemShowCommand.printSystem(result.getResource(), new ResourceSelectExpandParams());
         }
 
     }

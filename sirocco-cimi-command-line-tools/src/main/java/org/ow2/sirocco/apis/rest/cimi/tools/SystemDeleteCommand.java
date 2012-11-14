@@ -47,6 +47,8 @@ public class SystemDeleteCommand implements Command {
         System system = System.getSystemByReference(cimiClient, this.systemId);
         Job job = system.delete();
         java.lang.System.out.println("System " + this.systemId + " being deleted");
-        JobListCommand.printJob(job);
+        if (job != null) {
+            JobShowCommand.printJob(job, new ResourceSelectExpandParams());
+        }
     }
 }

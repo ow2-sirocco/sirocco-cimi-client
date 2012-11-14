@@ -97,9 +97,9 @@ public class MachineCreateCommand implements Command {
         CreateResult<Machine> result = Machine.createMachine(cimiClient, machineCreate);
         if (result.getJob() != null) {
             System.out.println("Machine " + result.getJob().getTargetResourceRef() + " being created");
-            JobListCommand.printJob(result.getJob());
+            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
         } else {
-            MachineShowCommand.printMachine(result.getResource());
+            MachineShowCommand.printMachine(result.getResource(), new ResourceSelectExpandParams());
         }
 
     }

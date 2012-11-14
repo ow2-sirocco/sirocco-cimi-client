@@ -33,6 +33,7 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.MachineVolume;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list volumes attached to machine")
 public class MachineVolumeListCommand implements Command {
@@ -41,14 +42,8 @@ public class MachineVolumeListCommand implements Command {
     @Parameter(names = "-machine", description = "id of the machine", required = true)
     private String machineId;
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "initialLocation", "volume");
 
     @Override
     public String getName() {
@@ -57,22 +52,20 @@ public class MachineVolumeListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<MachineVolume> machineVolumes = MachineVolume.getMachineVolumes(cimiClient, this.machineId,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, "volume"));
+        List<MachineVolume> machineVolumes = MachineVolume.getMachineVolumes(cimiClient, this.machineId, this.listParams
+            .buildQueryParams().setExpand("volume"));
 
-        Table table = new Table(5);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("Description");
-        table.addCell("Initial location");
-        table.addCell("Volume");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties", "initialLocation", "volume");
 
         for (MachineVolume machineVolume : machineVolumes) {
-            table.addCell(machineVolume.getId());
-            table.addCell(machineVolume.getName());
-            table.addCell(machineVolume.getDescription());
-            table.addCell(machineVolume.getInitialLocation());
-            table.addCell(machineVolume.getVolume().getId());
+            CommandHelper.printResourceCommonAttributes(table, machineVolume, this.listParams);
+            if (this.listParams.isSelected("initialLocation")) {
+                table.addCell(machineVolume.getInitialLocation());
+            }
+            if (this.listParams.isSelected("volume")) {
+                table.addCell(machineVolume.getVolume().getId());
+            }
         }
         System.out.println(table.render());
     }

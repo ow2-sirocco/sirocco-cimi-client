@@ -31,21 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.Address;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list addresses")
 public class AddressListCommand implements Command {
     public static String COMMAND_NAME = "address-list";
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "ip", "allocation");
 
     @Override
     public String getName() {
@@ -54,20 +48,19 @@ public class AddressListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<Address> nets = Address.getAddresses(cimiClient,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, null));
+        List<Address> addresses = Address.getAddresses(cimiClient, this.listParams.buildQueryParams());
 
-        Table table = new Table(4);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("IP");
-        table.addCell("Allocation");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties", "ip", "allocation");
 
-        for (Address net : nets) {
-            table.addCell(net.getId());
-            table.addCell(net.getName());
-            table.addCell(net.getIp());
-            table.addCell(net.getAllocation());
+        for (Address address : addresses) {
+            CommandHelper.printResourceCommonAttributes(table, address, this.listParams);
+            if (this.listParams.isSelected("ip")) {
+                table.addCell(address.getIp());
+            }
+            if (this.listParams.isSelected("allocation")) {
+                table.addCell(address.getAllocation());
+            }
         }
         System.out.println(table.render());
     }

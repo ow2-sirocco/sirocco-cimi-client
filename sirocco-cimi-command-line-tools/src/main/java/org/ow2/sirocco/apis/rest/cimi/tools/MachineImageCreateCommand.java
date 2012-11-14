@@ -69,9 +69,9 @@ public class MachineImageCreateCommand implements Command {
         CreateResult<MachineImage> result = MachineImage.createMachineImage(cimiClient, machineImage);
         if (result.getJob() != null) {
             System.out.println("MachineImage " + result.getJob().getTargetResourceRef() + " being created");
-            JobListCommand.printJob(result.getJob());
+            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
         } else {
-            MachineImageShowCommand.printMachineImage(result.getResource());
+            MachineImageShowCommand.printMachineImage(result.getResource(), new ResourceSelectExpandParams());
         }
     }
 

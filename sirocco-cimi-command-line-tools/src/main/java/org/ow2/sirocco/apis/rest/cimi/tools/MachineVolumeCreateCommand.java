@@ -70,9 +70,9 @@ public class MachineVolumeCreateCommand implements Command {
         CreateResult<MachineVolume> result = MachineVolume.createMachineVolume(cimiClient, this.machineId, machineVolume);
         if (result.getJob() != null) {
             System.out.println("Volume " + this.volumeId + " being attached");
-            JobListCommand.printJob(result.getJob());
+            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
         } else {
-            MachineVolumeShowCommand.printMachineVolume(result.getResource());
+            MachineVolumeShowCommand.printMachineVolume(result.getResource(), new ResourceSelectExpandParams());
         }
 
     }

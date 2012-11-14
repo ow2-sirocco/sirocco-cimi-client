@@ -29,26 +29,18 @@ import java.util.List;
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.Disk;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Machine;
 
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "list machines")
 public class MachineListCommand implements Command {
     public static String COMMAND_NAME = "machine-list";
 
-    @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
-
-    @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
-
-    @Parameter(names = "-filter", description = "Filter expression")
-    private String filter;
-
-    @Parameter(names = "-expand", description = "expand machine properties", required = false)
-    private String expand;
+    @ParametersDelegate
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "created", "state", "cpu", "memory", "disks");
 
     @Override
     public String getName() {
@@ -57,20 +49,34 @@ public class MachineListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<Machine> machines = Machine.getMachines(cimiClient,
-            CommandHelper.buildQueryParams(this.first, this.last, this.filter, this.expand));
+        List<Machine> machines = Machine.getMachines(cimiClient, this.listParams.buildQueryParams());
 
-        Table table = new Table(4);
-        table.addCell("ID");
-        table.addCell("Name");
-        table.addCell("Description");
-        table.addCell("State");
+        Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
+            "properties", "state", "cpu", "memory", "disks");
 
         for (Machine machine : machines) {
-            table.addCell(machine.getId());
-            table.addCell(machine.getName());
-            table.addCell(machine.getDescription());
-            table.addCell(machine.getState().toString());
+            CommandHelper.printResourceCommonAttributes(table, machine, this.listParams);
+            if (this.listParams.isSelected("state")) {
+                table.addCell(machine.getState().toString());
+            }
+            if (this.listParams.isSelected("cpu")) {
+                table.addCell(Integer.toString(machine.getCpu()));
+            }
+            if (this.listParams.isSelected("memory")) {
+                table.addCell(Integer.toString(machine.getMemory()));
+            }
+
+            if (this.listParams.isSelected("disks")) {
+                StringBuffer sb = new StringBuffer();
+                List<Disk> disks = machine.getDisks();
+                for (int i = 0; i < disks.size(); i++) {
+                    if (i > 0) {
+                        sb.append(", ");
+                    }
+                    sb.append(disks.get(i).getCapacity());
+                }
+                table.addCell((sb.toString()));
+            }
         }
         System.out.println(table.render());
     }

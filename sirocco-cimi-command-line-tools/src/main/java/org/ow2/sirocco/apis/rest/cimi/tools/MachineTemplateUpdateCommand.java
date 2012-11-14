@@ -94,7 +94,7 @@ public class MachineTemplateUpdateCommand implements Command {
             attributeValues);
         if (result.getJob() != null) {
             System.out.println("MachineTemplate " + result.getJob().getTargetResourceRef() + " being updated");
-            JobListCommand.printJob(result.getJob());
+            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
         } else {
             System.out.println("MachineTemplate: " + this.machineTemplateId + " updated");
         }

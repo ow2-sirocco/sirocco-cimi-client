@@ -24,8 +24,6 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
-import java.util.Map;
-
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -33,11 +31,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.Volume;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show volume")
 public class VolumeShowCommand implements Command {
     @Parameter(names = "-id", description = "id of the volume", required = true)
     private String volumeId;
+
+    @ParametersDelegate
+    private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
 
     @Override
     public String getName() {
@@ -46,44 +48,29 @@ public class VolumeShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Volume volume = Volume.getVolumeByReference(cimiClient, this.volumeId);
-        VolumeShowCommand.printVolume(volume);
+        Volume volume = Volume.getVolumeByReference(cimiClient, this.volumeId, this.showParams.buildQueryParams());
+        VolumeShowCommand.printVolume(volume, this.showParams);
     }
 
-    public static void printVolume(final Volume volume) {
-        Table table = new Table(2);
-        table.addCell("Attribute");
-        table.addCell("Value");
+    public static void printVolume(final Volume volume, final ResourceSelectExpandParams showParams) throws CimiException {
+        Table table = CommandHelper.createResourceShowTable(volume, showParams);
 
-        table.addCell("id");
-        table.addCell(volume.getId());
-
-        table.addCell("description");
-        table.addCell(volume.getDescription());
-        table.addCell("state");
-        table.addCell(volume.getState().toString());
-        table.addCell("capacity (MB)");
-        table.addCell(Integer.toString(volume.getCapacity()));
-        table.addCell("bootable");
-        table.addCell(Boolean.toString(volume.getBootable()));
-        table.addCell("type");
-        table.addCell(volume.getType());
-        table.addCell("created");
-        table.addCell(volume.getCreated().toString());
-        table.addCell("updated");
-        if (volume.getUpdated() != null) {
-            table.addCell(volume.getUpdated().toString());
-        } else {
-            table.addCell("");
+        if (showParams.isSelected("state")) {
+            table.addCell("state");
+            table.addCell(volume.getState().toString());
         }
-        table.addCell("properties");
-        StringBuffer sb = new StringBuffer();
-        if (volume.getProperties() != null) {
-            for (Map.Entry<String, String> prop : volume.getProperties().entrySet()) {
-                sb.append("(" + prop.getKey() + "," + prop.getValue() + ") ");
-            }
+        if (showParams.isSelected("type")) {
+            table.addCell("type");
+            table.addCell(volume.getType());
         }
-        table.addCell(sb.toString());
+        if (showParams.isSelected("capacity")) {
+            table.addCell("capacity");
+            table.addCell(Integer.toString(volume.getCapacity()) + "KB");
+        }
+        if (showParams.isSelected("bootable")) {
+            table.addCell("bootable");
+            table.addCell(Boolean.toString(volume.getBootable()));
+        }
 
         System.out.println(table.render());
     }
