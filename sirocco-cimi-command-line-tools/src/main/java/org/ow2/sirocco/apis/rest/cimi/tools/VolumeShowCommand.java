@@ -48,7 +48,7 @@ public class VolumeShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Volume volume = Volume.getVolumeByReference(cimiClient, this.volumeId, this.showParams.buildQueryParams());
+        Volume volume = Volume.getVolumeByReference(cimiClient, this.volumeId, this.showParams.getQueryParams());
         VolumeShowCommand.printVolume(volume, this.showParams);
     }
 

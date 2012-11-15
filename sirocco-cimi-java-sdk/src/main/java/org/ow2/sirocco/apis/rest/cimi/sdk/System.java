@@ -108,9 +108,9 @@ public class System extends Resource<CimiSystem> {
 
     public List<SystemMachine> getMachines() throws CimiException {
         String systemMachineCollection = this.cimiObject.getMachines().getHref();
-        CimiSystemMachineCollectionRoot sysMachines = this.cimiClient.getRequest(this.cimiClient
-            .extractPath(systemMachineCollection), CimiSystemMachineCollectionRoot.class,
-            QueryParams.build().setExpand("machine"));
+        CimiSystemMachineCollectionRoot sysMachines = this.cimiClient.getRequest(
+            this.cimiClient.extractPath(systemMachineCollection), CimiSystemMachineCollectionRoot.class, QueryParams.builder()
+                .expand("machine").build());
         this.cimiObject.getMachines().setArray(sysMachines.getArray());
         List<SystemMachine> machines = new ArrayList<SystemMachine>();
         if (this.cimiObject.getMachines().getArray() != null) {

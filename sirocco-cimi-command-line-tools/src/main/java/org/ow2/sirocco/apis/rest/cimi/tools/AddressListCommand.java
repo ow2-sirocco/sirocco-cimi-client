@@ -48,7 +48,7 @@ public class AddressListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<Address> addresses = Address.getAddresses(cimiClient, this.listParams.buildQueryParams());
+        List<Address> addresses = Address.getAddresses(cimiClient, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
             "properties", "ip", "allocation");

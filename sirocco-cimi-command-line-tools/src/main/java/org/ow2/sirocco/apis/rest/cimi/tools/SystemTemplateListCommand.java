@@ -48,8 +48,7 @@ public class SystemTemplateListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<SystemTemplate> systemTemplates = SystemTemplate
-            .getSystemTemplates(cimiClient, this.listParams.buildQueryParams());
+        List<SystemTemplate> systemTemplates = SystemTemplate.getSystemTemplates(cimiClient, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
             "properties");

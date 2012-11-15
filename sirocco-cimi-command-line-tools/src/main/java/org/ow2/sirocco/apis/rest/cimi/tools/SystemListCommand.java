@@ -48,7 +48,7 @@ public class SystemListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<System> systems = System.getSystems(cimiClient, this.listParams.buildQueryParams());
+        List<System> systems = System.getSystems(cimiClient, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
             "properties", "state");

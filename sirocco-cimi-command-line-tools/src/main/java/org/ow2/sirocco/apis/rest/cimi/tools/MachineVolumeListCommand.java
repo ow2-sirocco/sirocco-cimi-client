@@ -53,7 +53,7 @@ public class MachineVolumeListCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         List<MachineVolume> machineVolumes = MachineVolume.getMachineVolumes(cimiClient, this.machineId, this.listParams
-            .buildQueryParams().setExpand("volume"));
+            .getQueryParams().toBuilder().expand("volume").build());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
             "properties", "initialLocation", "volume");

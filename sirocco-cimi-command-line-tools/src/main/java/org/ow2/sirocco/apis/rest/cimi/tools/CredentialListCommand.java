@@ -48,7 +48,7 @@ public class CredentialListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<Credential> creds = Credential.getCredentials(cimiClient, this.listParams.buildQueryParams());
+        List<Credential> creds = Credential.getCredentials(cimiClient, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
             "properties", "publicKey");

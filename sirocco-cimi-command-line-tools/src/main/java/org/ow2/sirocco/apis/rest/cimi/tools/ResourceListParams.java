@@ -31,18 +31,8 @@ public class ResourceListParams extends ResourceSelectExpandParams {
     }
 
     @Override
-    public QueryParams buildQueryParams() {
-        QueryParams params = super.buildQueryParams();
-        if (this.first != null) {
-            params.setFirst(this.first);
-        }
-        if (this.last != null) {
-            params.setLast(this.last);
-        }
-        if (this.filter != null) {
-            params.addFilter(this.filter);
-        }
-        return params;
+    public QueryParams.Builder buildQueryParams() {
+        return super.buildQueryParams().first(this.first).last(this.last).filter(this.filter);
     }
 
 }

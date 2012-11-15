@@ -49,7 +49,7 @@ public class MachineImageShowCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         MachineImage machineImage = MachineImage.getMachineImageByReference(cimiClient, this.machineImageId,
-            this.showParams.buildQueryParams());
+            this.showParams.getQueryParams());
         MachineImageShowCommand.printMachineImage(machineImage, this.showParams);
     }
 

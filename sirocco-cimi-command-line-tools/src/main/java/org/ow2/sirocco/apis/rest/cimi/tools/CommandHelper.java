@@ -27,34 +27,9 @@ package org.ow2.sirocco.apis.rest.cimi.tools;
 import java.util.Map;
 
 import org.nocrala.tools.texttablefmt.Table;
-import org.ow2.sirocco.apis.rest.cimi.sdk.QueryParams;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Resource;
 
 public class CommandHelper {
-    public static QueryParams buildQueryParams(final Integer first, final Integer last, final String filter, final String expand) {
-        return CommandHelper.buildQueryParams(first, last, filter, expand, null);
-    }
-
-    public static QueryParams buildQueryParams(final Integer first, final Integer last, final String filter,
-        final String expand, final String select) {
-        QueryParams params = QueryParams.build();
-        if (first != null) {
-            params.setFirst(first);
-        }
-        if (last != null) {
-            params.setLast(last);
-        }
-        if (filter != null) {
-            params.addFilter(filter);
-        }
-        if (expand != null) {
-            params.setExpand(expand);
-        }
-        if (select != null) {
-            params.setSelect(select);
-        }
-        return params;
-    }
 
     public static Table createResourceListTable(final ResourceListParams listParams, final String... attributes) {
         int numAttr = listParams.isSelected(attributes);

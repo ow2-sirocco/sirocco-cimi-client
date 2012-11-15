@@ -49,7 +49,7 @@ public class MachineTemplateShowCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         MachineTemplate machineTemplate = MachineTemplate.getMachineTemplateByReference(cimiClient, this.machineTemplateId,
-            this.showParams.buildQueryParams());
+            this.showParams.getQueryParams());
         MachineTemplateShowCommand.printMachineTemplate(machineTemplate, this.showParams);
     }
 

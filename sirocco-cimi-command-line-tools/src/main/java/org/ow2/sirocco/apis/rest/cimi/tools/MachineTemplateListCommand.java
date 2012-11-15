@@ -49,7 +49,7 @@ public class MachineTemplateListCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         List<MachineTemplate> machineTemplates = MachineTemplate.getMachineTemplates(cimiClient,
-            this.listParams.buildQueryParams());
+            this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
             "properties", "machineConfig", "machineImage", "credential");

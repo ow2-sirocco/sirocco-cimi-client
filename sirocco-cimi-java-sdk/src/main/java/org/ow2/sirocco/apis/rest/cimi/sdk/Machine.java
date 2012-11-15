@@ -106,9 +106,10 @@ public class Machine extends Resource<CimiMachine> {
         if (this.cimiObject.getNetworkInterfaces() != null && this.cimiObject.getNetworkInterfaces().getArray() != null) {
             for (CimiMachineNetworkInterface cimiNic : this.cimiObject.getNetworkInterfaces().getArray()) {
                 if (cimiNic.getAddresses().getArray() == null) {
-                    CimiMachineNetworkInterfaceAddressCollectionRoot addresses = this.cimiClient.getRequest(
-                        this.cimiClient.extractPath(cimiNic.getAddresses().getHref()),
-                        CimiMachineNetworkInterfaceAddressCollectionRoot.class, QueryParams.build().setExpand("address"));
+                    CimiMachineNetworkInterfaceAddressCollectionRoot addresses = this.cimiClient
+                        .getRequest(this.cimiClient.extractPath(cimiNic.getAddresses().getHref()),
+                            CimiMachineNetworkInterfaceAddressCollectionRoot.class, QueryParams.builder().expand("address")
+                                .build());
                     cimiNic.setAddresses(addresses);
                 }
                 MachineNetworkInterface nic = new MachineNetworkInterface(this.cimiClient, cimiNic);

@@ -49,7 +49,7 @@ public class VolumeTemplateShowCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         VolumeTemplate volumeTemplate = VolumeTemplate.getVolumeTemplateByReference(cimiClient, this.volumeTemplateId,
-            this.showParams.buildQueryParams());
+            this.showParams.getQueryParams());
         VolumeTemplateShowCommand.printVolumeTemplate(volumeTemplate, this.showParams);
     }
 

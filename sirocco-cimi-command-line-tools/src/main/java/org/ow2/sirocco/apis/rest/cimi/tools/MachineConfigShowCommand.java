@@ -50,7 +50,7 @@ public class MachineConfigShowCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         MachineConfiguration machineConfig = MachineConfiguration.getMachineConfigurationByReference(cimiClient,
-            this.machineConfigId, this.selectParam.buildQueryParams());
+            this.machineConfigId, this.selectParam.getQueryParams());
         MachineConfigShowCommand.printMachineConfig(machineConfig, this.selectParam);
     }
 

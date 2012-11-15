@@ -57,12 +57,12 @@ public class ResourceSelectParam {
         return matches;
     }
 
-    public QueryParams buildQueryParams() {
-        QueryParams params = QueryParams.build();
-        if (this.select != null) {
-            params.setSelect(this.select);
-        }
-        return params;
+    public QueryParams.Builder buildQueryParams() {
+        return QueryParams.builder().select(this.select);
+    }
+
+    public QueryParams getQueryParams() {
+        return this.buildQueryParams().build();
     }
 
 }

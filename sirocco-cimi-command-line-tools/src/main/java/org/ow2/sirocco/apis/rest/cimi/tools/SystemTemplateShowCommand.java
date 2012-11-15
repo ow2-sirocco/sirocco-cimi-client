@@ -49,7 +49,7 @@ public class SystemTemplateShowCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         SystemTemplate systemTemplate = SystemTemplate.getSystemTemplateByReference(cimiClient, this.systemTemplateId,
-            this.showParams.buildQueryParams());
+            this.showParams.getQueryParams());
         SystemTemplateShowCommand.printSystemTemplate(systemTemplate, this.showParams);
     }
 

@@ -54,7 +54,7 @@ public class MachineNetworkInterfaceListCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         List<MachineNetworkInterface> nics = MachineNetworkInterface.getMachineNetworkInterfaces(cimiClient, this.machineId,
-            this.listParams.buildQueryParams().setExpand("addresses"));
+            this.listParams.getQueryParams().toBuilder().expand("addresses").build());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
             "properties", "addresses", "networkType", "network", "state");

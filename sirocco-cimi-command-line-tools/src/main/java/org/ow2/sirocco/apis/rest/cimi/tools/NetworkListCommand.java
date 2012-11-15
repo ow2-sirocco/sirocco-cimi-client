@@ -48,7 +48,7 @@ public class NetworkListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<Network> nets = Network.getNetworks(cimiClient, this.listParams.buildQueryParams());
+        List<Network> nets = Network.getNetworks(cimiClient, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
             "properties", "state", "networkType");

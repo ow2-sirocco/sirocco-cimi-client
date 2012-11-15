@@ -50,7 +50,7 @@ public class MachineNetworkInterfaceShowCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         MachineNetworkInterface nic = MachineNetworkInterface.getMachineNetworkInterfaceByReference(cimiClient, this.nicId,
-            this.showParams.buildQueryParams().setExpand("addresses"));
+            this.showParams.getQueryParams().toBuilder().expand("addresses").build());
         MachineNetworkInterfaceShowCommand.printMachineNetworkInterface(nic, this.showParams);
     }
 

@@ -48,8 +48,7 @@ public class CredentialShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Credential cred = Credential
-            .getCredentialByReference(cimiClient, this.credentialId, this.showParams.buildQueryParams());
+        Credential cred = Credential.getCredentialByReference(cimiClient, this.credentialId, this.showParams.getQueryParams());
         CredentialShowCommand.printCredential(cred, this.showParams);
     }
 

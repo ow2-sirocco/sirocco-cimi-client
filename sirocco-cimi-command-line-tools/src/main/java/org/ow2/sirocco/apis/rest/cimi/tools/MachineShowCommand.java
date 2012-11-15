@@ -52,7 +52,7 @@ public class MachineShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Machine machine = Machine.getMachineByReference(cimiClient, this.machineId, this.showParams.buildQueryParams());
+        Machine machine = Machine.getMachineByReference(cimiClient, this.machineId, this.showParams.getQueryParams());
         MachineShowCommand.printMachine(machine, this.showParams);
     }
 

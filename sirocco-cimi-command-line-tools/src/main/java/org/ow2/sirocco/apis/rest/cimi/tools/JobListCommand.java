@@ -47,7 +47,7 @@ public class JobListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws Exception {
-        List<Job> jobs = Job.getJobs(cimiClient, this.listParams.buildQueryParams());
+        List<Job> jobs = Job.getJobs(cimiClient, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
             "properties", "state", "targetResource", "action", "statusMessage", "timeOfStatusChange");

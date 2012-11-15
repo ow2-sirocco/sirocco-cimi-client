@@ -49,7 +49,7 @@ public class MachineListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<Machine> machines = Machine.getMachines(cimiClient, this.listParams.buildQueryParams());
+        List<Machine> machines = Machine.getMachines(cimiClient, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
             "properties", "state", "cpu", "memory", "disks");

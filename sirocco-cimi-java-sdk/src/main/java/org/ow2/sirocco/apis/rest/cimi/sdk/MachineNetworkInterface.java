@@ -74,9 +74,9 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
         if (href == null) {
             href = this.cimiObject.getAddresses().getId();
         }
-        CimiMachineNetworkInterfaceAddressCollectionRoot addresses = this.cimiClient.getRequest(this.cimiClient
-            .extractPath(href), CimiMachineNetworkInterfaceAddressCollectionRoot.class, QueryParams.build()
-            .setExpand("address"));
+        CimiMachineNetworkInterfaceAddressCollectionRoot addresses = this.cimiClient.getRequest(
+            this.cimiClient.extractPath(href), CimiMachineNetworkInterfaceAddressCollectionRoot.class, QueryParams.builder()
+                .expand("address").build());
         this.cimiObject.setAddresses(addresses);
         List<Address> result = new ArrayList<Address>();
         if (this.cimiObject.getAddresses().getArray() != null) {
@@ -123,7 +123,8 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
 
     public static CreateResult<MachineNetworkInterface> createMachineNetworkInterface(final CimiClient client,
         final String machineId, final MachineNetworkInterface machineNetworkInterface) throws CimiException {
-        Machine machine = Machine.getMachineByReference(client, machineId, QueryParams.build().setExpand("networkInterfaces"));
+        Machine machine = Machine.getMachineByReference(client, machineId, QueryParams.builder().expand("networkInterfaces")
+            .build());
         String addRef = Helper.findOperation("add", machine.cimiObject.getNetworkInterfaces());
         if (addRef == null) {
             throw new CimiException("Unsupported operation");

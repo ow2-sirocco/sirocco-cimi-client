@@ -49,7 +49,7 @@ public class MachineVolumeShowCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         MachineVolume machineVolume = MachineVolume.getMachineVolumeByReference(cimiClient, this.machineVolumeId,
-            this.showParams.buildQueryParams().setExpand("volume"));
+            this.showParams.getQueryParams().toBuilder().expand("volume").build());
         MachineVolumeShowCommand.printMachineVolume(machineVolume, this.showParams);
     }
 

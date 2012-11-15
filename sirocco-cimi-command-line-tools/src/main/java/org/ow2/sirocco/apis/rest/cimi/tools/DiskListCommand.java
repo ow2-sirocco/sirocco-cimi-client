@@ -52,7 +52,7 @@ public class DiskListCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        List<Disk> disks = Disk.getMachineDisks(cimiClient, this.machineId, this.listParams.buildQueryParams());
+        List<Disk> disks = Disk.getMachineDisks(cimiClient, this.machineId, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
             "properties", "capacity", "initialLocation");

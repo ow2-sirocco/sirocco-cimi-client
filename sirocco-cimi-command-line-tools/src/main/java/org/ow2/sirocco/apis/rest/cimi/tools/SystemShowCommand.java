@@ -48,7 +48,7 @@ public class SystemShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        System system = System.getSystemByReference(cimiClient, this.systemId, this.showParams.buildQueryParams());
+        System system = System.getSystemByReference(cimiClient, this.systemId, this.showParams.getQueryParams());
         SystemShowCommand.printSystem(system, this.showParams);
     }
 

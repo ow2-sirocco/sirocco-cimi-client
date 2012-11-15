@@ -49,7 +49,7 @@ public class VolumeConfigShowCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         VolumeConfiguration volumeConfig = VolumeConfiguration.getVolumeConfigurationByReference(cimiClient,
-            this.volumeConfigId, this.showParams.buildQueryParams());
+            this.volumeConfigId, this.showParams.getQueryParams());
         VolumeConfigShowCommand.printVolumeConfig(volumeConfig, this.showParams);
     }
 

@@ -17,12 +17,8 @@ public class ResourceSelectExpandParams extends ResourceSelectParam {
     }
 
     @Override
-    public QueryParams buildQueryParams() {
-        QueryParams params = super.buildQueryParams();
-        if (this.expand != null) {
-            params.setExpand(this.expand);
-        }
-        return params;
+    public QueryParams.Builder buildQueryParams() {
+        return super.buildQueryParams().expand(this.expand);
     }
 
 }

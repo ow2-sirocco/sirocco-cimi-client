@@ -318,13 +318,13 @@ public class CimiClient {
             if (queryParams[0].getSelect() != null) {
                 service = service.queryParam(CimiClient.CIMI_QUERY_SELECT_KEYWORD, queryParams[0].getSelect());
             }
-            for (String filter : queryParams[0].getFilters()) {
-                service = service.queryParam(CimiClient.CIMI_QUERY_FILTER_KEYWORD, filter);
+            if (queryParams[0].getFilter() != null) {
+                service = service.queryParam(CimiClient.CIMI_QUERY_FILTER_KEYWORD, queryParams[0].getFilter());
             }
-            if (queryParams[0].getFirst() != -1) {
+            if (queryParams[0].getFirst() != null) {
                 service = service.queryParam(CimiClient.CIMI_QUERY_FIRST_KEYWORD, Integer.toString(queryParams[0].getFirst()));
             }
-            if (queryParams[0].getLast() != -1) {
+            if (queryParams[0].getLast() != null) {
                 service = service.queryParam(CimiClient.CIMI_QUERY_LAST_KEYWORD, Integer.toString(queryParams[0].getLast()));
             }
         }

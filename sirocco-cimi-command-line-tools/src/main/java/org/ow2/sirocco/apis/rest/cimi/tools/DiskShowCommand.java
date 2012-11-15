@@ -48,7 +48,7 @@ public class DiskShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Disk disk = Disk.getMachineDiskByReference(cimiClient, this.diskId, this.showParams.buildQueryParams());
+        Disk disk = Disk.getMachineDiskByReference(cimiClient, this.diskId, this.showParams.getQueryParams());
         DiskShowCommand.printDisk(disk, this.showParams);
     }
 

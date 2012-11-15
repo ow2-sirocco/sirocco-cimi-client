@@ -76,7 +76,7 @@ public class Disk extends Resource<CimiMachineDisk> {
 
     public static CreateResult<Disk> createMachineDisk(final CimiClient client, final String machineId, final Disk machineDisk)
         throws CimiException {
-        Machine machine = Machine.getMachineByReference(client, machineId, QueryParams.build().setExpand("disks"));
+        Machine machine = Machine.getMachineByReference(client, machineId, QueryParams.builder().expand("disks").build());
         String addRef = Helper.findOperation("add", machine.cimiObject.getVolumes());
         if (addRef == null) {
             throw new CimiException("Unsupported operation");

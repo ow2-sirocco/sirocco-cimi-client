@@ -24,92 +24,121 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.sdk;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Helper class used to specify query parameters when retrieving CIMI resources
  */
-/**
- * @author dangtran
- */
 public class QueryParams {
-    private int first = -1;
+    public static class Builder {
+        private Integer first;
 
-    private int last = -1;
+        private Integer last;
 
-    private List<String> filters = new ArrayList<String>();
+        private String filter;
 
-    private String expand = null;
+        private String expand;
 
-    private String select = null;
+        private String select;
+
+        /**
+         * (1-based) ordinal position of the first entity of the collection to
+         * return
+         */
+        public Builder first(final Integer first) {
+            this.first = first;
+            return this;
+        }
+
+        /**
+         * (1-based) ordinal position of the last entity of the collection to
+         * return
+         */
+        public Builder last(final Integer last) {
+            this.last = last;
+            return this;
+        }
+
+        /**
+         * Set a filter to reduce the number of entities to return
+         * 
+         * @param filter expression as defined in DMTF CIMI 1.0 specification,
+         *        section 4.1.6.1
+         */
+        public Builder filter(final String filter) {
+            this.filter = filter;
+            return this;
+        }
+
+        /**
+         * Comma-seperated list of reference attributes to be expanded
+         */
+        public Builder expand(final String expand) {
+            this.expand = expand;
+            return this;
+        }
+
+        /**
+         * Comma-separated list of attributes to be retrieved
+         */
+        public Builder select(final String select) {
+            this.select = select;
+            return this;
+        }
+
+        public Builder fromQueryParams(final QueryParams from) {
+            return this.first(from.first).last(from.last).expand(from.expand).select(from.select).filter(from.filter);
+        }
+
+        public QueryParams build() {
+            QueryParams result = new QueryParams();
+            result.first = this.first;
+            result.last = this.last;
+            result.expand = this.expand;
+            result.select = this.select;
+            result.filter = this.filter;
+            return result;
+        }
+    }
+
+    private Integer first;
+
+    private Integer last;
+
+    private String filter;
+
+    private String expand;
+
+    private String select;
 
     private QueryParams() {
     }
 
-    /**
-     * Returns new query parameter container
-     */
-    public static QueryParams build() {
-        return new QueryParams();
+    public Builder toBuilder() {
+        return new Builder().fromQueryParams(this);
     }
 
-    /**
-     * (1-based) ordinal position of the first entity of the collection to
-     * return
-     */
-    public QueryParams setFirst(final int first) {
-        this.first = first;
-        return this;
-    }
-
-    /**
-     * (1-based) ordinal position of the last entity of the collection to return
-     */
-    public QueryParams setLast(final int last) {
-        this.last = last;
-        return this;
-    }
-
-    /**
-     * Adds a filter to reduce the number of entities to return
-     * 
-     * @param filter expression as defined in DMTF CIMI 1.0 specification,
-     *        section 4.1.6.1
-     * @return
-     */
-    public QueryParams addFilter(final String filter) {
-        this.filters.add(filter);
-        return this;
-    }
-
-    /**
-     * Comma-seperated list of reference attributes to be expanded
-     */
-    public QueryParams setExpand(final String expand) {
-        this.expand = expand;
-        return this;
+    public static Builder builder() {
+        return new Builder();
     }
 
     /**
      * Value of "first" query parameter
      */
-    public int getFirst() {
+    public Integer getFirst() {
         return this.first;
     }
 
     /**
      * Value of "last" query parameter
      */
-    public int getLast() {
+    public Integer getLast() {
         return this.last;
     }
 
     /**
      * List of filter expressions
      */
-    public List<String> getFilters() {
-        return this.filters;
+    public String getFilter() {
+        return this.filter;
     }
 
     /**
@@ -124,13 +153,6 @@ public class QueryParams {
      */
     public String getSelect() {
         return this.select;
-    }
-
-    /**
-     * Comma-separated list of attributes to be retrieved
-     */
-    public void setSelect(final String select) {
-        this.select = select;
     }
 
 }

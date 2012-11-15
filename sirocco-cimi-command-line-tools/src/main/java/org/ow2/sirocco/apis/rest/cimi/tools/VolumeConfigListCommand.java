@@ -49,7 +49,7 @@ public class VolumeConfigListCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         List<VolumeConfiguration> volumeConfigs = VolumeConfiguration.getVolumeConfigurations(cimiClient,
-            this.listParams.buildQueryParams());
+            this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
             "properties", "type", "format", "capacity");

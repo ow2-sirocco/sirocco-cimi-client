@@ -48,7 +48,7 @@ public class JobShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws Exception {
-        Job job = Job.getJobByReference(cimiClient, this.jobId, this.showParams.buildQueryParams());
+        Job job = Job.getJobByReference(cimiClient, this.jobId, this.showParams.getQueryParams());
         JobShowCommand.printJob(job, this.showParams);
     }
 
