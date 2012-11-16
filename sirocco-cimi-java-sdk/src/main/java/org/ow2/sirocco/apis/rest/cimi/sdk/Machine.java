@@ -94,7 +94,7 @@ public class Machine extends Resource<CimiMachine> {
     public List<MachineNetworkInterface> getNetworkInterfaces() throws CimiException {
         List<MachineNetworkInterface> nics = new ArrayList<MachineNetworkInterface>();
 
-        if (this.cimiObject.getNetworkInterfaces() == null || this.cimiObject.getNetworkInterfaces().getArray() == null) {
+        if (this.cimiObject.getNetworkInterfaces() != null && this.cimiObject.getNetworkInterfaces().getArray() == null) {
             String machineNicsRef = this.cimiObject.getNetworkInterfaces().getHref();
             if (machineNicsRef != null) {
                 CimiMachineNetworkInterfaceCollectionRoot cimiNics = this.cimiClient.getRequest(
