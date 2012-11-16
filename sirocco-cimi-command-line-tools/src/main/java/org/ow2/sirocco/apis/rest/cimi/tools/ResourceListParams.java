@@ -6,10 +6,10 @@ import com.beust.jcommander.Parameter;
 
 public class ResourceListParams extends ResourceSelectExpandParams {
     @Parameter(names = "-first", description = "First index of entity to return")
-    private Integer first = -1;
+    private Integer first;
 
     @Parameter(names = "-last", description = "Last index of entity to return")
-    private Integer last = -1;
+    private Integer last;
 
     @Parameter(names = "-filter", description = "Filter expression")
     private String filter;
