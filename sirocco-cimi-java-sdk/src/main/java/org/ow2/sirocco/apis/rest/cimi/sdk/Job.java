@@ -102,13 +102,6 @@ public class Job extends Resource<CimiJob> {
     }
 
     /**
-     * True if the Job can be cancelled
-     */
-    public Boolean getIsCancellable() {
-        return this.cimiObject.getIsCancellable();
-    }
-
-    /**
      * Subordinate Job resources
      */
     public NestedJob[] getNestedJobs() {
