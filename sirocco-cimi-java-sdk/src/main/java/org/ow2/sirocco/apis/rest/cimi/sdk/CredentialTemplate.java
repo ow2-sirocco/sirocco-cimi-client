@@ -55,30 +55,6 @@ public class CredentialTemplate extends Resource<CimiCredentialTemplate> {
         super(cimiClient, cimiObject);
     }
 
-    public String getUserName() {
-        return this.cimiObject.getUserName();
-    }
-
-    public void setUserName(final String userName) {
-        this.cimiObject.setUserName(userName);
-    }
-
-    public String getPassword() {
-        return this.cimiObject.getPassword();
-    }
-
-    public void setPassword(final String password) {
-        this.cimiObject.setPassword(password);
-    }
-
-    public String getPublicKey() {
-        return new String(this.cimiObject.getKey());
-    }
-
-    public void setPublicKey(final String key) {
-        this.cimiObject.setKey(key.getBytes());
-    }
-
     public Job delete() throws CimiException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {

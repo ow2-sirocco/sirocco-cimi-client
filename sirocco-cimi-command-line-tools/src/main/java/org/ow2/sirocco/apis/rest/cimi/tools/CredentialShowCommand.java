@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.Map;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -54,12 +56,10 @@ public class CredentialShowCommand implements Command {
 
     public static void printCredential(final Credential cred, final ResourceSelectExpandParams showParams) throws CimiException {
         Table table = CommandHelper.createResourceShowTable(cred, showParams);
-        if (showParams.isSelected("publicKey")) {
-            table.addCell("public key");
-            if (cred.getPublicKey() != null) {
-                table.addCell(cred.getPublicKey().substring(0, 10) + "...");
-            } else {
-                table.addCell("");
+        if (cred.getExtensionAttributes() != null) {
+            for (Map.Entry<String, Object> entry : cred.getExtensionAttributes().entrySet()) {
+                table.addCell(entry.getKey());
+                table.addCell(entry.getValue().toString());
             }
         }
         System.out.println(table.render());

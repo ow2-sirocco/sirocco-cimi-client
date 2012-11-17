@@ -51,17 +51,10 @@ public class CredentialListCommand implements Command {
         List<Credential> creds = Credential.getCredentials(cimiClient, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
-            "properties", "publicKey");
+            "properties");
 
         for (Credential cred : creds) {
             CommandHelper.printResourceCommonAttributes(table, cred, this.listParams);
-            if (this.listParams.isSelected("publicKey")) {
-                if (cred.getPublicKey() != null) {
-                    table.addCell(cred.getPublicKey().substring(0, 10) + "...");
-                } else {
-                    table.addCell("");
-                }
-            }
         }
         System.out.println(table.render());
     }

@@ -47,14 +47,8 @@ public class CredentialCreateCommand implements Command {
     @Parameter(names = "-properties", variableArity = true, description = "key value pairs", required = false)
     private List<String> properties;
 
-    @Parameter(names = "-key", description = "key", required = true)
-    private String key;
-
-    @Parameter(names = "-username", description = "user name", required = true)
-    private String userName;
-
-    @Parameter(names = "-password", description = "password", required = true)
-    private String password;
+    @Parameter(names = "-ext", variableArity = true, description = "extended attributes", required = false)
+    private List<String> extendedAttributes;
 
     @Override
     public String getName() {
@@ -64,9 +58,12 @@ public class CredentialCreateCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         CredentialTemplate credentialTemplate = new CredentialTemplate();
-        credentialTemplate.setPublicKey(this.key);
-        credentialTemplate.setUserName(this.userName);
-        credentialTemplate.setPassword(this.password);
+        if (this.extendedAttributes != null) {
+            for (int i = 0; i < this.extendedAttributes.size() / 2; i++) {
+                credentialTemplate.setExtensionAttribute(this.extendedAttributes.get(i * 2),
+                    this.extendedAttributes.get(i * 2 + 1));
+            }
+        }
         CredentialCreate credentialCreate = new CredentialCreate();
         credentialCreate.setCredentialTemplate(credentialTemplate);
         credentialCreate.setName(this.name);
