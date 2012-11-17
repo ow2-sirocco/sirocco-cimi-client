@@ -137,6 +137,34 @@ public abstract class Resource<E extends CimiObjectCommonAbstract> {
         this.cimiObject.getProperties().put(key, value);
     }
 
+    /**
+     * Retrieves an extension attribute for this resource
+     * 
+     * @param name the name of the attribute
+     * @return the attribute value
+     */
+    public Object getExtensionAttribute(final String name) {
+        return this.cimiObject.getExtensionAttribute(name);
+    }
+
+    /**
+     * Retrieves the map containing all the extension attributes defined on this
+     * resource
+     */
+    public Map<String, Object> getExtensionAttributes() {
+        return this.cimiObject.getExtensionAttributes();
+    }
+
+    /**
+     * Sets an extension attribute on this resource
+     * 
+     * @param name the name of the attribute
+     * @param value the value of the attribute
+     */
+    public void setExtensionAttribute(final String name, final Object value) {
+        this.cimiObject.addExtensionAttribute(name, value);
+    }
+
     E getResource() {
         return this.cimiObject;
     }
