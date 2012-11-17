@@ -42,4 +42,4 @@ if $cygwin; then
   CLASSPATH=";$CLASSPATH"
 fi
 
-java -cp "$CLASSPATH"  org.ow2.sirocco.apis.rest.cimi.tools.Client "$@"                   
+java -cp "$CLASSPATH" $CIMICLIENT_OPTS org.ow2.sirocco.apis.rest.cimi.tools.Client "$@"                   
