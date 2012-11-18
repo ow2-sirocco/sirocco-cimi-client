@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -36,8 +38,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show machine config")
 public class MachineConfigShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the machine config", required = true)
-    private String machineConfigId;
+    @Parameter(description = "<machine config id>", required = true)
+    private List<String> machineConfigId;
 
     @ParametersDelegate
     private ResourceSelectParam selectParam = new ResourceSelectParam();
@@ -50,7 +52,7 @@ public class MachineConfigShowCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         MachineConfiguration machineConfig = MachineConfiguration.getMachineConfigurationByReference(cimiClient,
-            this.machineConfigId, this.selectParam.getQueryParams());
+            this.machineConfigId.get(0), this.selectParam.getQueryParams());
         MachineConfigShowCommand.printMachineConfig(machineConfig, this.selectParam);
     }
 
@@ -63,16 +65,16 @@ public class MachineConfigShowCommand implements Command {
         }
 
         if (selectParam.isSelected("memory")) {
-            table.addCell("memory (KB)");
-            table.addCell(Integer.toString(machineConfig.getMemory()));
+            table.addCell("memory");
+            table.addCell(CommandHelper.printKibibytesValue(machineConfig.getMemory()));
         }
 
         if (selectParam.isSelected("disks")) {
             for (int i = 0; i < machineConfig.getDisks().length; i++) {
                 Disk disk = machineConfig.getDisks()[i];
                 table.addCell("disk #" + i);
-                table.addCell("capacity=" + disk.capacity + "KB, format=" + disk.format + ", initialLocation="
-                    + disk.initialLocation);
+                table.addCell("capacity=" + CommandHelper.printKilobytesValue(disk.capacity) + ", format=" + disk.format
+                    + ", initialLocation=" + disk.initialLocation);
             }
         }
 

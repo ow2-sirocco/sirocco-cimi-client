@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -35,8 +37,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show machine template")
 public class MachineTemplateShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the machine template", required = true)
-    private String machineTemplateId;
+    @Parameter(description = "<machine template id>", required = true)
+    private List<String> machineTemplateIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -48,8 +50,8 @@ public class MachineTemplateShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        MachineTemplate machineTemplate = MachineTemplate.getMachineTemplateByReference(cimiClient, this.machineTemplateId,
-            this.showParams.getQueryParams());
+        MachineTemplate machineTemplate = MachineTemplate.getMachineTemplateByReference(cimiClient,
+            this.machineTemplateIds.get(0), this.showParams.getQueryParams());
         MachineTemplateShowCommand.printMachineTemplate(machineTemplate, this.showParams);
     }
 

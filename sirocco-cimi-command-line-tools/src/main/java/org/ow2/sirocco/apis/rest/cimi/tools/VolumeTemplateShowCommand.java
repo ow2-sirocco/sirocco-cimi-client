@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -35,8 +37,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show volume template")
 public class VolumeTemplateShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the volume template", required = true)
-    private String volumeTemplateId;
+    @Parameter(description = "<volume template id>", required = true)
+    private List<String> volumeTemplateIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -48,7 +50,7 @@ public class VolumeTemplateShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        VolumeTemplate volumeTemplate = VolumeTemplate.getVolumeTemplateByReference(cimiClient, this.volumeTemplateId,
+        VolumeTemplate volumeTemplate = VolumeTemplate.getVolumeTemplateByReference(cimiClient, this.volumeTemplateIds.get(0),
             this.showParams.getQueryParams());
         VolumeTemplateShowCommand.printVolumeTemplate(volumeTemplate, this.showParams);
     }

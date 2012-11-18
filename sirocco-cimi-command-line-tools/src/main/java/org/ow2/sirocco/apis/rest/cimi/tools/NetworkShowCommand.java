@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -35,8 +37,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show network")
 public class NetworkShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the network", required = true)
-    private String networkId;
+    @Parameter(description = "<network id>", required = true)
+    private List<String> networkIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -48,7 +50,7 @@ public class NetworkShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Network net = Network.getNetworkByReference(cimiClient, this.networkId, this.showParams.getQueryParams());
+        Network net = Network.getNetworkByReference(cimiClient, this.networkIds.get(0), this.showParams.getQueryParams());
         NetworkShowCommand.printNetwork(net, this.showParams);
     }
 

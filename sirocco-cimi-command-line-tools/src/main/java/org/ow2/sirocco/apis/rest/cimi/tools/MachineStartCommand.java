@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Job;
@@ -34,8 +36,8 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "start machine")
 public class MachineStartCommand implements Command {
-    @Parameter(names = "-id", description = "id of the machine", required = true)
-    private String machineId;
+    @Parameter(description = "<machine id>", required = true)
+    private List<String> machineIds;
 
     @Override
     public String getName() {
@@ -44,9 +46,9 @@ public class MachineStartCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Machine machine = Machine.getMachineByReference(cimiClient, this.machineId);
+        Machine machine = Machine.getMachineByReference(cimiClient, this.machineIds.get(0));
         Job job = machine.start();
-        System.out.println("Starting machine " + this.machineId);
+        System.out.println("Starting machine " + this.machineIds.get(0));
         if (job != null) {
             JobShowCommand.printJob(job, new ResourceSelectExpandParams());
         }

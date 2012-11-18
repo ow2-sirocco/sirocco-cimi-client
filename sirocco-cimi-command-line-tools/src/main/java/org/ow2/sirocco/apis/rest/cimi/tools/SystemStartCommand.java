@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Job;
@@ -34,8 +36,8 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "start system")
 public class SystemStartCommand implements Command {
-    @Parameter(names = "-id", description = "id of the system", required = true)
-    private String systemId;
+    @Parameter(description = "<system id>", required = true)
+    private List<String> systemIds;
 
     @Override
     public String getName() {
@@ -44,9 +46,9 @@ public class SystemStartCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        System system = System.getSystemByReference(cimiClient, this.systemId);
+        System system = System.getSystemByReference(cimiClient, this.systemIds.get(0));
         Job job = system.start();
-        java.lang.System.out.println("Starting system " + this.systemId);
+        java.lang.System.out.println("Starting system " + this.systemIds.get(0));
         if (job != null) {
             JobShowCommand.printJob(job, new ResourceSelectExpandParams());
         }

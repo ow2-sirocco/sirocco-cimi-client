@@ -60,7 +60,7 @@ public class MachineConfigListCommand implements Command {
                 table.addCell(Integer.toString(machineConfig.getCpu()));
             }
             if (this.listParams.isSelected("memory")) {
-                table.addCell(Integer.toString(machineConfig.getMemory()));
+                table.addCell(CommandHelper.printKibibytesValue(machineConfig.getMemory()));
             }
 
             if (this.listParams.isSelected("disks")) {
@@ -69,7 +69,7 @@ public class MachineConfigListCommand implements Command {
                     if (i > 0) {
                         sb.append(", ");
                     }
-                    sb.append(machineConfig.getDisks()[i].capacity + "KB");
+                    sb.append(CommandHelper.printKilobytesValue(machineConfig.getDisks()[i].capacity));
                 }
                 table.addCell((sb.toString()));
             }

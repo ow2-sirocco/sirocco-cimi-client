@@ -63,7 +63,7 @@ public class VolumeConfigListCommand implements Command {
                 table.addCell(volumeConfig.getFormat());
             }
             if (this.listParams.isSelected("capacity")) {
-                table.addCell(Integer.toString(volumeConfig.getCapacity()) + "KB");
+                table.addCell(CommandHelper.printKilobytesValue(volumeConfig.getCapacity()));
             }
 
         }

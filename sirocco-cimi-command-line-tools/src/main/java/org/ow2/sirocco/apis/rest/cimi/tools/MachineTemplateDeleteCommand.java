@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineTemplate;
@@ -33,8 +35,8 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "delete machine template")
 public class MachineTemplateDeleteCommand implements Command {
-    @Parameter(names = "-id", description = "id of the machine template", required = true)
-    private String machineTemplateId;
+    @Parameter(description = "<machine template id>", required = true)
+    private List<String> machineTemplateIds;
 
     @Override
     public String getName() {
@@ -43,8 +45,9 @@ public class MachineTemplateDeleteCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        MachineTemplate machineTemplate = MachineTemplate.getMachineTemplateByReference(cimiClient, this.machineTemplateId);
+        MachineTemplate machineTemplate = MachineTemplate.getMachineTemplateByReference(cimiClient,
+            this.machineTemplateIds.get(0));
         machineTemplate.delete();
-        System.out.println("MachineTemplate " + this.machineTemplateId + " deleted");
+        System.out.println("MachineTemplate " + this.machineTemplateIds.get(0) + " deleted");
     }
 }

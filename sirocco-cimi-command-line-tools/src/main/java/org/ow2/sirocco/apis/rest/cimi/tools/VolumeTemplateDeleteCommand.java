@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.VolumeTemplate;
@@ -33,8 +35,8 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "delete volume template")
 public class VolumeTemplateDeleteCommand implements Command {
-    @Parameter(names = "-id", description = "id of the volume template", required = true)
-    private String volumeTemplateId;
+    @Parameter(description = "<volume template id>", required = true)
+    private List<String> volumeTemplateIds;
 
     @Override
     public String getName() {
@@ -43,8 +45,8 @@ public class VolumeTemplateDeleteCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        VolumeTemplate volumeTemplate = VolumeTemplate.getVolumeTemplateByReference(cimiClient, this.volumeTemplateId);
+        VolumeTemplate volumeTemplate = VolumeTemplate.getVolumeTemplateByReference(cimiClient, this.volumeTemplateIds.get(0));
         volumeTemplate.delete();
-        System.out.println("VolumeTemplate " + this.volumeTemplateId + " deleted");
+        System.out.println("VolumeTemplate " + this.volumeTemplateIds.get(0) + " deleted");
     }
 }

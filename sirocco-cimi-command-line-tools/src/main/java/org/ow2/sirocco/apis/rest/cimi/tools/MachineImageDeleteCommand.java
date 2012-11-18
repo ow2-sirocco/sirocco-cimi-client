@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineImage;
@@ -33,8 +35,8 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "delete machine image")
 public class MachineImageDeleteCommand implements Command {
-    @Parameter(names = "-id", description = "id of the machine image", required = true)
-    private String machineImageId;
+    @Parameter(description = "<machine image id>", required = true)
+    private List<String> machineImageIds;
 
     @Override
     public String getName() {
@@ -43,8 +45,8 @@ public class MachineImageDeleteCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        MachineImage machineImage = MachineImage.getMachineImageByReference(cimiClient, this.machineImageId);
+        MachineImage machineImage = MachineImage.getMachineImageByReference(cimiClient, this.machineImageIds.get(0));
         machineImage.delete();
-        System.out.println("MachineImage " + this.machineImageId + " deleted");
+        System.out.println("MachineImage " + this.machineImageIds.get(0) + " deleted");
     }
 }

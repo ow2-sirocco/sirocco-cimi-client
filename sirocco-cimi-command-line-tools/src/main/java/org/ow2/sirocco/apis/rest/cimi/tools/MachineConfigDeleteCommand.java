@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineConfiguration;
@@ -33,8 +35,8 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "delete machine config")
 public class MachineConfigDeleteCommand implements Command {
-    @Parameter(names = "-id", description = "id of the machine config", required = true)
-    private String machineConfigId;
+    @Parameter(description = "<machine config id>", required = true)
+    private List<String> machineConfigIds;
 
     @Override
     public String getName() {
@@ -44,8 +46,8 @@ public class MachineConfigDeleteCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         MachineConfiguration machineConfig = MachineConfiguration.getMachineConfigurationByReference(cimiClient,
-            this.machineConfigId);
+            this.machineConfigIds.get(0));
         machineConfig.delete();
-        System.out.println("MachineConfig " + this.machineConfigId + " deleted");
+        System.out.println("MachineConfig " + this.machineConfigIds.get(0) + " deleted");
     }
 }

@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Address;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
@@ -36,8 +38,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show nic")
 public class MachineNetworkInterfaceShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the nic", required = true)
-    private String nicId;
+    @Parameter(description = "<nic id>", required = true)
+    private List<String> nicIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -49,8 +51,8 @@ public class MachineNetworkInterfaceShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        MachineNetworkInterface nic = MachineNetworkInterface.getMachineNetworkInterfaceByReference(cimiClient, this.nicId,
-            this.showParams.getQueryParams().toBuilder().expand("addresses").build());
+        MachineNetworkInterface nic = MachineNetworkInterface.getMachineNetworkInterfaceByReference(cimiClient,
+            this.nicIds.get(0), this.showParams.getQueryParams().toBuilder().expand("addresses").build());
         MachineNetworkInterfaceShowCommand.printMachineNetworkInterface(nic, this.showParams);
     }
 

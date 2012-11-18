@@ -38,8 +38,8 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "update machine template")
 public class MachineTemplateUpdateCommand implements Command {
-    @Parameter(names = "-id", description = "id of the machine template", required = true)
-    private String machineTemplateId;
+    @Parameter(description = "<machine template id>", required = true)
+    private List<String> machineTemplateIds;
 
     @Parameter(names = "-name", description = "name of the template", required = false)
     private String name;
@@ -90,13 +90,13 @@ public class MachineTemplateUpdateCommand implements Command {
             attributeValues.put("machineImage", this.machineImageId);
         }
 
-        UpdateResult<MachineTemplate> result = MachineTemplate.updateMachineTemplate(cimiClient, this.machineTemplateId,
-            attributeValues);
+        UpdateResult<MachineTemplate> result = MachineTemplate.updateMachineTemplate(cimiClient,
+            this.machineTemplateIds.get(0), attributeValues);
         if (result.getJob() != null) {
             System.out.println("MachineTemplate " + result.getJob().getTargetResourceRef() + " being updated");
             JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
         } else {
-            System.out.println("MachineTemplate: " + this.machineTemplateId + " updated");
+            System.out.println("MachineTemplate: " + this.machineTemplateIds.get(0) + " updated");
         }
     }
 

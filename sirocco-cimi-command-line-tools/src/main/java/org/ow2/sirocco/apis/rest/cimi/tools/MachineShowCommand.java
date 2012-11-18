@@ -39,8 +39,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show machine")
 public class MachineShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the machine", required = true)
-    private String machineId;
+    @Parameter(description = "<machine id>", required = true)
+    private List<String> machineIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -52,7 +52,7 @@ public class MachineShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Machine machine = Machine.getMachineByReference(cimiClient, this.machineId, this.showParams.getQueryParams());
+        Machine machine = Machine.getMachineByReference(cimiClient, this.machineIds.get(0), this.showParams.getQueryParams());
         MachineShowCommand.printMachine(machine, this.showParams);
     }
 
@@ -69,7 +69,7 @@ public class MachineShowCommand implements Command {
         }
         if (showParams.isSelected("memory")) {
             table.addCell("memory");
-            table.addCell(Integer.toString(machine.getMemory()));
+            table.addCell(CommandHelper.printKibibytesValue(machine.getMemory()));
         }
 
         if (showParams.isSelected("disks")) {
@@ -80,7 +80,7 @@ public class MachineShowCommand implements Command {
                 if (i > 0) {
                     sb.append(", ");
                 }
-                sb.append(disks.get(i).getCapacity());
+                sb.append(CommandHelper.printKilobytesValue(disks.get(i).getCapacity()));
             }
             table.addCell((sb.toString()));
         }

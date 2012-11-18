@@ -38,8 +38,8 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "update machine image")
 public class MachineImageUpdateCommand implements Command {
-    @Parameter(names = "-id", description = "id of the machine image", required = true)
-    private String machineImageId;
+    @Parameter(description = "<machine image id>", required = true)
+    private List<String> machineImageId;
 
     @Parameter(names = "-name", description = "name of the image", required = false)
     private String name;
@@ -78,7 +78,8 @@ public class MachineImageUpdateCommand implements Command {
             attributeValues.put("imageLocation", this.imageLocation);
         }
 
-        UpdateResult<MachineImage> result = MachineImage.updateMachineImage(cimiClient, this.machineImageId, attributeValues);
+        UpdateResult<MachineImage> result = MachineImage.updateMachineImage(cimiClient, this.machineImageId.get(0),
+            attributeValues);
         if (result.getJob() != null) {
             System.out.println("MachineImage " + result.getJob().getTargetResourceRef() + " being updated");
             JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());

@@ -22,6 +22,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -33,8 +35,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show resource metadata")
 public class ResourceMetadataShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the resource metadata", required = true)
-    private String metadataId;
+    @Parameter(description = "<resource metadata id>", required = true)
+    private List<String> metadataIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -46,7 +48,7 @@ public class ResourceMetadataShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        ResourceMetadata disk = ResourceMetadata.getResourceMetadataByReference(cimiClient, this.metadataId,
+        ResourceMetadata disk = ResourceMetadata.getResourceMetadataByReference(cimiClient, this.metadataIds.get(0),
             this.showParams.getQueryParams());
         ResourceMetadataShowCommand.printResourceMetadata(disk, this.showParams);
     }

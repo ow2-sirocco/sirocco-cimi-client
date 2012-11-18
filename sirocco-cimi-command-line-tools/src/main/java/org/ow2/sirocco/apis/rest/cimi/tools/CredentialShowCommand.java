@@ -24,6 +24,7 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
 import java.util.Map;
 
 import org.nocrala.tools.texttablefmt.Table;
@@ -37,8 +38,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show credential")
 public class CredentialShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the credential", required = true)
-    private String credentialId;
+    @Parameter(description = "<credential id>", required = true)
+    private List<String> credentialIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -50,7 +51,8 @@ public class CredentialShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Credential cred = Credential.getCredentialByReference(cimiClient, this.credentialId, this.showParams.getQueryParams());
+        Credential cred = Credential.getCredentialByReference(cimiClient, this.credentialIds.get(0),
+            this.showParams.getQueryParams());
         CredentialShowCommand.printCredential(cred, this.showParams);
     }
 

@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Job;
@@ -34,8 +36,8 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "detach volume from machine")
 public class MachineVolumeDeleteCommand implements Command {
-    @Parameter(names = "-id", description = "id of the machine volume", required = true)
-    private String machineVolumeId;
+    @Parameter(description = "<machine volume id>", required = true)
+    private List<String> machineVolumeIds;
 
     @Override
     public String getName() {
@@ -44,9 +46,9 @@ public class MachineVolumeDeleteCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        MachineVolume machineVolume = MachineVolume.getMachineVolumeByReference(cimiClient, this.machineVolumeId);
+        MachineVolume machineVolume = MachineVolume.getMachineVolumeByReference(cimiClient, this.machineVolumeIds.get(0));
         Job job = machineVolume.delete();
-        System.out.println("MachineVolume " + this.machineVolumeId + " being deleted");
+        System.out.println("MachineVolume " + this.machineVolumeIds.get(0) + " being deleted");
         JobShowCommand.printJob(job, new ResourceSelectExpandParams());
     }
 }

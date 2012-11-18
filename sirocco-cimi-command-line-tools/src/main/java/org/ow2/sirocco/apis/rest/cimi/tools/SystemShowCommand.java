@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -35,8 +37,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show system")
 public class SystemShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the system", required = true)
-    private String systemId;
+    @Parameter(description = "<system id>", required = true)
+    private List<String> systemIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -48,7 +50,7 @@ public class SystemShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        System system = System.getSystemByReference(cimiClient, this.systemId, this.showParams.getQueryParams());
+        System system = System.getSystemByReference(cimiClient, this.systemIds.get(0), this.showParams.getQueryParams());
         SystemShowCommand.printSystem(system, this.showParams);
     }
 

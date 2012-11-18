@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -35,8 +37,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show volume config")
 public class VolumeConfigShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the volume config", required = true)
-    private String volumeConfigId;
+    @Parameter(description = "<volume config id>", required = true)
+    private List<String> volumeConfigIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -49,7 +51,7 @@ public class VolumeConfigShowCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         VolumeConfiguration volumeConfig = VolumeConfiguration.getVolumeConfigurationByReference(cimiClient,
-            this.volumeConfigId, this.showParams.getQueryParams());
+            this.volumeConfigIds.get(0), this.showParams.getQueryParams());
         VolumeConfigShowCommand.printVolumeConfig(volumeConfig, this.showParams);
     }
 
@@ -67,7 +69,7 @@ public class VolumeConfigShowCommand implements Command {
         }
         if (showParams.isSelected("capacity")) {
             table.addCell("capacity");
-            table.addCell(Integer.toString(volumeConfig.getCapacity()) + "KB");
+            table.addCell(CommandHelper.printKilobytesValue(volumeConfig.getCapacity()));
         }
         System.out.println(table.render());
     }

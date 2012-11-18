@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -35,8 +37,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show volume")
 public class VolumeShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the volume", required = true)
-    private String volumeId;
+    @Parameter(description = "<volume id>", required = true)
+    private List<String> volumeIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -48,7 +50,7 @@ public class VolumeShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Volume volume = Volume.getVolumeByReference(cimiClient, this.volumeId, this.showParams.getQueryParams());
+        Volume volume = Volume.getVolumeByReference(cimiClient, this.volumeIds.get(0), this.showParams.getQueryParams());
         VolumeShowCommand.printVolume(volume, this.showParams);
     }
 
@@ -65,7 +67,7 @@ public class VolumeShowCommand implements Command {
         }
         if (showParams.isSelected("capacity")) {
             table.addCell("capacity");
-            table.addCell(Integer.toString(volume.getCapacity()) + "KB");
+            table.addCell(CommandHelper.printKilobytesValue(volume.getCapacity()));
         }
         if (showParams.isSelected("bootable")) {
             table.addCell("bootable");

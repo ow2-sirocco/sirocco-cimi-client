@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -35,8 +37,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show disk")
 public class DiskShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the Disk", required = true)
-    private String diskId;
+    @Parameter(description = "<disk id>", required = true)
+    private List<String> diskIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -48,7 +50,7 @@ public class DiskShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Disk disk = Disk.getMachineDiskByReference(cimiClient, this.diskId, this.showParams.getQueryParams());
+        Disk disk = Disk.getMachineDiskByReference(cimiClient, this.diskIds.get(0), this.showParams.getQueryParams());
         DiskShowCommand.printDisk(disk, this.showParams);
     }
 

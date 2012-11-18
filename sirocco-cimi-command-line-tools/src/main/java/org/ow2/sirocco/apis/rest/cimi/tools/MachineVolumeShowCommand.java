@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -35,8 +37,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show MachineVolume")
 public class MachineVolumeShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the MachineVolume", required = true)
-    private String machineVolumeId;
+    @Parameter(description = "<MachineVolume id>", required = true)
+    private List<String> machineVolumeIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -48,7 +50,7 @@ public class MachineVolumeShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        MachineVolume machineVolume = MachineVolume.getMachineVolumeByReference(cimiClient, this.machineVolumeId,
+        MachineVolume machineVolume = MachineVolume.getMachineVolumeByReference(cimiClient, this.machineVolumeIds.get(0),
             this.showParams.getQueryParams().toBuilder().expand("volume").build());
         MachineVolumeShowCommand.printMachineVolume(machineVolume, this.showParams);
     }

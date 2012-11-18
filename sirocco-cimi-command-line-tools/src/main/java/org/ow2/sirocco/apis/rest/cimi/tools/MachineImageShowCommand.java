@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -35,8 +37,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show machine image")
 public class MachineImageShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the machine image", required = true)
-    private String machineImageId;
+    @Parameter(description = "<machine image id>", required = true)
+    private List<String> machineImageIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -48,7 +50,7 @@ public class MachineImageShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        MachineImage machineImage = MachineImage.getMachineImageByReference(cimiClient, this.machineImageId,
+        MachineImage machineImage = MachineImage.getMachineImageByReference(cimiClient, this.machineImageIds.get(0),
             this.showParams.getQueryParams());
         MachineImageShowCommand.printMachineImage(machineImage, this.showParams);
     }

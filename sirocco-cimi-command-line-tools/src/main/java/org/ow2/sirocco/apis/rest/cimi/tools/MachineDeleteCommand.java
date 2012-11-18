@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Job;
@@ -34,8 +36,8 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "delete machine")
 public class MachineDeleteCommand implements Command {
-    @Parameter(names = "-id", description = "id of the machine", required = true)
-    private String machineId;
+    @Parameter(description = "<machine id>", required = true)
+    private List<String> machineIds;
 
     @Override
     public String getName() {
@@ -44,9 +46,9 @@ public class MachineDeleteCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Machine machine = Machine.getMachineByReference(cimiClient, this.machineId);
+        Machine machine = Machine.getMachineByReference(cimiClient, this.machineIds.get(0));
         Job job = machine.delete();
-        System.out.println("Machine " + this.machineId + " being deleted");
+        System.out.println("Machine " + this.machineIds.get(0) + " being deleted");
         JobShowCommand.printJob(job, new ResourceSelectExpandParams());
     }
 }

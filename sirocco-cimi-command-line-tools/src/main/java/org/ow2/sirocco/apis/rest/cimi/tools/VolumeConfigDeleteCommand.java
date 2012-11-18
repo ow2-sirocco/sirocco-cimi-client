@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.VolumeConfiguration;
@@ -33,8 +35,8 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "delete volume config")
 public class VolumeConfigDeleteCommand implements Command {
-    @Parameter(names = "-id", description = "id of the volume config", required = true)
-    private String volumeConfigId;
+    @Parameter(description = "<volume config id>", required = true)
+    private List<String> volumeConfigIds;
 
     @Override
     public String getName() {
@@ -44,8 +46,8 @@ public class VolumeConfigDeleteCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
         VolumeConfiguration volumeConfig = VolumeConfiguration.getVolumeConfigurationByReference(cimiClient,
-            this.volumeConfigId);
+            this.volumeConfigIds.get(0));
         volumeConfig.delete();
-        System.out.println("VolumeConfig " + this.volumeConfigId + " deleted");
+        System.out.println("VolumeConfig " + this.volumeConfigIds.get(0) + " deleted");
     }
 }

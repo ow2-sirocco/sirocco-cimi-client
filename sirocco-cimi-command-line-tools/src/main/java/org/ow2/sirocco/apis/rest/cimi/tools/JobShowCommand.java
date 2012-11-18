@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
@@ -35,8 +37,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "job machine")
 public class JobShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the job", required = true)
-    private String jobId;
+    @Parameter(description = "<job id>", required = true)
+    private List<String> jobIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -48,7 +50,7 @@ public class JobShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws Exception {
-        Job job = Job.getJobByReference(cimiClient, this.jobId, this.showParams.getQueryParams());
+        Job job = Job.getJobByReference(cimiClient, this.jobIds.get(0), this.showParams.getQueryParams());
         JobShowCommand.printJob(job, this.showParams);
     }
 

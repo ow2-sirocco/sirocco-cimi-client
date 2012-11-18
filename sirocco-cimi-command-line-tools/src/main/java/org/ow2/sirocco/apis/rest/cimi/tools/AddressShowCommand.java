@@ -24,6 +24,8 @@
  */
 package org.ow2.sirocco.apis.rest.cimi.tools;
 
+import java.util.List;
+
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Address;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
@@ -35,8 +37,8 @@ import com.beust.jcommander.ParametersDelegate;
 
 @Parameters(commandDescription = "show address")
 public class AddressShowCommand implements Command {
-    @Parameter(names = "-id", description = "id of the address", required = true)
-    private String addressId;
+    @Parameter(description = "<address id>", required = true)
+    private List<String> addressIds;
 
     @ParametersDelegate
     private ResourceSelectExpandParams showParams = new ResourceSelectExpandParams();
@@ -48,7 +50,7 @@ public class AddressShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiException {
-        Address address = Address.getAddressByReference(cimiClient, this.addressId, this.showParams.getQueryParams());
+        Address address = Address.getAddressByReference(cimiClient, this.addressIds.get(0), this.showParams.getQueryParams());
         AddressShowCommand.printAddress(address, this.showParams);
     }
 
