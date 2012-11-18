@@ -131,4 +131,30 @@ public class CommandHelper {
         }
     }
 
+    public static String printKibibytesValue(final int val) {
+        String result;
+        if (val < 1024) {
+            result = val + " KB";
+        }
+        if (val < 1024 * 1024) {
+            result = String.format("%.0f MB", val / 1024.0f);
+        } else {
+            result = String.format("%.0f GB", ((float) val) / (1024 * 1024));
+        }
+        return result;
+    }
+
+    public static String printKilobytesValue(final int val) {
+        String result;
+        if (val < 1000) {
+            result = val + " KB";
+        }
+        if (val < 1000 * 1000) {
+            result = String.format("%.0f MB", val / 1000.0f);
+        } else {
+            result = String.format("%.0f GB", ((float) val) / (1000 * 1000));
+        }
+        return result;
+    }
+
 }
