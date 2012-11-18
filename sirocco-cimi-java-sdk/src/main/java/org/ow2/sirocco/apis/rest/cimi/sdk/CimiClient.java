@@ -32,7 +32,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiCloudEntryPoint;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiObjectCommonAbstract;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -402,8 +401,8 @@ public class CimiClient {
         }
     }
 
-    <U extends CimiObjectCommonAbstract> U getCimiObjectByReference(final String ref, final Class<U> clazz,
-        final QueryParams... queryParams) throws CimiException {
+    <U> U getCimiObjectByReference(final String ref, final Class<U> clazz, final QueryParams... queryParams)
+        throws CimiException {
         return this.getRequest(this.extractPath(ref), clazz, queryParams);
     }
 
