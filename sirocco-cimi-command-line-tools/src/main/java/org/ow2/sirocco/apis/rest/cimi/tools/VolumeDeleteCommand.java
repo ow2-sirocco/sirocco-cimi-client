@@ -27,7 +27,7 @@ package org.ow2.sirocco.apis.rest.cimi.tools;
 import java.util.List;
 
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Job;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Volume;
 
@@ -45,7 +45,7 @@ public class VolumeDeleteCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         Volume volume = Volume.getVolumeByReference(cimiClient, this.volumeIds.get(0));
         Job job = volume.delete();
         System.out.println("Volume " + this.volumeIds.get(0) + " being deleted");

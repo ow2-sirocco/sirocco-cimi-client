@@ -27,7 +27,7 @@ package org.ow2.sirocco.apis.rest.cimi.tools;
 import java.util.List;
 
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CreateResult;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Credential;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CredentialCreate;
@@ -56,7 +56,7 @@ public class CredentialCreateCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         CredentialTemplate credentialTemplate = new CredentialTemplate();
         if (this.extendedAttributes != null) {
             for (int i = 0; i < this.extendedAttributes.size() / 2; i++) {

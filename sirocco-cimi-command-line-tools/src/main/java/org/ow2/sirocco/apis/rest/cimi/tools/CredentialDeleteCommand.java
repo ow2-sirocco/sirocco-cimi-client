@@ -27,7 +27,7 @@ package org.ow2.sirocco.apis.rest.cimi.tools;
 import java.util.List;
 
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Credential;
 
 import com.beust.jcommander.Parameter;
@@ -44,7 +44,7 @@ public class CredentialDeleteCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         Credential cred = Credential.getCredentialByReference(cimiClient, this.credentialIds.get(0));
         cred.delete();
         System.out.println("Credential " + this.credentialIds.get(0) + " deleted");

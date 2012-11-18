@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.ResourceMetadata;
 
 import com.beust.jcommander.Parameter;
@@ -47,14 +47,14 @@ public class ResourceMetadataShowCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         ResourceMetadata disk = ResourceMetadata.getResourceMetadataByReference(cimiClient, this.metadataIds.get(0),
             this.showParams.getQueryParams());
         ResourceMetadataShowCommand.printResourceMetadata(disk, this.showParams);
     }
 
     public static void printResourceMetadata(final ResourceMetadata metadata, final ResourceSelectExpandParams showParams)
-        throws CimiException {
+        throws CimiClientException {
         Table table = new Table(2);
         table.addCell("Attribute");
         table.addCell("Value");

@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.SystemTemplate;
 
 import com.beust.jcommander.Parameter;
@@ -49,14 +49,14 @@ public class SystemTemplateShowCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         SystemTemplate systemTemplate = SystemTemplate.getSystemTemplateByReference(cimiClient, this.systemTemplateIds.get(0),
             this.showParams.getQueryParams());
         SystemTemplateShowCommand.printSystemTemplate(systemTemplate, this.showParams);
     }
 
     public static void printSystemTemplate(final SystemTemplate systemTemplate, final ResourceSelectExpandParams showParams)
-        throws CimiException {
+        throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(systemTemplate, showParams);
         java.lang.System.out.println(table.render());
     }

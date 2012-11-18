@@ -69,7 +69,7 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
         super(cimiClient, cimiMachineNetworkInterface);
     }
 
-    public List<Address> getAddresses() throws CimiException {
+    public List<Address> getAddresses() throws CimiClientException, CimiProviderException {
         String href = this.cimiObject.getAddresses().getHref();
         if (href == null) {
             href = this.cimiObject.getAddresses().getId();
@@ -108,10 +108,10 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
         return this.cimiObject.getMtu();
     }
 
-    public Job delete() throws CimiException {
+    public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiJob job = this.cimiClient.deleteRequest(deleteRef);
         if (job != null) {
@@ -122,12 +122,12 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
     }
 
     public static CreateResult<MachineNetworkInterface> createMachineNetworkInterface(final CimiClient client,
-        final String machineId, final MachineNetworkInterface machineNetworkInterface) throws CimiException {
+        final String machineId, final MachineNetworkInterface machineNetworkInterface) throws CimiClientException, CimiProviderException {
         Machine machine = Machine.getMachineByReference(client, machineId, QueryParams.builder().expand("networkInterfaces")
             .build());
         String addRef = Helper.findOperation("add", machine.cimiObject.getNetworkInterfaces());
         if (addRef == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiResult<CimiMachineNetworkInterface> result = client.postCreateRequest(addRef, machineNetworkInterface.cimiObject,
             CimiMachineNetworkInterface.class);
@@ -138,10 +138,10 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
     }
 
     public static List<MachineNetworkInterface> getMachineNetworkInterfaces(final CimiClient client, final String machineId,
-        final QueryParams... queryParams) throws CimiException {
+        final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
         Machine machine = Machine.getMachineByReference(client, machineId);
         if (machine.cimiObject.getNetworkInterfaces() == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
 
         CimiMachineNetworkInterfaceCollection machineNetworkInterfaceCollection = client.getRequest(
@@ -159,7 +159,7 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
     }
 
     public static MachineNetworkInterface getMachineNetworkInterfaceByReference(final CimiClient client, final String ref,
-        final QueryParams... queryParams) throws CimiException {
+        final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
         return new MachineNetworkInterface(client, client.getCimiObjectByReference(ref, CimiMachineNetworkInterface.class,
             queryParams));
     }

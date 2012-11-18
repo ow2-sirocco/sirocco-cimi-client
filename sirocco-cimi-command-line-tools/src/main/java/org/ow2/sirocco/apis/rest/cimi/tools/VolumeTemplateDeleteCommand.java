@@ -27,7 +27,7 @@ package org.ow2.sirocco.apis.rest.cimi.tools;
 import java.util.List;
 
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.VolumeTemplate;
 
 import com.beust.jcommander.Parameter;
@@ -44,7 +44,7 @@ public class VolumeTemplateDeleteCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         VolumeTemplate volumeTemplate = VolumeTemplate.getVolumeTemplateByReference(cimiClient, this.volumeTemplateIds.get(0));
         volumeTemplate.delete();
         System.out.println("VolumeTemplate " + this.volumeTemplateIds.get(0) + " deleted");

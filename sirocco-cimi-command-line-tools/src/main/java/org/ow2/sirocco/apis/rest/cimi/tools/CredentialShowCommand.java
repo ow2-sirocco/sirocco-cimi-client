@@ -29,7 +29,7 @@ import java.util.Map;
 
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Credential;
 
 import com.beust.jcommander.Parameter;
@@ -50,13 +50,13 @@ public class CredentialShowCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         Credential cred = Credential.getCredentialByReference(cimiClient, this.credentialIds.get(0),
             this.showParams.getQueryParams());
         CredentialShowCommand.printCredential(cred, this.showParams);
     }
 
-    public static void printCredential(final Credential cred, final ResourceSelectExpandParams showParams) throws CimiException {
+    public static void printCredential(final Credential cred, final ResourceSelectExpandParams showParams) throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(cred, showParams);
         if (cred.getExtensionAttributes() != null) {
             for (Map.Entry<String, Object> entry : cred.getExtensionAttributes().entrySet()) {

@@ -31,7 +31,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.ow2.sirocco.apis.rest.cimi.sdk.AuthPlugin;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -104,14 +104,14 @@ public class OpenStackKeystoneAuthPlugin implements AuthPlugin {
     }
 
     @Override
-    public Map<String, String> authenticate(final String user, final String password) throws CimiException {
+    public Map<String, String> authenticate(final String user, final String password) throws CimiClientException {
         String[] tenantAndUser = user.split(":");
         if (tenantAndUser.length != 2) {
-            throw new CimiException("Invalid tenant:user value");
+            throw new CimiClientException("Invalid tenant:user value");
         }
         String openStackAuthUrl = System.getenv("OS_AUTH_URL");
         if (openStackAuthUrl == null) {
-            throw new CimiException("OS_AUTH_URL environment variable muste be set");
+            throw new CimiClientException("OS_AUTH_URL environment variable muste be set");
         }
 
         ClientConfig config = new DefaultClientConfig();
@@ -133,7 +133,7 @@ public class OpenStackKeystoneAuthPlugin implements AuthPlugin {
             .entity(authMessage, MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class);
 
         if (response.getStatus() == 401) {
-            throw new CimiException("Unauthorized");
+            throw new CimiClientException("Unauthorized");
         }
 
         ObjectMapper mapper = new ObjectMapper();
@@ -141,7 +141,7 @@ public class OpenStackKeystoneAuthPlugin implements AuthPlugin {
         try {
             access = mapper.readValue(response.getEntityInputStream(), Map.class);
         } catch (Exception e) {
-            throw new CimiException("Unable to parse Keystone response: " + e.getMessage());
+            throw new CimiClientException("Unable to parse Keystone response: " + e.getMessage());
         }
         String tokenId = (String) ((Map<String, Object>) ((Map<String, Object>) access.get("access")).get("token")).get("id");
 

@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.ow2.sirocco.apis.rest.cimi.sdk.AuthPlugin;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 
 import com.sun.jersey.core.util.Base64;
 
@@ -38,7 +38,7 @@ import com.sun.jersey.core.util.Base64;
 public class BasicAuthPlugin implements AuthPlugin {
 
     @Override
-    public Map<String, String> authenticate(final String user, final String password) throws CimiException {
+    public Map<String, String> authenticate(final String user, final String password) throws CimiClientException {
         StringBuilder sbToEncode = new StringBuilder();
         sbToEncode.append(user).append(':').append(password);
         StringBuilder sb = new StringBuilder();

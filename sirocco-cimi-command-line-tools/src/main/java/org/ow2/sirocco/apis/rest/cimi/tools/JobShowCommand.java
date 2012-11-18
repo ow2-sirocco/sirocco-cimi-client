@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Job;
 
 import com.beust.jcommander.Parameter;
@@ -54,7 +54,7 @@ public class JobShowCommand implements Command {
         JobShowCommand.printJob(job, this.showParams);
     }
 
-    public static void printJob(final Job job, final ResourceSelectExpandParams showParams) throws CimiException {
+    public static void printJob(final Job job, final ResourceSelectExpandParams showParams) throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(job, showParams);
 
         if (showParams.isSelected("state")) {

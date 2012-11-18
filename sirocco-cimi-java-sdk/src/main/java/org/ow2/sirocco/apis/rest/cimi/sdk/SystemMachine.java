@@ -41,7 +41,7 @@ public class SystemMachine extends Resource<CimiSystemMachine> {
         this.cimiObject.setHref(id);
     }
 
-    SystemMachine(final CimiClient cimiClient, final CimiSystemMachine cimiObject) throws CimiException {
+    SystemMachine(final CimiClient cimiClient, final CimiSystemMachine cimiObject) throws CimiClientException, CimiProviderException {
         super(cimiClient, cimiObject);
         this.machine = Machine.getMachineByReference(cimiClient, cimiObject.getMachine().getHref());
     }

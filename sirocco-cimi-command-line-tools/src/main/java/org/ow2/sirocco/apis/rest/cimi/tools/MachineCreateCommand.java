@@ -27,7 +27,7 @@ package org.ow2.sirocco.apis.rest.cimi.tools;
 import java.util.List;
 
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CreateResult;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Machine;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineCreate;
@@ -68,9 +68,9 @@ public class MachineCreateCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         if (this.templateId == null && (this.configId == null || this.imageId == null)) {
-            throw new CimiException("You need to specify either a template id or both a config id and an image id");
+            throw new CimiClientException("You need to specify either a template id or both a config id and an image id");
         }
         MachineCreate machineCreate = new MachineCreate();
         MachineTemplate machineTemplate;

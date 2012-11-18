@@ -34,6 +34,7 @@ import org.ow2.sirocco.apis.rest.cimi.domain.CimiCloudEntryPoint;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
@@ -202,34 +203,34 @@ public class CimiClient {
         return this.extractPath(this.cloudEntryPoint.getSystemTemplates().getHref());
     }
 
-    private void handleResponseStatus(final ClientResponse response) throws CimiException {
+    private void handleResponseStatus(final ClientResponse response) throws CimiProviderException {
         if (response.getStatus() == 400) {
             String message = response.getEntity(String.class);
-            throw new CimiException(message);
+            throw new CimiProviderException(message);
         } else if (response.getStatus() == 401) {
-            throw new CimiException("Unauthorized");
+            throw new CimiProviderException("Unauthorized");
         } else if (response.getStatus() == 403) {
             String message = response.getEntity(String.class);
-            throw new CimiException("Forbidden: " + message);
+            throw new CimiProviderException("Forbidden: " + message);
         } else if (response.getStatus() == 404) {
             String message = response.getEntity(String.class);
-            throw new CimiException("Resource not found: " + message);
+            throw new CimiProviderException("Resource not found: " + message);
         } else if (response.getStatus() == 409) {
             String message = response.getEntity(String.class);
-            throw new CimiException(message);
+            throw new CimiProviderException(message);
         } else if (response.getStatus() == 503) {
             String message = response.getEntity(String.class);
-            throw new CimiException("Service unavailable: " + message);
+            throw new CimiProviderException("Service unavailable: " + message);
         } else if (response.getStatus() == 500) {
             String message = response.getEntity(String.class);
-            throw new CimiException("Internal error: " + message);
+            throw new CimiProviderException("Internal error: " + message);
         } else if (response.getStatus() == 501) {
             String message = response.getEntity(String.class);
-            throw new CimiException("Not implemented: " + message);
+            throw new CimiProviderException("Not implemented: " + message);
         }
     }
 
-    private void initAuthenticationHeaders(final String userName, final String password) throws CimiException {
+    private void initAuthenticationHeaders(final String userName, final String password) throws CimiClientException {
         String authPluginClassName = java.lang.System.getProperty(CimiClient.CIMICLIENT_AUTH_PLUGIN_CLASS_PROP);
         if (authPluginClassName == null) {
             authPluginClassName = CimiClient.DEFAULT_CIMICLIENT_AUTH_PLUGIN_CLASS;
@@ -238,13 +239,13 @@ public class CimiClient {
         try {
             authPluginClazz = Class.forName(authPluginClassName);
         } catch (ClassNotFoundException ex) {
-            throw new CimiException("Cannot find auth pluging class " + authPluginClassName);
+            throw new CimiClientException("Cannot find auth pluging class " + authPluginClassName);
         }
         AuthPlugin authPlugin = null;
         try {
             authPlugin = (AuthPlugin) authPluginClazz.newInstance();
         } catch (Exception ex) {
-            throw new CimiException("Cannot create auth plugin " + authPluginClassName + " " + ex.getMessage());
+            throw new CimiClientException("Cannot create auth plugin " + authPluginClassName + " " + ex.getMessage());
         }
         this.authenticationHeaders = authPlugin.authenticate(userName, password);
     }
@@ -258,7 +259,7 @@ public class CimiClient {
     }
 
     private CimiClient(final String cimiEndpointUrl, final String userName, final String password, final Options... optionList)
-        throws CimiException {
+        throws CimiClientException, CimiProviderException {
         this.cimiEndpointUrl = cimiEndpointUrl;
         this.userName = userName;
         this.password = password;
@@ -274,14 +275,19 @@ public class CimiClient {
                 this.mediaType = options.mediaType;
             }
         }
-        WebResource cepWebResource = client.resource(cimiEndpointUrl).path("/");
+        try {
+            WebResource cepWebResource = client.resource(cimiEndpointUrl).path("/");
 
-        ClientResponse response = this.addAuthenticationHeaders(cepWebResource).accept(this.mediaType)
-            .get(ClientResponse.class);
-        this.handleResponseStatus(response);
-        this.cloudEntryPoint = response.getEntity(CimiCloudEntryPoint.class);
+            ClientResponse response = this.addAuthenticationHeaders(cepWebResource).accept(this.mediaType)
+                .get(ClientResponse.class);
+            this.handleResponseStatus(response);
+            this.cloudEntryPoint = response.getEntity(CimiCloudEntryPoint.class);
 
-        this.webResource = client.resource(this.cloudEntryPoint.getBaseURI());
+            this.webResource = client.resource(this.cloudEntryPoint.getBaseURI());
+        } catch (ClientHandlerException e) {
+            String message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
+            throw new CimiClientException(message, e);
+        }
     }
 
     /**
@@ -301,14 +307,14 @@ public class CimiClient {
      * @param password password
      * @param options options
      * @return
-     * @throws CimiException raised if login operation fails
+     * @throws CimiClientException raised if login operation fails
      */
     public static CimiClient login(final String cimiEndpointUrl, final String userName, final String password,
-        final Options... options) throws CimiException {
+        final Options... options) throws CimiClientException {
         return new CimiClient(cimiEndpointUrl, userName, password, options);
     }
 
-    <U> U getRequest(final String path, final Class<U> clazz, final QueryParams... queryParams) throws CimiException {
+    <U> U getRequest(final String path, final Class<U> clazz, final QueryParams... queryParams) throws CimiClientException {
         WebResource service = this.webResource.path(path);
         if (queryParams.length > 0) {
             if (queryParams[0].getExpand() != null) {
@@ -327,82 +333,105 @@ public class CimiClient {
                 service = service.queryParam(CimiClient.CIMI_QUERY_LAST_KEYWORD, Integer.toString(queryParams[0].getLast()));
             }
         }
-        ClientResponse response = this.addAuthenticationHeaders(service).accept(this.mediaType).get(ClientResponse.class);
-        this.handleResponseStatus(response);
-        U cimiObject = response.getEntity(clazz);
-        return cimiObject;
+        try {
+            ClientResponse response = this.addAuthenticationHeaders(service).accept(this.mediaType).get(ClientResponse.class);
+            this.handleResponseStatus(response);
+            U cimiObject = response.getEntity(clazz);
+            return cimiObject;
+        } catch (ClientHandlerException e) {
+            throw new CimiClientException(e.getMessage(), e);
+        }
     }
 
-    <U> CimiJob actionRequest(final String href, final U input) throws CimiException {
+    <U> CimiJob actionRequest(final String href, final U input) throws CimiClientException {
         WebResource service = this.webResource.path(this.extractPath(href));
-        ClientResponse response = this.addAuthenticationHeaders(service).accept(this.mediaType).entity(input, this.mediaType)
-            .post(ClientResponse.class);
-        this.handleResponseStatus(response);
-        if (response.getStatus() == 202) {
-            if (response.getLength() > 0
-                || (response.getType().equals(MediaType.APPLICATION_XML_TYPE) || response.getType().equals(
-                    MediaType.APPLICATION_JSON_TYPE))) {
-                return response.getEntity(CimiJob.class);
+        try {
+            ClientResponse response = this.addAuthenticationHeaders(service).accept(this.mediaType)
+                .entity(input, this.mediaType).post(ClientResponse.class);
+            this.handleResponseStatus(response);
+            if (response.getStatus() == 202) {
+                if (response.getLength() > 0
+                    || (response.getType().equals(MediaType.APPLICATION_XML_TYPE) || response.getType().equals(
+                        MediaType.APPLICATION_JSON_TYPE))) {
+                    return response.getEntity(CimiJob.class);
+                }
             }
+        } catch (ClientHandlerException e) {
+            throw new CimiClientException(e.getMessage(), e);
         }
         return null;
     }
 
-    <U, V> CimiResult<V> postCreateRequest(final String ref, final U input, final Class<V> outputClazz) throws CimiException {
+    <U, V> CimiResult<V> postCreateRequest(final String ref, final U input, final Class<V> outputClazz)
+        throws CimiClientException {
         WebResource service = this.webResource.path(this.extractPath(ref));
-        ClientResponse response = this.addAuthenticationHeaders(service).accept(this.mediaType).entity(input, this.mediaType)
-            .post(ClientResponse.class);
-        this.handleResponseStatus(response);
-        CimiResult<V> createResult = null;
-        if (response.getStatus() == 201) {
-            V resource = null;
-            if (response.getLength() > 0
-                || (response.getType().equals(MediaType.APPLICATION_XML_TYPE) || response.getType().equals(
-                    MediaType.APPLICATION_JSON_TYPE))) {
-                resource = response.getEntity(outputClazz);
+        try {
+            ClientResponse response = this.addAuthenticationHeaders(service).accept(this.mediaType)
+                .entity(input, this.mediaType).post(ClientResponse.class);
+            this.handleResponseStatus(response);
+            CimiResult<V> createResult = null;
+            if (response.getStatus() == 201) {
+                V resource = null;
+                if (response.getLength() > 0
+                    || (response.getType().equals(MediaType.APPLICATION_XML_TYPE) || response.getType().equals(
+                        MediaType.APPLICATION_JSON_TYPE))) {
+                    resource = response.getEntity(outputClazz);
+                }
+                createResult = new CimiResult<V>(null, resource);
+            } else if (response.getStatus() == 202) {
+                CimiJob job = response.getEntity(CimiJob.class);
+                createResult = new CimiResult<V>(job, null);
             }
-            createResult = new CimiResult<V>(null, resource);
-        } else if (response.getStatus() == 202) {
-            CimiJob job = response.getEntity(CimiJob.class);
-            createResult = new CimiResult<V>(job, null);
+            return createResult;
+        } catch (ClientHandlerException e) {
+            throw new CimiClientException(e.getMessage(), e);
         }
-        return createResult;
     }
 
-    <V> CimiResult<V> partialUpdateRequest(final String href, final V input, final String attributes) throws CimiException {
+    <V> CimiResult<V> partialUpdateRequest(final String href, final V input, final String attributes)
+        throws CimiClientException {
         WebResource service = this.webResource.path(this.extractPath(href));
         service = service.queryParam(CimiClient.CIMI_QUERY_SELECT_KEYWORD, attributes);
-        ClientResponse response = this.addAuthenticationHeaders(service).accept(this.mediaType).entity(input, this.mediaType)
-            .put(ClientResponse.class);
-        this.handleResponseStatus(response);
-        CimiResult<V> updateResult = null;
-        if (response.getStatus() == 200) {
-            V resource = null;
-            if (response.getLength() > 0) {
-                resource = (V) response.getEntity(input.getClass());
+        try {
+            ClientResponse response = this.addAuthenticationHeaders(service).accept(this.mediaType)
+                .entity(input, this.mediaType).put(ClientResponse.class);
+            this.handleResponseStatus(response);
+            CimiResult<V> updateResult = null;
+            if (response.getStatus() == 200) {
+                V resource = null;
+                if (response.getLength() > 0) {
+                    resource = (V) response.getEntity(input.getClass());
+                }
+                updateResult = new CimiResult<V>(null, resource);
+            } else if (response.getStatus() == 202) {
+                CimiJob job = response.getEntity(CimiJob.class);
+                updateResult = new CimiResult<V>(job, null);
             }
-            updateResult = new CimiResult<V>(null, resource);
-        } else if (response.getStatus() == 202) {
-            CimiJob job = response.getEntity(CimiJob.class);
-            updateResult = new CimiResult<V>(job, null);
+            return updateResult;
+        } catch (ClientHandlerException e) {
+            throw new CimiClientException(e.getMessage(), e);
         }
-        return updateResult;
     }
 
-    CimiJob deleteRequest(final String id) throws CimiException {
+    CimiJob deleteRequest(final String id) throws CimiClientException {
         WebResource service = this.webResource.path(this.extractPath(id));
-        ClientResponse response = this.addAuthenticationHeaders(service).accept(this.mediaType).delete(ClientResponse.class);
-        this.handleResponseStatus(response);
-        if (response.getStatus() == 202) {
-            CimiJob job = response.getEntity(CimiJob.class);
-            return job;
-        } else {
-            return null;
+        try {
+            ClientResponse response = this.addAuthenticationHeaders(service).accept(this.mediaType)
+                .delete(ClientResponse.class);
+            this.handleResponseStatus(response);
+            if (response.getStatus() == 202) {
+                CimiJob job = response.getEntity(CimiJob.class);
+                return job;
+            } else {
+                return null;
+            }
+        } catch (ClientHandlerException e) {
+            throw new CimiClientException(e.getMessage(), e);
         }
     }
 
     <U> U getCimiObjectByReference(final String ref, final Class<U> clazz, final QueryParams... queryParams)
-        throws CimiException {
+        throws CimiClientException {
         return this.getRequest(this.extractPath(ref), clazz, queryParams);
     }
 

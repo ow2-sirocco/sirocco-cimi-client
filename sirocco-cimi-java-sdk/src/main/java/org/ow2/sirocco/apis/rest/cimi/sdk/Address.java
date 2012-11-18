@@ -114,9 +114,10 @@ public class Address extends Resource<CimiAddress> {
         this.cimiObject.setNetwork(network.cimiObject);
     }
 
-    public static List<Address> getAddresses(final CimiClient client, final QueryParams queryParams) throws CimiException {
+    public static List<Address> getAddresses(final CimiClient client, final QueryParams queryParams)
+        throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getAddresses() == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiAddressCollection addressCollection = client.getRequest(
             client.extractPath(client.cloudEntryPoint.getAddresses().getHref()), CimiAddressCollectionRoot.class, queryParams);
@@ -131,7 +132,7 @@ public class Address extends Resource<CimiAddress> {
     }
 
     public static Address getAddressByReference(final CimiClient client, final String id, final QueryParams params)
-        throws CimiException {
+        throws CimiClientException, CimiProviderException {
         return new Address(client, client.getCimiObjectByReference(id, CimiAddress.class, params));
     }
 }

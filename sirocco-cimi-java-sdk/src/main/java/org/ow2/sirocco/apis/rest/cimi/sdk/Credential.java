@@ -54,10 +54,10 @@ public class Credential extends Resource<CimiCredential> {
         super(cimiClient, cimiObject);
     }
 
-    public Job delete() throws CimiException {
+    public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiJob job = this.cimiClient.deleteRequest(deleteRef);
         if (job != null) {
@@ -68,15 +68,15 @@ public class Credential extends Resource<CimiCredential> {
     }
 
     public static CreateResult<Credential> createCredential(final CimiClient client, final CredentialCreate credentialCreate)
-        throws CimiException {
+        throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getCredentials() == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiCredentialCollection credentialCollection = client.getRequest(
             client.extractPath(client.cloudEntryPoint.getCredentials().getHref()), CimiCredentialCollectionRoot.class);
         String addRef = Helper.findOperation("add", credentialCollection);
         if (addRef == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiResult<CimiCredential> result = client.postCreateRequest(addRef, credentialCreate.cimiCredentialsCreate,
             CimiCredential.class);
@@ -86,9 +86,9 @@ public class Credential extends Resource<CimiCredential> {
     }
 
     public static List<Credential> getCredentials(final CimiClient client, final QueryParams... queryParams)
-        throws CimiException {
+        throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getCredentials() == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiCredentialCollection credentialCollection = client.getRequest(
             client.extractPath(client.cloudEntryPoint.getCredentials().getHref()), CimiCredentialCollectionRoot.class,
@@ -105,7 +105,7 @@ public class Credential extends Resource<CimiCredential> {
     }
 
     public static Credential getCredentialByReference(final CimiClient client, final String ref,
-        final QueryParams... queryParams) throws CimiException {
+        final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
         return new Credential(client, client.getCimiObjectByReference(ref, CimiCredential.class, queryParams));
     }
 

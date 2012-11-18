@@ -72,10 +72,10 @@ public class MachineVolume extends Resource<CimiMachineVolume> {
         this.cimiObject.setInitialLocation(initialLocation);
     }
 
-    public Job delete() throws CimiException {
+    public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiJob job = this.cimiClient.deleteRequest(deleteRef);
         if (job != null) {
@@ -86,11 +86,11 @@ public class MachineVolume extends Resource<CimiMachineVolume> {
     }
 
     public static CreateResult<MachineVolume> createMachineVolume(final CimiClient client, final String machineId,
-        final MachineVolume machineVolume) throws CimiException {
+        final MachineVolume machineVolume) throws CimiClientException, CimiProviderException {
         Machine machine = Machine.getMachineByReference(client, machineId, QueryParams.builder().expand("volumes").build());
         String addRef = Helper.findOperation("add", machine.cimiObject.getVolumes());
         if (addRef == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiResult<CimiMachineVolume> result = client.postCreateRequest(addRef, machineVolume.cimiObject,
             CimiMachineVolume.class);
@@ -101,10 +101,10 @@ public class MachineVolume extends Resource<CimiMachineVolume> {
     }
 
     public static List<MachineVolume> getMachineVolumes(final CimiClient client, final String machineId,
-        final QueryParams... queryParams) throws CimiException {
+        final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
         Machine machine = Machine.getMachineByReference(client, machineId);
         if (machine.cimiObject.getVolumes() == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
 
         CimiMachineVolumeCollection machineVolumeCollection = client.getRequest(
@@ -120,7 +120,7 @@ public class MachineVolume extends Resource<CimiMachineVolume> {
     }
 
     public static MachineVolume getMachineVolumeByReference(final CimiClient client, final String ref,
-        final QueryParams... queryParams) throws CimiException {
+        final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
         return new MachineVolume(client, client.getCimiObjectByReference(ref, CimiMachineVolume.class, queryParams));
     }
 

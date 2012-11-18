@@ -102,6 +102,21 @@ public class Job extends Resource<CimiJob> {
     }
 
     /**
+     * Operation return code
+     */
+    public Integer getReturnCode() {
+        return this.cimiObject.getReturnCode();
+    }
+
+    /**
+     * An integer value in the range 0 ... 100 that indicates the progress of
+     * this Job
+     */
+    public Integer getProgress() {
+        return this.cimiObject.getProgress();
+    }
+
+    /**
      * Subordinate Job resources
      */
     public NestedJob[] getNestedJobs() {
@@ -117,11 +132,11 @@ public class Job extends Resource<CimiJob> {
      * @param period subsequent wait for Job checks take place at approximately
      *        regular intervals separated by the specified period
      * @param unit time unit in which timeout and period are specified
-     * @throws CimiException
+     * @throws CimiClientException, CimiProviderException
      * @throws TimeoutException raised if the timeout happens
      * @throws InterruptedException raised if the method is interrupted
      */
-    public void waitForCompletion(final long timeout, final long period, final TimeUnit unit) throws CimiException,
+    public void waitForCompletion(final long timeout, final long period, final TimeUnit unit) throws CimiClientException, CimiProviderException,
         TimeoutException, InterruptedException {
         long endTime = java.lang.System.nanoTime() + unit.toNanos(timeout);
         long periodInMilliseconds = TimeUnit.MILLISECONDS.convert(period, unit);
@@ -144,11 +159,11 @@ public class Job extends Resource<CimiJob> {
      * 
      * @param timeout timeout until which this method polls for the Job status
      * @param unit time unit in which the timeout is specified
-     * @throws CimiException
+     * @throws CimiClientException, CimiProviderException
      * @throws TimeoutException raised if the timeout happens
      * @throws InterruptedException raised if the method is interrupted
      */
-    public void waitForCompletion(final long timeout, final TimeUnit unit) throws CimiException, TimeoutException,
+    public void waitForCompletion(final long timeout, final TimeUnit unit) throws CimiClientException, CimiProviderException, TimeoutException,
         InterruptedException {
         long period = unit.convert(this.DEFAULT_POLL_PERIOD_IN_SECONDS, TimeUnit.SECONDS);
         this.waitForCompletion(timeout, period, unit);
@@ -160,11 +175,11 @@ public class Job extends Resource<CimiJob> {
      * @param client client handle
      * @param queryParams optional query parameters
      * @return a list of Job resources
-     * @throws CimiException
+     * @throws CimiClientException, CimiProviderException
      */
-    public static List<Job> getJobs(final CimiClient client, final QueryParams... queryParams) throws CimiException {
+    public static List<Job> getJobs(final CimiClient client, final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getJobs() == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiJobCollection jobCollection = client.getRequest(
             client.extractPath(client.cloudEntryPoint.getJobs().getHref()), CimiJobCollectionRoot.class, queryParams);
@@ -186,10 +201,10 @@ public class Job extends Resource<CimiJob> {
      * @param ref reference to the Job
      * @param queryParams optional query parameters
      * @return the Job resource
-     * @throws CimiException
+     * @throws CimiClientException, CimiProviderException
      */
     public static Job getJobByReference(final CimiClient client, final String ref, final QueryParams... queryParams)
-        throws CimiException {
+        throws CimiClientException, CimiProviderException {
         return new Job(client, client.getCimiObjectByReference(ref, CimiJob.class, queryParams));
     }
 

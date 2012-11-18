@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineImage;
 
 import com.beust.jcommander.Parameter;
@@ -49,7 +49,7 @@ public class MachineImageShowCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         MachineImage machineImage = MachineImage.getMachineImageByReference(cimiClient, this.machineImageIds.get(0),
             this.showParams.getQueryParams());
         MachineImageShowCommand.printMachineImage(machineImage, this.showParams);

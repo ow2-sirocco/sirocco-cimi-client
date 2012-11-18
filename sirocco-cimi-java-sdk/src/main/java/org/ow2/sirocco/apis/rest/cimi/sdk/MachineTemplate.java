@@ -198,10 +198,10 @@ public class MachineTemplate extends Resource<CimiMachineTemplate> {
         this.cimiObject.setUserData(userData);
     }
 
-    public Job delete() throws CimiException {
+    public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiJob job = this.cimiClient.deleteRequest(deleteRef);
         if (job != null) {
@@ -212,16 +212,16 @@ public class MachineTemplate extends Resource<CimiMachineTemplate> {
     }
 
     public static CreateResult<MachineTemplate> createMachineTemplate(final CimiClient client,
-        final MachineTemplate machineTemplate) throws CimiException {
+        final MachineTemplate machineTemplate) throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getMachineTemplates() == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiMachineTemplateCollection machineTemplateCollection = client
             .getRequest(client.extractPath(client.cloudEntryPoint.getMachineTemplates().getHref()),
                 CimiMachineTemplateCollectionRoot.class);
         String addRef = Helper.findOperation("add", machineTemplateCollection);
         if (addRef == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiResult<CimiMachineTemplate> result = client.postCreateRequest(addRef, machineTemplate.cimiObject,
             CimiMachineTemplate.class);
@@ -232,7 +232,7 @@ public class MachineTemplate extends Resource<CimiMachineTemplate> {
     }
 
     public static UpdateResult<MachineTemplate> updateMachineTemplate(final CimiClient client, final String id,
-        final Map<String, Object> attributeValues) throws CimiException {
+        final Map<String, Object> attributeValues) throws CimiClientException, CimiProviderException {
         CimiMachineTemplate cimiObject = new CimiMachineTemplate();
         StringBuilder sb = new StringBuilder();
         for (Entry<String, Object> entry : attributeValues.entrySet()) {
@@ -261,9 +261,9 @@ public class MachineTemplate extends Resource<CimiMachineTemplate> {
     }
 
     public static List<MachineTemplate> getMachineTemplates(final CimiClient client, final QueryParams... queryParams)
-        throws CimiException {
+        throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getMachineTemplates() == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiMachineTemplateCollection machineTemplateCollection = client.getRequest(
             client.extractPath(client.cloudEntryPoint.getMachineTemplates().getHref()),
@@ -280,7 +280,7 @@ public class MachineTemplate extends Resource<CimiMachineTemplate> {
     }
 
     public static MachineTemplate getMachineTemplateByReference(final CimiClient client, final String ref,
-        final QueryParams... queryParams) throws CimiException {
+        final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
         return new MachineTemplate(client, client.getCimiObjectByReference(ref, CimiMachineTemplate.class, queryParams));
     }
 

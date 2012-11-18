@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineTemplate;
 
 import com.beust.jcommander.Parameter;
@@ -49,14 +49,14 @@ public class MachineTemplateShowCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         MachineTemplate machineTemplate = MachineTemplate.getMachineTemplateByReference(cimiClient,
             this.machineTemplateIds.get(0), this.showParams.getQueryParams());
         MachineTemplateShowCommand.printMachineTemplate(machineTemplate, this.showParams);
     }
 
     public static void printMachineTemplate(final MachineTemplate machineTemplate, final ResourceSelectExpandParams showParams)
-        throws CimiException {
+        throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(machineTemplate, showParams);
 
         if (showParams.isSelected("machineConfig")) {

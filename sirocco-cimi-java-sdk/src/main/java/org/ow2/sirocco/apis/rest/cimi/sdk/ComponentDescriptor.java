@@ -108,7 +108,7 @@ public class ComponentDescriptor {
             this.cimiComponentDescriptor.setComponent(((CredentialTemplate) componentTemplate).cimiObject);
             this.cimiComponentDescriptor.setType(Credential.TYPE_URI);
         } else {
-            throw new CimiException("Illegal template type");
+            throw new CimiClientException("Illegal template type");
         }
 
     }

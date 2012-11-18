@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineTemplate;
 import org.ow2.sirocco.apis.rest.cimi.sdk.UpdateResult;
 
@@ -65,7 +65,7 @@ public class MachineTemplateUpdateCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         Map<String, Object> attributeValues = new HashMap<String, Object>();
         if (this.name != null) {
             attributeValues.put("name", this.name);

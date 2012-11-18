@@ -26,42 +26,44 @@
 package org.ow2.sirocco.apis.rest.cimi.sdk;
 
 /**
- * CIMI exception class
+ * Base exception class for any errors that occur while attempting to use a CIMI
+ * client to make service calls to a CIMI Provider.
  */
-public class CimiException extends Exception {
+public class CimiClientException extends Exception {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructs a CimiException with null as its error detail message.
+     * Constructs a CimiClientException with null as its error detail message.
      */
-    public CimiException() {
+    public CimiClientException() {
     }
 
     /**
-     * Constructs a CimiException with the specified detailed message
+     * Constructs a CimiClientException with the specified detailed message
      * 
      * @param message the detail message
      */
-    public CimiException(final String message) {
+    public CimiClientException(final String message) {
         super(message);
     }
 
     /**
-     * Constructs a CimiException with the specified cause.
+     * Constructs a CimiClientException with the specified cause.
      * 
      * @param cause the cause
      */
-    public CimiException(final Throwable cause) {
+    public CimiClientException(final Throwable cause) {
         super(cause);
     }
 
     /**
-     * Constructs a CimiException with the specified detail message and cause.
+     * Constructs a CimiClientException with the specified detail message and
+     * cause.
      * 
      * @param message the detail message
      * @param cause the cause
      */
-    public CimiException(final String message, final Throwable cause) {
+    public CimiClientException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

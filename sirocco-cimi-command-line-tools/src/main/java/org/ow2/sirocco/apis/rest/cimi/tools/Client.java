@@ -28,7 +28,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.Options;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiProviderException;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -133,8 +134,11 @@ public class Client {
                 commandName = null;
             }
             this.printUsageAndExit(jCommander, commandName);
-        } catch (CimiException ex) {
-            System.out.println("Request failed: " + ex.getMessage());
+        } catch (CimiProviderException ex) {
+            System.out.println(ex.getStatusMessage());
+            System.exit(1);
+        } catch (CimiClientException ex) {
+            System.out.println(ex.getMessage());
             System.exit(1);
         } catch (Exception ex) {
             ex.printStackTrace();

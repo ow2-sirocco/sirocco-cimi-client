@@ -54,10 +54,10 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
         super(cimiClient, cimiObject);
     }
 
-    public Job delete() throws CimiException {
+    public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiJob job = this.cimiClient.deleteRequest(deleteRef);
         if (job != null) {
@@ -78,15 +78,15 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
     }
 
     public static CreateResult<SystemTemplate> createSystemTemplate(final CimiClient client, final SystemTemplate systemTemplate)
-        throws CimiException {
+        throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getSystemTemplates() == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiSystemTemplateCollection systemTemplateCollection = client.getRequest(
             client.extractPath(client.cloudEntryPoint.getSystemTemplates().getHref()), CimiSystemTemplateCollectionRoot.class);
         String addRef = Helper.findOperation("add", systemTemplateCollection);
         if (addRef == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiResult<CimiSystemTemplate> result = client.postCreateRequest(addRef, systemTemplate.cimiObject,
             CimiSystemTemplate.class);
@@ -97,9 +97,9 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
     }
 
     public static List<SystemTemplate> getSystemTemplates(final CimiClient client, final QueryParams... queryParams)
-        throws CimiException {
+        throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getSystemTemplates() == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiSystemTemplateCollection systemTemplateCollection = client.getRequest(
             client.extractPath(client.cloudEntryPoint.getSystemTemplates().getHref()), CimiSystemTemplateCollectionRoot.class,
@@ -116,7 +116,7 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
     }
 
     public static SystemTemplate getSystemTemplateByReference(final CimiClient client, final String ref,
-        final QueryParams... queryParams) throws CimiException {
+        final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
         return new SystemTemplate(client, client.getCimiObjectByReference(ref, CimiSystemTemplate.class, queryParams));
     }
 

@@ -27,7 +27,7 @@ package org.ow2.sirocco.apis.rest.cimi.tools;
 import java.util.List;
 
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CreateResult;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Volume;
 import org.ow2.sirocco.apis.rest.cimi.sdk.VolumeConfiguration;
@@ -63,9 +63,9 @@ public class VolumeCreateCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         if (this.templateId == null && this.configId == null && this.capacityMB == null) {
-            throw new CimiException("You need to provide either a template id, a config id or a capacity");
+            throw new CimiClientException("You need to provide either a template id, a config id or a capacity");
         }
         VolumeCreate volumeCreate = new VolumeCreate();
         VolumeTemplate volumeTemplate;

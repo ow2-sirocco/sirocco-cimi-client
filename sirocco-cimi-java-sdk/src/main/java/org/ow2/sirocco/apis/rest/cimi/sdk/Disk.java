@@ -61,10 +61,10 @@ public class Disk extends Resource<CimiMachineDisk> {
         return this.cimiObject.getInitialLocation();
     }
 
-    public Job delete() throws CimiException {
+    public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiJob job = this.cimiClient.deleteRequest(deleteRef);
         if (job != null) {
@@ -75,11 +75,11 @@ public class Disk extends Resource<CimiMachineDisk> {
     }
 
     public static CreateResult<Disk> createMachineDisk(final CimiClient client, final String machineId, final Disk machineDisk)
-        throws CimiException {
+        throws CimiClientException, CimiProviderException {
         Machine machine = Machine.getMachineByReference(client, machineId, QueryParams.builder().expand("disks").build());
         String addRef = Helper.findOperation("add", machine.cimiObject.getVolumes());
         if (addRef == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiResult<CimiMachineDisk> result = client.postCreateRequest(addRef, machineDisk.cimiObject, CimiMachineDisk.class);
         Job job = result.getJob() != null ? new Job(client, result.getJob()) : null;
@@ -88,10 +88,10 @@ public class Disk extends Resource<CimiMachineDisk> {
     }
 
     public static List<Disk> getMachineDisks(final CimiClient client, final String machineId, final QueryParams... queryParams)
-        throws CimiException {
+        throws CimiClientException, CimiProviderException {
         Machine machine = Machine.getMachineByReference(client, machineId);
         if (machine.cimiObject.getDisks() == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
 
         CimiMachineDiskCollection machineDiskCollection = client.getRequest(
@@ -107,7 +107,7 @@ public class Disk extends Resource<CimiMachineDisk> {
     }
 
     public static Disk getMachineDiskByReference(final CimiClient client, final String ref, final QueryParams... queryParams)
-        throws CimiException {
+        throws CimiClientException, CimiProviderException {
         return new Disk(client, client.getCimiObjectByReference(ref, CimiMachineDisk.class, queryParams));
     }
 

@@ -78,7 +78,7 @@ public class Machine extends Resource<CimiMachine> {
         return this.cimiObject.getMemory();
     }
 
-    public List<Disk> getDisks() throws CimiException {
+    public List<Disk> getDisks() throws CimiClientException, CimiProviderException {
         List<Disk> disks = new ArrayList<Disk>();
         if (this.cimiObject.getDisks() == null || this.cimiObject.getDisks().getArray() == null) {
             CimiMachineDiskCollectionRoot cimiDisks = this.cimiClient.getRequest(
@@ -91,7 +91,7 @@ public class Machine extends Resource<CimiMachine> {
         return disks;
     }
 
-    public List<MachineNetworkInterface> getNetworkInterfaces() throws CimiException {
+    public List<MachineNetworkInterface> getNetworkInterfaces() throws CimiClientException, CimiProviderException {
         List<MachineNetworkInterface> nics = new ArrayList<MachineNetworkInterface>();
 
         if (this.cimiObject.getNetworkInterfaces() != null && this.cimiObject.getNetworkInterfaces().getArray() == null) {
@@ -119,10 +119,10 @@ public class Machine extends Resource<CimiMachine> {
         return nics;
     }
 
-    public Job start() throws CimiException {
+    public Job start() throws CimiClientException, CimiProviderException {
         String startRef = Helper.findOperation(ActionType.START.getPath(), this.cimiObject);
         if (startRef == null) {
-            throw new CimiException("Illegal operation");
+            throw new CimiClientException("Illegal operation");
         }
         CimiAction actionStart = new CimiAction();
         actionStart.setAction(ActionType.START.getPath());
@@ -134,10 +134,10 @@ public class Machine extends Resource<CimiMachine> {
         }
     }
 
-    public Job stop() throws CimiException {
+    public Job stop() throws CimiClientException, CimiProviderException {
         String stopRef = Helper.findOperation(ActionType.STOP.getPath(), this.cimiObject);
         if (stopRef == null) {
-            throw new CimiException("Illegal operation");
+            throw new CimiClientException("Illegal operation");
         }
         CimiAction actionStop = new CimiAction();
         actionStop.setAction(ActionType.STOP.getPath());
@@ -149,10 +149,10 @@ public class Machine extends Resource<CimiMachine> {
         }
     }
 
-    public Job delete() throws CimiException {
+    public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiJob job = this.cimiClient.deleteRequest(deleteRef);
         if (job != null) {
@@ -163,15 +163,15 @@ public class Machine extends Resource<CimiMachine> {
     }
 
     public static CreateResult<Machine> createMachine(final CimiClient client, final MachineCreate machineCreate)
-        throws CimiException {
+        throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getMachines() == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiMachineCollection machinesCollection = client.getRequest(
             client.extractPath(client.cloudEntryPoint.getMachines().getHref()), CimiMachineCollectionRoot.class);
         String addRef = Helper.findOperation("add", machinesCollection);
         if (addRef == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiResult<CimiMachine> result = client.postCreateRequest(addRef, machineCreate.cimiMachineCreate, CimiMachine.class);
         Job job = result.getJob() != null ? new Job(client, result.getJob()) : null;
@@ -180,7 +180,7 @@ public class Machine extends Resource<CimiMachine> {
     }
 
     public static UpdateResult<Machine> updateMachine(final CimiClient client, final String id,
-        final Map<String, Object> attributeValues) throws CimiException {
+        final Map<String, Object> attributeValues) throws CimiClientException, CimiProviderException {
         CimiMachine cimiObject = new CimiMachine();
         StringBuilder sb = new StringBuilder();
         for (Entry<String, Object> entry : attributeValues.entrySet()) {
@@ -203,9 +203,10 @@ public class Machine extends Resource<CimiMachine> {
         return new UpdateResult<Machine>(job, machineConfig);
     }
 
-    public static List<Machine> getMachines(final CimiClient client, final QueryParams... queryParams) throws CimiException {
+    public static List<Machine> getMachines(final CimiClient client, final QueryParams... queryParams)
+        throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getMachines() == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiMachineCollection machinesCollection = client.getRequest(
             client.extractPath(client.cloudEntryPoint.getMachines().getHref()), CimiMachineCollectionRoot.class, queryParams);
@@ -220,7 +221,7 @@ public class Machine extends Resource<CimiMachine> {
     }
 
     public static Machine getMachineByReference(final CimiClient client, final String ref, final QueryParams... queryParams)
-        throws CimiException {
+        throws CimiClientException, CimiProviderException {
         Machine result = new Machine(client, client.getCimiObjectByReference(ref, CimiMachine.class, queryParams));
         return result;
     }

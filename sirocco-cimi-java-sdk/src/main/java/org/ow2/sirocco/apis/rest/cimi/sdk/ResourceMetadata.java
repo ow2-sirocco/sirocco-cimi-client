@@ -99,9 +99,9 @@ public class ResourceMetadata {
     }
 
     public static List<ResourceMetadata> getResourceMetadatas(final CimiClient client, final QueryParams... queryParams)
-        throws CimiException {
+        throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getResourceMetadata() == null) {
-            throw new CimiException("Unsupported operation");
+            throw new CimiClientException("Unsupported operation");
         }
         CimiResourceMetadataCollection metadataCollection = client.getRequest(
             client.extractPath(client.cloudEntryPoint.getResourceMetadata().getHref()),
@@ -117,7 +117,7 @@ public class ResourceMetadata {
     }
 
     public static ResourceMetadata getResourceMetadataByReference(final CimiClient client, final String ref,
-        final QueryParams... queryParams) throws CimiException {
+        final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
         ResourceMetadata result = new ResourceMetadata(client, client.getCimiObjectByReference(ref, CimiResourceMetadata.class,
             queryParams));
         return result;

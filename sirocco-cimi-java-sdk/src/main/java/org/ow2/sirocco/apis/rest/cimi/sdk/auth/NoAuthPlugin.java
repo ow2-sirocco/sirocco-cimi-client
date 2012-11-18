@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.ow2.sirocco.apis.rest.cimi.sdk.AuthPlugin;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 
 /**
  * Plugin implementing no authentication
@@ -36,7 +36,7 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
 public class NoAuthPlugin implements AuthPlugin {
 
     @Override
-    public Map<String, String> authenticate(final String user, final String password) throws CimiException {
+    public Map<String, String> authenticate(final String user, final String password) throws CimiClientException {
         return Collections.emptyMap();
     }
 

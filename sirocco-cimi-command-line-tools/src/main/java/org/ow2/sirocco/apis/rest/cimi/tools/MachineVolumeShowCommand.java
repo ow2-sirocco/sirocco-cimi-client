@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineVolume;
 
 import com.beust.jcommander.Parameter;
@@ -49,14 +49,14 @@ public class MachineVolumeShowCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         MachineVolume machineVolume = MachineVolume.getMachineVolumeByReference(cimiClient, this.machineVolumeIds.get(0),
             this.showParams.getQueryParams().toBuilder().expand("volume").build());
         MachineVolumeShowCommand.printMachineVolume(machineVolume, this.showParams);
     }
 
     public static void printMachineVolume(final MachineVolume machineVolume, final ResourceSelectExpandParams showParams)
-        throws CimiException {
+        throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(machineVolume, showParams);
 
         if (showParams.isSelected("initialLocation")) {

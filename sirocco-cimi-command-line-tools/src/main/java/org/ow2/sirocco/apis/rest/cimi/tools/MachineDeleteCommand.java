@@ -27,7 +27,7 @@ package org.ow2.sirocco.apis.rest.cimi.tools;
 import java.util.List;
 
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Job;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Machine;
 
@@ -45,7 +45,7 @@ public class MachineDeleteCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         Machine machine = Machine.getMachineByReference(cimiClient, this.machineIds.get(0));
         Job job = machine.delete();
         System.out.println("Machine " + this.machineIds.get(0) + " being deleted");

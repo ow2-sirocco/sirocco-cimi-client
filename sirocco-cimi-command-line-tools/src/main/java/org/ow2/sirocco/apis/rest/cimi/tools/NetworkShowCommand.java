@@ -28,7 +28,7 @@ import java.util.List;
 
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Network;
 
 import com.beust.jcommander.Parameter;
@@ -49,12 +49,12 @@ public class NetworkShowCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         Network net = Network.getNetworkByReference(cimiClient, this.networkIds.get(0), this.showParams.getQueryParams());
         NetworkShowCommand.printNetwork(net, this.showParams);
     }
 
-    public static void printNetwork(final Network net, final ResourceSelectExpandParams showParams) throws CimiException {
+    public static void printNetwork(final Network net, final ResourceSelectExpandParams showParams) throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(net, showParams);
 
         if (showParams.isSelected("state")) {

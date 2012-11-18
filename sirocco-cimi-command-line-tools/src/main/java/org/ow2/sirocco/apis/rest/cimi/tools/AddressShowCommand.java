@@ -29,7 +29,7 @@ import java.util.List;
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Address;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -49,12 +49,12 @@ public class AddressShowCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         Address address = Address.getAddressByReference(cimiClient, this.addressIds.get(0), this.showParams.getQueryParams());
         AddressShowCommand.printAddress(address, this.showParams);
     }
 
-    public static void printAddress(final Address address, final ResourceSelectExpandParams showParams) throws CimiException {
+    public static void printAddress(final Address address, final ResourceSelectExpandParams showParams) throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(address, showParams);
         if (showParams.isSelected("ip")) {
             table.addCell("ip");

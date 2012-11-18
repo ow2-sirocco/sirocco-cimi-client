@@ -29,7 +29,7 @@ import java.util.List;
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.apis.rest.cimi.sdk.Address;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiException;
+import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineNetworkInterface;
 
 import com.beust.jcommander.Parameter;
@@ -50,14 +50,14 @@ public class MachineNetworkInterfaceShowCommand implements Command {
     }
 
     @Override
-    public void execute(final CimiClient cimiClient) throws CimiException {
+    public void execute(final CimiClient cimiClient) throws CimiClientException {
         MachineNetworkInterface nic = MachineNetworkInterface.getMachineNetworkInterfaceByReference(cimiClient,
             this.nicIds.get(0), this.showParams.getQueryParams().toBuilder().expand("addresses").build());
         MachineNetworkInterfaceShowCommand.printMachineNetworkInterface(nic, this.showParams);
     }
 
     public static void printMachineNetworkInterface(final MachineNetworkInterface nic,
-        final ResourceSelectExpandParams showParams) throws CimiException {
+        final ResourceSelectExpandParams showParams) throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(nic, showParams);
 
         if (showParams.isSelected("state")) {
