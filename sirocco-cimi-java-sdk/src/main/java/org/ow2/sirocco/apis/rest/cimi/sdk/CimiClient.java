@@ -85,7 +85,7 @@ public class CimiClient {
         }
 
         /**
-         * Turns on logging of HTTP messages on standard output
+         * Turns on or off logging of HTTP messages on standard output
          * 
          * @param debug true if logging is desired
          * @return Options object
@@ -100,8 +100,9 @@ public class CimiClient {
          * 
          * @param mediaType either XML or JSON
          */
-        public void setMediaType(final MediaType mediaType) {
+        public Options setMediaType(final MediaType mediaType) {
             this.mediaType = mediaType;
+            return this;
         }
 
     }
