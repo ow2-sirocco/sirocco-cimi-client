@@ -25,25 +25,42 @@
 package org.ow2.sirocco.apis.rest.cimi.sdk;
 
 /**
- * Helper class representing the result of an update operation
+ * Helper class representing the result of an update operation.
  * 
- * @param <E>
+ * @param <E> the element type
  */
 public class UpdateResult<E> {
     final Job job;
 
     final E resource;
 
+    /**
+     * Instantiates a new update result.
+     * 
+     * @param job the job
+     * @param resource the resource
+     */
     public UpdateResult(final Job job, final E resource) {
         super();
         this.job = job;
         this.resource = resource;
     }
 
+    /**
+     * Gets the job.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     */
     public Job getJob() {
         return this.job;
     }
 
+    /**
+     * Gets the updated resource.
+     * 
+     * @return the updated resource or null if not returned by the provider
+     */
     public E getResource() {
         return this.resource;
     }

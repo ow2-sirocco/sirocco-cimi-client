@@ -27,11 +27,14 @@ package org.ow2.sirocco.apis.rest.cimi.sdk;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiSystemMachine;
 
 /**
- * Represents a Machine within a System
+ * Represents a Machine within a System.
  */
 public class SystemMachine extends Resource<CimiSystemMachine> {
     private Machine machine;
 
+    /**
+     * Instantiates a new system machine.
+     */
     public SystemMachine() {
         super(null, new CimiSystemMachine());
     }
@@ -46,6 +49,11 @@ public class SystemMachine extends Resource<CimiSystemMachine> {
         this.machine = Machine.getMachineByReference(cimiClient, cimiObject.getMachine().getHref());
     }
 
+    /**
+     * Gets the machine.
+     * 
+     * @return the machine
+     */
     public Machine getMachine() {
         return this.machine;
     }

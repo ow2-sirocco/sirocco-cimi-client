@@ -32,9 +32,9 @@ import java.util.Map;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiObjectCommonAbstract;
 
 /**
- * Base class of all first-class CIMI resources
+ * Base class of all first-class CIMI resources.
  * 
- * @param <E>
+ * @param <E> the element type
  */
 public abstract class Resource<E extends CimiObjectCommonAbstract> {
 
@@ -49,14 +49,18 @@ public abstract class Resource<E extends CimiObjectCommonAbstract> {
     }
 
     /**
-     * Returns the human-readable name of the resource
+     * Returns the human-readable name of the resource.
+     * 
+     * @return the name
      */
     public String getName() {
         return this.cimiObject.getName();
     }
 
     /**
-     * Returns the id of the resource
+     * Returns the id of the resource.
+     * 
+     * @return the id
      */
     public String getId() {
         if (this.cimiObject.getId() != null) {
@@ -67,23 +71,27 @@ public abstract class Resource<E extends CimiObjectCommonAbstract> {
     }
 
     /**
-     * Returns the description of the resource
+     * Returns the description of the resource.
+     * 
+     * @return the description
      */
     public String getDescription() {
         return this.cimiObject.getDescription();
     }
 
     /**
-     * Returns the time when this resource was created
+     * Returns the time when this resource was created.
      * 
-     * @return
+     * @return the created
      */
     public Date getCreated() {
         return this.cimiObject.getCreated();
     }
 
     /**
-     * Returns the properties of the resource (map of key/value pairs)
+     * Returns the properties of the resource (map of key/value pairs).
+     * 
+     * @return the properties
      */
     public Map<String, String> getProperties() {
         return this.cimiObject.getProperties();
@@ -91,41 +99,43 @@ public abstract class Resource<E extends CimiObjectCommonAbstract> {
 
     /**
      * Returns the time at which the last explicit attribute update was made on
-     * the resource
+     * the resource.
+     * 
+     * @return the updated
      */
     public Date getUpdated() {
         return this.cimiObject.getUpdated();
     }
 
     /**
-     * Sets the human-readable name of the resource
+     * Sets the human-readable name of the resource.
      * 
-     * @param name
+     * @param name the new name
      */
     public void setName(final String name) {
         this.cimiObject.setName(name);
     }
 
     /**
-     * Sets the description of the resource
+     * Sets the description of the resource.
      * 
-     * @param description
+     * @param description the new description
      */
     public void setDescription(final String description) {
         this.cimiObject.setDescription(description);
     }
 
     /**
-     * Sets the properties of the resource (map of key/value pairs)
+     * Sets the properties of the resource (map of key/value pairs).
      * 
-     * @param properties
+     * @param properties the properties
      */
     public void setProperties(final Map<String, String> properties) {
         this.cimiObject.setProperties(properties);
     }
 
     /**
-     * Adds a property (key/value pair) to the resource
+     * Adds a property (key/value pair) to the resource.
      * 
      * @param key property key
      * @param value property value
@@ -138,7 +148,7 @@ public abstract class Resource<E extends CimiObjectCommonAbstract> {
     }
 
     /**
-     * Retrieves an extension attribute for this resource
+     * Retrieves an extension attribute for this resource.
      * 
      * @param name the name of the attribute
      * @return the attribute value
@@ -149,14 +159,16 @@ public abstract class Resource<E extends CimiObjectCommonAbstract> {
 
     /**
      * Retrieves the map containing all the extension attributes defined on this
-     * resource
+     * resource.
+     * 
+     * @return the extension attributes
      */
     public Map<String, Object> getExtensionAttributes() {
         return this.cimiObject.getExtensionAttributes();
     }
 
     /**
-     * Sets an extension attribute on this resource
+     * Sets an extension attribute on this resource.
      * 
      * @param name the name of the attribute
      * @param value the value of the attribute

@@ -35,10 +35,13 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeConfigurationC
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
 /**
- * Set of hardware settings used to create a Volume
+ * Set of hardware settings used to create a Volume.
  */
 public class VolumeConfiguration extends Resource<CimiVolumeConfiguration> {
 
+    /**
+     * Instantiates a new volume configuration.
+     */
     public VolumeConfiguration() {
         super(null, new CimiVolumeConfiguration());
     }
@@ -52,30 +55,72 @@ public class VolumeConfiguration extends Resource<CimiVolumeConfiguration> {
         super(cimiClient, cimiObject);
     }
 
+    /**
+     * Sets the type of the volume to be created.
+     * 
+     * @param type the type of the volume to be created
+     */
     public void setType(final String type) {
         this.cimiObject.setType(type);
     }
 
+    /**
+     * Gets the type of the volume to be created.
+     * 
+     * @return the type of the volume to be created
+     */
     public String getType() {
         return this.cimiObject.getType();
     }
 
+    /**
+     * Gets the capacity of the volume to be created in kilobytes.
+     * 
+     * @return the capacity of the volume to be created in kilobytes
+     */
     public int getCapacity() {
         return this.cimiObject.getCapacity();
     }
 
+    /**
+     * Sets the capacity of the volume to be created in kilobytes.
+     * 
+     * @param capacity the capacity of the volume to be created in kilobytes
+     */
     public void setCapacity(final int capacity) {
         this.cimiObject.setCapacity(capacity);
     }
 
+    /**
+     * Gets the format of the volume to be created.
+     * 
+     * @return the format of the volume to be created
+     */
     public String getFormat() {
         return this.cimiObject.getFormat();
     }
 
+    /**
+     * Sets the format of the volume to be created.
+     * 
+     * @param format the format of the volume to be created
+     */
     public void setFormat(final String format) {
         this.cimiObject.setFormat(format);
     }
 
+    /**
+     * Deletes this volume configuration.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
@@ -89,6 +134,19 @@ public class VolumeConfiguration extends Resource<CimiVolumeConfiguration> {
         }
     }
 
+    /**
+     * Creates a new volume configuration.
+     * 
+     * @param client the CIMI client
+     * @param volumeConfig the volume configuration to create
+     * @return creation result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static CreateResult<VolumeConfiguration> createVolumeConfiguration(final CimiClient client,
         final VolumeConfiguration volumeConfig) throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getVolumeConfigs() == null) {
@@ -109,6 +167,19 @@ public class VolumeConfiguration extends Resource<CimiVolumeConfiguration> {
         return new CreateResult<VolumeConfiguration>(job, createdVolumeConfiguration);
     }
 
+    /**
+     * Retrieves the collection of volume configurations visible to the client.
+     * 
+     * @param client the client
+     * @param queryParams optional query parameters
+     * @return the volume configurations
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static List<VolumeConfiguration> getVolumeConfigurations(final CimiClient client, final QueryParams... queryParams)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getVolumeConfigs() == null) {
@@ -128,9 +199,23 @@ public class VolumeConfiguration extends Resource<CimiVolumeConfiguration> {
         return result;
     }
 
-    public static VolumeConfiguration getVolumeConfigurationByReference(final CimiClient client, final String ref,
+    /**
+     * Retrieves the volume configuration with the given id.
+     * 
+     * @param client the client
+     * @param id the id of the resource
+     * @param queryParams optional query parameters
+     * @return the volume configuration by reference
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public static VolumeConfiguration getVolumeConfigurationByReference(final CimiClient client, final String id,
         final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
-        return new VolumeConfiguration(client, client.getCimiObjectByReference(ref, CimiVolumeConfiguration.class, queryParams));
+        return new VolumeConfiguration(client, client.getCimiObjectByReference(id, CimiVolumeConfiguration.class, queryParams));
     }
 
 }

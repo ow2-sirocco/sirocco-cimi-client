@@ -54,7 +54,8 @@ public class AddressShowCommand implements Command {
         AddressShowCommand.printAddress(address, this.showParams);
     }
 
-    public static void printAddress(final Address address, final ResourceSelectExpandParams showParams) throws CimiClientException {
+    public static void printAddress(final Address address, final ResourceSelectExpandParams showParams)
+        throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(address, showParams);
         if (showParams.isSelected("ip")) {
             table.addCell("ip");
@@ -68,7 +69,7 @@ public class AddressShowCommand implements Command {
 
         if (showParams.isSelected("allocation")) {
             table.addCell("allocation");
-            table.addCell(address.getAllocation());
+            table.addCell(address.getAllocation().toString());
         }
         if (showParams.isSelected("defaultGateway")) {
             table.addCell("defaultGateway");

@@ -27,7 +27,7 @@ package org.ow2.sirocco.apis.rest.cimi.sdk;
 import java.util.Map;
 
 /**
- * Authentification plugin interface
+ * Authentification plugin interface.
  */
 public interface AuthPlugin {
     /**
@@ -37,8 +37,7 @@ public interface AuthPlugin {
      * @param user user name
      * @param password password
      * @return a map of HTTP headers
-     * @throws CimiClientException raised by the plugin if the the authentication
-     *         cannot proceed
+     * @throws CimiClientException if the authentication cannot proceed
      */
     Map<String, String> authenticate(String user, String password) throws CimiClientException;
 }

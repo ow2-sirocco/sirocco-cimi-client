@@ -25,25 +25,42 @@
 package org.ow2.sirocco.apis.rest.cimi.sdk;
 
 /**
- * Helper class representing the result of a CIMI resource creation
+ * Helper class representing the result of a CIMI resource creation.
  * 
- * @param <E>
+ * @param <E> the element type
  */
 public class CreateResult<E> {
     final Job job;
 
     final E resource;
 
+    /**
+     * Instantiates a new creates the result.
+     * 
+     * @param job the job
+     * @param resource the resource
+     */
     public CreateResult(final Job job, final E resource) {
         super();
         this.job = job;
         this.resource = resource;
     }
 
+    /**
+     * Gets the job.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     */
     public Job getJob() {
         return this.job;
     }
 
+    /**
+     * Gets the created resource.
+     * 
+     * @return the created resource or null if not returned by the CIMI provider
+     */
     public E getResource() {
         return this.resource;
     }

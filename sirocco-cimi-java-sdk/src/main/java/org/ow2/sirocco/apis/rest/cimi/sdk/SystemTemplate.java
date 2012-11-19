@@ -41,6 +41,10 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
  * describing how to create a System component that can be any CIMI resource
  */
 public class SystemTemplate extends Resource<CimiSystemTemplate> {
+
+    /**
+     * Instantiates a new system template.
+     */
     public SystemTemplate() {
         super(null, new CimiSystemTemplate());
     }
@@ -54,6 +58,18 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
         super(cimiClient, cimiObject);
     }
 
+    /**
+     * Deletes this system template.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
@@ -67,6 +83,11 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
         }
     }
 
+    /**
+     * Gets the component descriptors of this system template.
+     * 
+     * @return the component descriptors of this system template
+     */
     public List<ComponentDescriptor> getComponentDescriptors() {
         List<ComponentDescriptor> result = new ArrayList<ComponentDescriptor>();
         if (this.cimiObject.getComponentDescriptors() != null) {
@@ -77,6 +98,19 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
         return result;
     }
 
+    /**
+     * Creates a new system template.
+     * 
+     * @param client the CIMI client
+     * @param systemTemplate the system template to create
+     * @return creation result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static CreateResult<SystemTemplate> createSystemTemplate(final CimiClient client, final SystemTemplate systemTemplate)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getSystemTemplates() == null) {
@@ -96,6 +130,19 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
         return new CreateResult<SystemTemplate>(job, createdSystemTemplate);
     }
 
+    /**
+     * Retrieves the collection of system templates visible to the client.
+     * 
+     * @param client the client
+     * @param queryParams optional query parameters
+     * @return the system templates
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static List<SystemTemplate> getSystemTemplates(final CimiClient client, final QueryParams... queryParams)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getSystemTemplates() == null) {
@@ -115,9 +162,23 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
         return result;
     }
 
-    public static SystemTemplate getSystemTemplateByReference(final CimiClient client, final String ref,
+    /**
+     * Retrieves the system template with the given id.
+     * 
+     * @param client the client
+     * @param id the id of the resource
+     * @param queryParams optional query parameters
+     * @return the system template by reference
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public static SystemTemplate getSystemTemplateByReference(final CimiClient client, final String id,
         final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
-        return new SystemTemplate(client, client.getCimiObjectByReference(ref, CimiSystemTemplate.class, queryParams));
+        return new SystemTemplate(client, client.getCimiObjectByReference(id, CimiSystemTemplate.class, queryParams));
     }
 
 }

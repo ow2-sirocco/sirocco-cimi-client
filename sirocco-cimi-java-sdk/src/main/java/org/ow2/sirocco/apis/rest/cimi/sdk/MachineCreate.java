@@ -31,41 +31,82 @@ import java.util.Map;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineCreate;
 
 /**
- * Helper class to create a Machine
+ * Helper class to create a Machine.
  */
 public class MachineCreate {
     CimiMachineCreate cimiMachineCreate;
 
     private MachineTemplate machineTemplate;
 
+    /**
+     * Instantiates a new machine create.
+     */
     public MachineCreate() {
         this.cimiMachineCreate = new CimiMachineCreate();
     }
 
+    /**
+     * Gets the name that will assigned to the created machine.
+     * 
+     * @return the name that will assigned to the created machine
+     */
     public String getName() {
         return this.cimiMachineCreate.getName();
     }
 
+    /**
+     * Sets the name that will assigned to the created machine.
+     * 
+     * @param name the name that will assigned to the created machine
+     */
     public void setName(final String name) {
         this.cimiMachineCreate.setName(name);
     }
 
+    /**
+     * Gets the description that will assigned to the created machine.
+     * 
+     * @return the description that will assigned to the created machine
+     */
     public String getDescription() {
         return this.cimiMachineCreate.getDescription();
     }
 
+    /**
+     * Sets the description that will assigned to the created machine.
+     * 
+     * @param description the description that will assigned to the created
+     *        machine
+     */
     public void setDescription(final String description) {
         this.cimiMachineCreate.setDescription(description);
     }
 
+    /**
+     * Gets the properties that will assigned to the created machine.
+     * 
+     * @return the properties that will assigned to the created machine
+     */
     public Map<String, String> getProperties() {
         return this.cimiMachineCreate.getProperties();
     }
 
+    /**
+     * Sets the properties that will assigned to the created machine.
+     * 
+     * @param properties the properties that will assigned to the created
+     *        machine
+     */
     public void setProperties(final Map<String, String> properties) {
         this.cimiMachineCreate.setProperties(properties);
     }
 
+    /**
+     * Adds a property that will assigned to the created machine.
+     * 
+     * @param key the property key
+     * @param value the property value
+     */
     public void addProperty(final String key, final String value) {
         if (this.cimiMachineCreate.getProperties() == null) {
             this.cimiMachineCreate.setProperties(new HashMap<String, String>());
@@ -73,15 +114,33 @@ public class MachineCreate {
         this.cimiMachineCreate.getProperties().put(key, value);
     }
 
+    /**
+     * Gets the machine template that will be used to create a machine.
+     * 
+     * @return the machine template that will be used to create a machine
+     */
     public MachineTemplate getMachineTemplate() {
         return this.machineTemplate;
     }
 
+    /**
+     * Sets the machine template that will be used to create a machine.
+     * 
+     * @param machineTemplate the machine template that will be used to create a
+     *        machine
+     */
     public void setMachineTemplate(final MachineTemplate machineTemplate) {
         this.machineTemplate = machineTemplate;
         this.cimiMachineCreate.setMachineTemplate(machineTemplate.cimiObject);
     }
 
+    /**
+     * Sets the reference of the machine template that will be used to create a
+     * machine.
+     * 
+     * @param machineTemplateRef the reference of the machine template that will
+     *        be used to create a machine.
+     */
     public void setMachineTemplateRef(final String machineTemplateRef) {
         this.machineTemplate = new MachineTemplate(null, machineTemplateRef);
         this.cimiMachineCreate.setMachineTemplate(this.machineTemplate.cimiObject);

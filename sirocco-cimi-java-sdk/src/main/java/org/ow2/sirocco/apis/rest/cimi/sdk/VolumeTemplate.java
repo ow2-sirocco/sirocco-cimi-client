@@ -35,13 +35,16 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeTemplateCollec
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
 /**
- * Set of hardware and software settings required to create a Volume
+ * Set of hardware and software settings required to create a Volume.
  */
 public class VolumeTemplate extends Resource<CimiVolumeTemplate> {
     private VolumeImage volumeImage;
 
     private VolumeConfiguration volumeConfig;
 
+    /**
+     * Instantiates a new volume template.
+     */
     public VolumeTemplate() {
         super(null, new CimiVolumeTemplate());
     }
@@ -63,34 +66,85 @@ public class VolumeTemplate extends Resource<CimiVolumeTemplate> {
         this.volumeConfig = new VolumeConfiguration(cimiClient, cimiObject.getVolumeConfig());
     }
 
+    /**
+     * Gets the volume image to be used to create a volume from this template.
+     * 
+     * @return the volume image to be used to create a volume from this template
+     */
     public VolumeImage getVolumeImage() {
         return this.volumeImage;
     }
 
+    /**
+     * Sets the volume image to be used to create a volume from this template.
+     * 
+     * @param volumeImage the volume image to be used to create a volume from
+     *        this template
+     */
     public void setVolumeImage(final VolumeImage volumeImage) {
         this.volumeImage = volumeImage;
         this.cimiObject.setVolumeImage(volumeImage.cimiObject);
     }
 
+    /**
+     * Sets the reference of volume image to be used to create a volume from
+     * this template.
+     * 
+     * @param the reference of volume image to be used to create a volume from
+     *        this template
+     */
     public void setVolumeImageRef(final String volumeImageRef) {
         this.volumeImage = new VolumeImage(this.cimiClient, volumeImageRef);
         this.cimiObject.setVolumeImage(this.volumeImage.cimiObject);
     }
 
+    /**
+     * Gets the volume configuration to be used to create a volume from this
+     * template.
+     * 
+     * @return the volume configuration to be used to create a volume from this
+     *         template
+     */
     public VolumeConfiguration getVolumeConfig() {
         return this.volumeConfig;
     }
 
+    /**
+     * Sets the volume configuration to be used to create a volume from this
+     * template.
+     * 
+     * @param volumeConfig the volume configuration to be used to create a
+     *        volume from this template
+     */
     public void setVolumeConfig(final VolumeConfiguration volumeConfig) {
         this.volumeConfig = volumeConfig;
         this.cimiObject.setVolumeConfig(volumeConfig.cimiObject);
     }
 
+    /**
+     * Sets the reference of the volume configuration to be used to create a
+     * volume from this template.
+     * 
+     * @param volumeConfigRef the reference of the volume configuration to be
+     *        used to create a volume from this template
+     */
     public void setVolumeConfigRef(final String volumeConfigRef) {
         this.volumeConfig = new VolumeConfiguration(this.cimiClient, volumeConfigRef);
         this.cimiObject.setVolumeConfig(this.volumeConfig.cimiObject);
     }
 
+    /**
+     * Deletes this volume template.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
@@ -104,6 +158,19 @@ public class VolumeTemplate extends Resource<CimiVolumeTemplate> {
         }
     }
 
+    /**
+     * Creates a new volume template.
+     * 
+     * @param client the CIMI client
+     * @param volumeTemplate the volume template to create
+     * @return creation result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static CreateResult<VolumeTemplate> createVolumeTemplate(final CimiClient client, final VolumeTemplate volumeTemplate)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getVolumeTemplates() == null) {
@@ -123,10 +190,19 @@ public class VolumeTemplate extends Resource<CimiVolumeTemplate> {
         return new CreateResult<VolumeTemplate>(job, createdVolumeTemplate);
     }
 
-    public static List<VolumeTemplate> getVolumeTemplates(final CimiClient client) throws CimiClientException, CimiProviderException {
-        return VolumeTemplate.getVolumeTemplates(client);
-    }
-
+    /**
+     * Retrieves the collection of volume templates visible to the client.
+     * 
+     * @param client the client
+     * @param queryParams optional query parameters
+     * @return the volume templates
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static List<VolumeTemplate> getVolumeTemplates(final CimiClient client, final QueryParams... queryParams)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getVolumeTemplates() == null) {
@@ -146,13 +222,23 @@ public class VolumeTemplate extends Resource<CimiVolumeTemplate> {
         return result;
     }
 
-    public static VolumeTemplate getVolumeTemplateByReference(final CimiClient client, final String ref) throws CimiClientException, CimiProviderException {
-        return new VolumeTemplate(client, client.getCimiObjectByReference(ref, CimiVolumeTemplate.class));
-    }
-
-    public static VolumeTemplate getVolumeTemplateByReference(final CimiClient client, final String ref,
+    /**
+     * Retrieves the volume template with the given id.
+     * 
+     * @param client the client
+     * @param id the id of the resource
+     * @param queryParams optional query parameters
+     * @return the volume template by reference
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public static VolumeTemplate getVolumeTemplateByReference(final CimiClient client, final String id,
         final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
-        return new VolumeTemplate(client, client.getCimiObjectByReference(ref, CimiVolumeTemplate.class, queryParams));
+        return new VolumeTemplate(client, client.getCimiObjectByReference(id, CimiVolumeTemplate.class, queryParams));
     }
 
 }

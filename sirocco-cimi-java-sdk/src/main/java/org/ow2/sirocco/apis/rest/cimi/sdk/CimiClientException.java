@@ -39,7 +39,7 @@ public class CimiClientException extends Exception {
     }
 
     /**
-     * Constructs a CimiClientException with the specified detailed message
+     * Constructs a CimiClientException with the specified detailed message.
      * 
      * @param message the detail message
      */

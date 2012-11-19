@@ -31,41 +31,81 @@ import java.util.Map;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiVolumeCreate;
 
 /**
- * Helper class used to create a Volume
+ * Helper class used to create a Volume.
  */
 public class VolumeCreate {
     CimiVolumeCreate cimiVolumeCreate;
 
     private VolumeTemplate volumeTemplate;
 
+    /**
+     * Instantiates a new volume create.
+     */
     public VolumeCreate() {
         this.cimiVolumeCreate = new CimiVolumeCreate();
     }
 
+    /**
+     * Gets the name that will assigned to the created volume.
+     * 
+     * @return the name that will assigned to the created volume
+     */
     public String getName() {
         return this.cimiVolumeCreate.getName();
     }
 
+    /**
+     * Sets the name that will assigned to the created volume.
+     * 
+     * @param name the name that will assigned to the created volume
+     */
     public void setName(final String name) {
         this.cimiVolumeCreate.setName(name);
     }
 
+    /**
+     * Gets the description that will assigned to the created volume.
+     * 
+     * @return the description that will assigned to the created volume
+     */
     public String getDescription() {
         return this.cimiVolumeCreate.getDescription();
     }
 
+    /**
+     * Sets the description that will assigned to the created volume.
+     * 
+     * @param description the description that will assigned to the created
+     *        volume
+     */
     public void setDescription(final String description) {
         this.cimiVolumeCreate.setDescription(description);
     }
 
+    /**
+     * Gets the properties that will assigned to the created volume.
+     * 
+     * @return the properties that will assigned to the created volume
+     */
     public Map<String, String> getProperties() {
         return this.cimiVolumeCreate.getProperties();
     }
 
+    /**
+     * Sets the properties that will assigned to the created volume.
+     * 
+     * @param properties the properties that will assigned to the created volume
+     */
     public void setProperties(final Map<String, String> properties) {
         this.cimiVolumeCreate.setProperties(properties);
     }
 
+    /**
+     * Adds a property that will assigned to the created volume.
+     * 
+     * @param key the property key
+     * @param value the property value
+     */
     public void addProperty(final String key, final String value) {
         if (this.cimiVolumeCreate.getProperties() == null) {
             this.cimiVolumeCreate.setProperties(new HashMap<String, String>());
@@ -73,15 +113,31 @@ public class VolumeCreate {
         this.cimiVolumeCreate.getProperties().put(key, value);
     }
 
+    /**
+     * Gets the volume template to be used to create a volume.
+     * 
+     * @return the volume template to be used to create a volume
+     */
     public VolumeTemplate getVolumeTemplate() {
         return this.volumeTemplate;
     }
 
+    /**
+     * Sets the volume template to be used to create a volume.
+     * 
+     * @param volumeTemplate the volume template to be used to create a volume
+     */
     public void setVolumeTemplate(final VolumeTemplate volumeTemplate) {
         this.volumeTemplate = volumeTemplate;
         this.cimiVolumeCreate.setVolumeTemplate(volumeTemplate.cimiObject);
     }
 
+    /**
+     * Sets the reference of the volume template to be used to create a volume.
+     * 
+     * @param volumeTemplateRef the reference of the volume template to be used
+     *        to create a volume
+     */
     public void setVolumeTemplateRef(final String volumeTemplateRef) {
         this.volumeTemplate = new VolumeTemplate(null, volumeTemplateRef);
         this.cimiVolumeCreate.setVolumeTemplate(this.volumeTemplate.cimiObject);

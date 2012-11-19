@@ -32,13 +32,15 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiNetworkCollection;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiNetworkCollectionRoot;
 
 /**
- * L2 Network
+ * L2 Network.
  */
 public class Network extends Resource<CimiNetwork> {
+
+    /** A unique URI denoting this resource type */
     public static final String TYPE_URI = "http://schemas.dmtf.org/cimi/1/Network";
 
     /**
-     * Network state
+     * Network state.
      */
     public static enum State {
         CREATING, STARTING, STARTED, STOPPING, STOPPED, DELETING, DELETED, ERROR
@@ -53,19 +55,48 @@ public class Network extends Resource<CimiNetwork> {
         super(cimiClient, cimiNetwork);
     }
 
+    /**
+     * Gets the state of this network.
+     * 
+     * @return the state of this network
+     */
     public State getState() {
         return State.valueOf(this.cimiObject.getState());
     }
 
+    /**
+     * Gets the network type.
+     * 
+     * @return the network type
+     */
     public String getNetworkType() {
         return this.cimiObject.getNetworkType();
     }
 
+    /**
+     * Sets the network type.
+     * 
+     * @param networkType the new network type
+     */
     public void setNetworkType(final String networkType) {
         this.cimiObject.setNetworkType(networkType);
     }
 
-    public static List<Network> getNetworks(final CimiClient client, final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
+    /**
+     * Retrieves the collection of networks visible to the client.
+     * 
+     * @param client the client
+     * @param queryParams optional query parameters
+     * @return the networks
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public static List<Network> getNetworks(final CimiClient client, final QueryParams... queryParams)
+        throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getNetworks() == null) {
             throw new CimiClientException("Unsupported operation");
         }
@@ -81,6 +112,20 @@ public class Network extends Resource<CimiNetwork> {
         return result;
     }
 
+    /**
+     * Retrieves the network with the given id.
+     * 
+     * @param client the client
+     * @param id the id
+     * @param queryParams optional query parameters
+     * @return the network by reference
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static Network getNetworkByReference(final CimiClient client, final String id, final QueryParams... queryParams)
         throws CimiClientException, CimiProviderException {
         return new Network(client, client.getCimiObjectByReference(id, CimiNetwork.class, queryParams));

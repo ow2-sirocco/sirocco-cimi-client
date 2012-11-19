@@ -29,7 +29,14 @@ import org.ow2.sirocco.apis.rest.cimi.domain.CimiResourceMetadata;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiResourceMetadataCollection;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiResourceMetadataCollectionRoot;
 
+/**
+ * Resource metadata.
+ */
 public class ResourceMetadata {
+
+    /**
+     * Attribute metadata.
+     */
     public static class AttributeMetadata {
         private final String name;
 
@@ -46,19 +53,39 @@ public class ResourceMetadata {
             this.required = from.getRequired();
         }
 
+        /**
+         * Gets the name of the attribute.
+         * 
+         * @return the name of the attribute
+         */
         public String getName() {
             return this.name;
         }
 
+        /**
+         * Gets the namespace of the attribute.
+         * 
+         * @return the namespace of the attribute
+         */
         public String getNamespace() {
             return this.namespace;
         }
 
+        /**
+         * Gets the type of the attribute.
+         * 
+         * @return the type of the attribute
+         */
         public String getType() {
             return this.type;
         }
 
-        public Boolean getRequired() {
+        /**
+         * True if the attribute is required.
+         * 
+         * @return true if the attribute is required
+         */
+        public Boolean isRequired() {
             return this.required;
         }
     }
@@ -69,6 +96,11 @@ public class ResourceMetadata {
 
     private List<AttributeMetadata> attributeMetadata;
 
+    /**
+     * Gets the id of the ResourceMetadata.
+     * 
+     * @return the id of the ResourceMetadata
+     */
     public String getId() {
         if (this.cimiResourceMetaData.getId() != null) {
             return this.cimiResourceMetaData.getId();
@@ -77,14 +109,29 @@ public class ResourceMetadata {
         }
     }
 
+    /**
+     * Gets the type URI of the resource.
+     * 
+     * @return the type URI of the resource
+     */
     public String getTypeURI() {
         return this.cimiResourceMetaData.getTypeURI();
     }
 
+    /**
+     * Gets the name of the resource type.
+     * 
+     * @return the name of the resource type
+     */
     public String getName() {
         return this.cimiResourceMetaData.getName();
     }
 
+    /**
+     * Gets the attribute metadata.
+     * 
+     * @return the attribute metadata
+     */
     public List<AttributeMetadata> getAttributes() {
         return this.attributeMetadata;
     }
@@ -98,6 +145,19 @@ public class ResourceMetadata {
         }
     }
 
+    /**
+     * Retrieves the resource metadata of the CIMI provider.
+     * 
+     * @param client the CIMI client
+     * @param queryParams optional query parameters
+     * @return the resource metadata
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static List<ResourceMetadata> getResourceMetadatas(final CimiClient client, final QueryParams... queryParams)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getResourceMetadata() == null) {
@@ -116,9 +176,23 @@ public class ResourceMetadata {
         return result;
     }
 
-    public static ResourceMetadata getResourceMetadataByReference(final CimiClient client, final String ref,
+    /**
+     * Retrieves the resource metadata with a given id.
+     * 
+     * @param client the client
+     * @param id the id of the resource
+     * @param queryParams optional query parameters
+     * @return the resource metadata by reference
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public static ResourceMetadata getResourceMetadataByReference(final CimiClient client, final String id,
         final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
-        ResourceMetadata result = new ResourceMetadata(client, client.getCimiObjectByReference(ref, CimiResourceMetadata.class,
+        ResourceMetadata result = new ResourceMetadata(client, client.getCimiObjectByReference(id, CimiResourceMetadata.class,
             queryParams));
         return result;
     }

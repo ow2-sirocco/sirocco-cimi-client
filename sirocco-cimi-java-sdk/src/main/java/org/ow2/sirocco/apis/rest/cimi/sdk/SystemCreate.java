@@ -31,7 +31,7 @@ import java.util.Map;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiSystemCreate;
 
 /**
- * Helper class used to create a System
+ * Helper class used to create a System.
  */
 public class SystemCreate {
     CimiSystemCreate cimiSystemCreate;
@@ -39,68 +39,69 @@ public class SystemCreate {
     private SystemTemplate systemTemplate;
 
     /**
-     * Creates a new SystemCreate
+     * Creates a new SystemCreate.
      */
     public SystemCreate() {
         this.cimiSystemCreate = new CimiSystemCreate();
     }
 
     /**
-     * Returns the name that will assigned to the System
+     * Gets the name that will assigned to the system.
      * 
-     * @return name that will assigned to the System
+     * @return the name that will assigned to the system
      */
     public String getName() {
         return this.cimiSystemCreate.getName();
     }
 
     /**
-     * Sets the name that will assigned to the System
+     * Sets the name that will assigned to the system.
      * 
-     * @param name
+     * @param name the name that will assigned to the system.
      */
     public void setName(final String name) {
         this.cimiSystemCreate.setName(name);
     }
 
     /**
-     * Returns the description of the System
+     * Returns the description that will assigned to the system.
      * 
-     * @return
+     * @return the description that will assigned to the system
      */
     public String getDescription() {
         return this.cimiSystemCreate.getDescription();
     }
 
     /**
-     * Sets the description of the System
+     * Sets the description that will assigned to the system.
      * 
-     * @param description
+     * @param description the description that will assigned to the system
      */
     public void setDescription(final String description) {
         this.cimiSystemCreate.setDescription(description);
     }
 
     /**
-     * Returns the properties that will be assigned to the System
+     * Gets the properties that will be assigned to the system.
      * 
-     * @return
+     * @return the properties that will be assigned to the system
      */
     public Map<String, String> getProperties() {
         return this.cimiSystemCreate.getProperties();
     }
 
     /**
-     * Sets the properties that will be assigned to the System
+     * Sets the properties the properties that will be assigned to the system.
      * 
-     * @param properties
+     * @param properties the properties the properties that will be assigned to
+     *        the system
      */
     public void setProperties(final Map<String, String> properties) {
         this.cimiSystemCreate.setProperties(properties);
     }
 
     /**
-     * Adds a property that will be assigned to the System
+     * Adds a property that will be assigned to the system.
      * 
      * @param key property key
      * @param value property value
@@ -113,18 +114,19 @@ public class SystemCreate {
     }
 
     /**
-     * Returns the SystemTemplate that will used to create the System
+     * Returns the system template that will used to create a system.
      * 
-     * @return
+     * @return the system template that will used to create a system
      */
     public SystemTemplate getSystemTemplate() {
         return this.systemTemplate;
     }
 
     /**
-     * Sets the SystemTemplate that will used to create the System
+     * Sets the system template that will used to create a system.
      * 
-     * @param systemTemplate
+     * @param systemTemplate the system template that will used to create a
+     *        system
      */
     public void setSystemTemplate(final SystemTemplate systemTemplate) {
         this.systemTemplate = systemTemplate;
@@ -132,10 +134,11 @@ public class SystemCreate {
     }
 
     /**
-     * Sets the reference of the SystemTemplate that will used to create the
-     * System
+     * Sets the reference of the system template that will used to create a
+     * system.
      * 
-     * @param systemTemplateRef
+     * @param systemTemplateRef tSets the reference of the system template that
+     *        will used to create a system
      */
     public void setSystemTemplateRef(final String systemTemplateRef) {
         this.systemTemplate = new SystemTemplate(null, systemTemplateRef);

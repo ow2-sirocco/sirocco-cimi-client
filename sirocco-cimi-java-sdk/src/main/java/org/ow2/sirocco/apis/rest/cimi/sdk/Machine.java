@@ -45,13 +45,15 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
 /**
  * Instantiated compute resource that encapsulates CPU and Memory and local
- * storage
+ * storage.
  */
 public class Machine extends Resource<CimiMachine> {
+
+    /** A unique URI denoting this resource type */
     public static final String TYPE_URI = "http://schemas.dmtf.org/cimi/1/Machine";
 
     /**
-     * Machine state
+     * Machine state.
      */
     public static enum State {
         CREATING, STARTING, STARTED, STOPPING, STOPPED, PAUSING, PAUSED, SUSPENDING, SUSPENDED, DELETING, DELETED, ERROR
@@ -66,18 +68,44 @@ public class Machine extends Resource<CimiMachine> {
         super(cimiClient, cimiMachine);
     }
 
+    /**
+     * Gets the state of this machine.
+     * 
+     * @return the state of this machine
+     */
     public State getState() {
         return State.valueOf(this.cimiObject.getState());
     }
 
+    /**
+     * Gets the number of CPUs of this machine.
+     * 
+     * @return the number of CPUs of this machine
+     */
     public int getCpu() {
         return this.cimiObject.getCpu();
     }
 
+    /**
+     * Gets the size of the memory of this machine in kibibytes.
+     * 
+     * @return the size of the memory of this machine in kibibytes
+     */
     public int getMemory() {
         return this.cimiObject.getMemory();
     }
 
+    /**
+     * Gets the local disks of this machine.
+     * 
+     * @return the list of local disks of this machine
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public List<Disk> getDisks() throws CimiClientException, CimiProviderException {
         List<Disk> disks = new ArrayList<Disk>();
         if (this.cimiObject.getDisks() == null || this.cimiObject.getDisks().getArray() == null) {
@@ -91,6 +119,17 @@ public class Machine extends Resource<CimiMachine> {
         return disks;
     }
 
+    /**
+     * Gets the network interfaces of this machine.
+     * 
+     * @return the network interfaces of this machine
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public List<MachineNetworkInterface> getNetworkInterfaces() throws CimiClientException, CimiProviderException {
         List<MachineNetworkInterface> nics = new ArrayList<MachineNetworkInterface>();
 
@@ -119,6 +158,18 @@ public class Machine extends Resource<CimiMachine> {
         return nics;
     }
 
+    /**
+     * Starts this machine.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public Job start() throws CimiClientException, CimiProviderException {
         String startRef = Helper.findOperation(ActionType.START.getPath(), this.cimiObject);
         if (startRef == null) {
@@ -134,6 +185,18 @@ public class Machine extends Resource<CimiMachine> {
         }
     }
 
+    /**
+     * Stops this machine.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public Job stop() throws CimiClientException, CimiProviderException {
         String stopRef = Helper.findOperation(ActionType.STOP.getPath(), this.cimiObject);
         if (stopRef == null) {
@@ -149,6 +212,18 @@ public class Machine extends Resource<CimiMachine> {
         }
     }
 
+    /**
+     * Deletes this machine.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
@@ -162,6 +237,19 @@ public class Machine extends Resource<CimiMachine> {
         }
     }
 
+    /**
+     * Creates a new machine.
+     * 
+     * @param client the client
+     * @param machineCreate creation parameters
+     * @return creation result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static CreateResult<Machine> createMachine(final CimiClient client, final MachineCreate machineCreate)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getMachines() == null) {
@@ -179,6 +267,20 @@ public class Machine extends Resource<CimiMachine> {
         return new CreateResult<Machine>(job, machine);
     }
 
+    /**
+     * Updates a machine.
+     * 
+     * @param client the client
+     * @param id the id
+     * @param attributeValues the attribute values
+     * @return the update result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static UpdateResult<Machine> updateMachine(final CimiClient client, final String id,
         final Map<String, Object> attributeValues) throws CimiClientException, CimiProviderException {
         CimiMachine cimiObject = new CimiMachine();
@@ -203,6 +305,19 @@ public class Machine extends Resource<CimiMachine> {
         return new UpdateResult<Machine>(job, machineConfig);
     }
 
+    /**
+     * Retrieves the collection of machines visible to the client
+     * 
+     * @param client the client
+     * @param queryParams optional query parameters
+     * @return the machines
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static List<Machine> getMachines(final CimiClient client, final QueryParams... queryParams)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getMachines() == null) {
@@ -220,9 +335,23 @@ public class Machine extends Resource<CimiMachine> {
         return result;
     }
 
-    public static Machine getMachineByReference(final CimiClient client, final String ref, final QueryParams... queryParams)
+    /**
+     * Retrieves the machine with the given id.
+     * 
+     * @param client the client
+     * @param id the id of the resource
+     * @param queryParams optional query parameters
+     * @return the machine by reference
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public static Machine getMachineByReference(final CimiClient client, final String id, final QueryParams... queryParams)
         throws CimiClientException, CimiProviderException {
-        Machine result = new Machine(client, client.getCimiObjectByReference(ref, CimiMachine.class, queryParams));
+        Machine result = new Machine(client, client.getCimiObjectByReference(id, CimiMachine.class, queryParams));
         return result;
     }
 

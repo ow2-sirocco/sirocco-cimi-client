@@ -38,23 +38,27 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineImageCollecti
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
 /**
- * Machine image used to instantiate a Machine
+ * Machine image used to instantiate a Machine.
  */
 public class MachineImage extends Resource<CimiMachineImage> {
+
     /**
-     * MachineImage state
+     * MachineImage state.
      */
     public static enum State {
         CREATING, AVAILABLE, DELETING, ERROR
     }
 
     /**
-     * MachineImage type
+     * MachineImage type.
      */
     public static enum Type {
         IMAGE, SNAPSHOT, PARTIAL_SNAPSHOT
     }
 
+    /**
+     * Instantiates a new machine image.
+     */
     public MachineImage() {
         super(null, new CimiMachineImage());
     }
@@ -68,28 +72,65 @@ public class MachineImage extends Resource<CimiMachineImage> {
         super(cimiClient, cimiMachineImage);
     }
 
+    /**
+     * Gets the state of this machine image.
+     * 
+     * @return the state of this machine image
+     */
     public State getState() {
         return State.valueOf(this.cimiObject.getState());
     }
 
+    /**
+     * Gets the type of this machine image.
+     * 
+     * @return the type of this machine image
+     */
     public Type getType() {
         return Type.valueOf(this.cimiObject.getType());
     }
 
+    /**
+     * Gets the image location of this machine image.
+     * 
+     * @return the image location of this machine image
+     */
     public String getImageLocation() {
         return this.cimiObject.getImageLocation().getHref();
     }
 
+    /**
+     * Sets the image location of this machine image.
+     * 
+     * @param imageLocation the image location of this machine image
+     */
     public void setImageLocation(final String imageLocation) {
         ImageLocation loc = new ImageLocation();
         loc.setHref(imageLocation);
         this.cimiObject.setImageLocation(loc);
     }
 
+    /**
+     * Sets the type of this machine image.
+     * 
+     * @param type the type of this machine image
+     */
     public void setType(final Type type) {
         this.cimiObject.setType(type.toString());
     }
 
+    /**
+     * Deletes this machine image.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
@@ -103,6 +144,19 @@ public class MachineImage extends Resource<CimiMachineImage> {
         }
     }
 
+    /**
+     * Creates a new machine image.
+     * 
+     * @param client the CIMI client
+     * @param machineImage the machine image to create
+     * @return creation result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static CreateResult<MachineImage> createMachineImage(final CimiClient client, final MachineImage machineImage)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getMachineImages() == null) {
@@ -120,6 +174,20 @@ public class MachineImage extends Resource<CimiMachineImage> {
         return new CreateResult<MachineImage>(job, createdMachineImage);
     }
 
+    /**
+     * Updates a machine image.
+     * 
+     * @param client the client
+     * @param id the id
+     * @param attributeValues the attribute values
+     * @return the update result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static UpdateResult<MachineImage> updateMachineImage(final CimiClient client, final String id,
         final Map<String, Object> attributeValues) throws CimiClientException, CimiProviderException {
         CimiMachineImage cimiObject = new CimiMachineImage();
@@ -148,6 +216,19 @@ public class MachineImage extends Resource<CimiMachineImage> {
         return new UpdateResult<MachineImage>(job, machineImage);
     }
 
+    /**
+     * Retrieves the collection of machine images visible to the client.
+     * 
+     * @param client the client
+     * @param queryParams optional query parameters
+     * @return the machine images
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static List<MachineImage> getMachineImages(final CimiClient client, final QueryParams... queryParams)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getMachineImages() == null) {
@@ -167,9 +248,23 @@ public class MachineImage extends Resource<CimiMachineImage> {
         return result;
     }
 
-    public static MachineImage getMachineImageByReference(final CimiClient client, final String ref,
+    /**
+     * Retrieves the machine image with the given id.
+     * 
+     * @param client the client
+     * @param id the id of the resource
+     * @param queryParams optional query parameters
+     * @return the machine image by reference
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public static MachineImage getMachineImageByReference(final CimiClient client, final String id,
         final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
-        return new MachineImage(client, client.getCimiObjectByReference(ref, CimiMachineImage.class, queryParams));
+        return new MachineImage(client, client.getCimiObjectByReference(id, CimiMachineImage.class, queryParams));
     }
 
 }

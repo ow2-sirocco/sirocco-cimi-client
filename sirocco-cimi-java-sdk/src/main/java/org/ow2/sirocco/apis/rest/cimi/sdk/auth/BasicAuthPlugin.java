@@ -33,10 +33,16 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 import com.sun.jersey.core.util.Base64;
 
 /**
- * Plugin implementing HTTP Basic authentication
+ * Plugin implementing HTTP Basic authentication.
  */
 public class BasicAuthPlugin implements AuthPlugin {
 
+    /*
+     * (non-Javadoc)
+     * @see
+     * org.ow2.sirocco.apis.rest.cimi.sdk.AuthPlugin#authenticate(java.lang.
+     * String, java.lang.String)
+     */
     @Override
     public Map<String, String> authenticate(final String user, final String password) throws CimiClientException {
         StringBuilder sbToEncode = new StringBuilder();

@@ -40,6 +40,9 @@ public class ComponentDescriptor {
 
     private Object componentTemplate;
 
+    /**
+     * Instantiates a new component descriptor.
+     */
     public ComponentDescriptor() {
         this.cimiComponentDescriptor = new CimiComponentDescriptor();
     }
@@ -58,42 +61,101 @@ public class ComponentDescriptor {
         }
     }
 
+    /**
+     * Gets the number of component instances to be created from this component
+     * descriptor.
+     * 
+     * @return the number of component instances to be created from this
+     *         component descriptor
+     */
     public int getQuantity() {
         return this.cimiComponentDescriptor.getQuantity();
     }
 
+    /**
+     * Sets number of component instances to be created from this component
+     * descriptor.
+     * 
+     * @param quantity the number of component instances to be created from this
+     *        component descriptor
+     */
     public void setQuantity(final int quantity) {
         this.cimiComponentDescriptor.setQuantity(quantity);
     }
 
+    /**
+     * Gets the name that will be associated with a System component created
+     * from this component descriptor.
+     * 
+     * @return the name that will be associated with a System component created
+     *         from this component descriptor
+     */
     public String getName() {
         return this.cimiComponentDescriptor.getName();
     }
 
+    /**
+     * Sets the name that will be associated with a System component created
+     * from this component descriptor.
+     * 
+     * @param name the name that will be associated with a System component
+     *        created from this component descriptor
+     */
     public void setName(final String name) {
         this.cimiComponentDescriptor.setName(name);
     }
 
+    /**
+     * Gets the description.
+     * 
+     * @return the description
+     */
     public String getDescription() {
         return this.cimiComponentDescriptor.getDescription();
     }
 
+    /**
+     * Sets the description.
+     * 
+     * @param description the new description
+     */
     public void setDescription(final String description) {
         this.cimiComponentDescriptor.setDescription(description);
     }
 
+    /**
+     * Gets the properties.
+     * 
+     * @return the properties
+     */
     public Map<String, String> getProperties() {
         return this.cimiComponentDescriptor.getProperties();
     }
 
+    /**
+     * Sets the properties.
+     * 
+     * @param properties the properties
+     */
     public void setProperties(final Map<String, String> properties) {
         this.cimiComponentDescriptor.setProperties(properties);
     }
 
+    /**
+     * Gets the component template.
+     * 
+     * @return the component template
+     */
     public Object getComponentTemplate() {
         return this.componentTemplate;
     }
 
+    /**
+     * Sets the component template.
+     * 
+     * @param componentTemplate the new component template
+     * @throws Exception the exception
+     */
     public void setComponentTemplate(final Object componentTemplate) throws Exception {
         if (componentTemplate instanceof MachineTemplate) {
             this.componentTemplate = componentTemplate;

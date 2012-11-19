@@ -36,11 +36,16 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineVolumeCollect
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
 /**
- * Represents the attachment of a Volume to a Machine
+ * Represents the attachment of a Volume to a Machine.
  */
 public class MachineVolume extends Resource<CimiMachineVolume> {
+
+    /** A unique URI denoting this resource type */
     public static final String TYPE_URI = "http://schemas.dmtf.org/cimi/1/MachineVolume";
 
+    /**
+     * Instantiates a new machine volume.
+     */
     public MachineVolume() {
         super(null, new CimiMachineVolume());
     }
@@ -54,24 +59,56 @@ public class MachineVolume extends Resource<CimiMachineVolume> {
         super(cimiClient, cimiMachineVolume);
     }
 
+    /**
+     * Gets the attached volume.
+     * 
+     * @return the attached volume
+     */
     public Volume getVolume() {
         return new Volume(this.cimiClient, this.cimiObject.getVolume());
     }
 
+    /**
+     * Gets the initial location of the attached volume.
+     * 
+     * @return the initial location
+     */
     public String getInitialLocation() {
         return this.cimiObject.getInitialLocation();
     }
 
+    /**
+     * Sets the reference of the volume to be attached.
+     * 
+     * @param volumeRef the reference of the volume to be attached
+     */
     public void setVolumeRef(final String volumeRef) {
         CimiVolume vol = new CimiVolume();
         vol.setHref(volumeRef);
         this.cimiObject.setVolume(vol);
     }
 
+    /**
+     * Sets the initial location of the volume.
+     * 
+     * @param initialLocation the initial location of the volume
+     */
     public void setInitialLocation(final String initialLocation) {
         this.cimiObject.setInitialLocation(initialLocation);
     }
 
+    /**
+     * Detaches a volume from a machine.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
@@ -85,6 +122,20 @@ public class MachineVolume extends Resource<CimiMachineVolume> {
         }
     }
 
+    /**
+     * Attaches a volume to a machine.
+     * 
+     * @param client the CIMI client
+     * @param machineId the id of the machine to which the volume is attached
+     * @param machineVolume the machine volume to attach
+     * @return creation result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static CreateResult<MachineVolume> createMachineVolume(final CimiClient client, final String machineId,
         final MachineVolume machineVolume) throws CimiClientException, CimiProviderException {
         Machine machine = Machine.getMachineByReference(client, machineId, QueryParams.builder().expand("volumes").build());
@@ -100,6 +151,20 @@ public class MachineVolume extends Resource<CimiMachineVolume> {
         return new CreateResult<MachineVolume>(job, createdMachineVolume);
     }
 
+    /**
+     * Retrieves the collection of machine volumes belonging to a given machine
+     * 
+     * @param client the client
+     * @param machineId the machine id
+     * @param queryParams optional query parameters
+     * @return the machine volumes
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static List<MachineVolume> getMachineVolumes(final CimiClient client, final String machineId,
         final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
         Machine machine = Machine.getMachineByReference(client, machineId);
@@ -119,9 +184,23 @@ public class MachineVolume extends Resource<CimiMachineVolume> {
         return result;
     }
 
-    public static MachineVolume getMachineVolumeByReference(final CimiClient client, final String ref,
+    /**
+     * Retrieves the machine volume with the given id.
+     * 
+     * @param client the client
+     * @param id the id of the resource
+     * @param queryParams optional query parameters
+     * @return the machine volume by reference
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public static MachineVolume getMachineVolumeByReference(final CimiClient client, final String id,
         final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
-        return new MachineVolume(client, client.getCimiObjectByReference(ref, CimiMachineVolume.class, queryParams));
+        return new MachineVolume(client, client.getCimiObjectByReference(id, CimiMachineVolume.class, queryParams));
     }
 
 }

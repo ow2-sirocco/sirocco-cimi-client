@@ -36,11 +36,16 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
 /**
  * Information required to create the initial administrative superuser of a
- * Machine
+ * Machine.
  */
 public class Credential extends Resource<CimiCredential> {
+
+    /** A unique URI denoting this resource type */
     public static final String TYPE_URI = "http://schemas.dmtf.org/cimi/1/Credential";
 
+    /**
+     * Instantiates a new credential.
+     */
     public Credential() {
         super(null, new CimiCredential());
     }
@@ -54,6 +59,18 @@ public class Credential extends Resource<CimiCredential> {
         super(cimiClient, cimiObject);
     }
 
+    /**
+     * Deletes this credential.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
@@ -67,6 +84,19 @@ public class Credential extends Resource<CimiCredential> {
         }
     }
 
+    /**
+     * Creates a new credential.
+     * 
+     * @param client the CIMI client
+     * @param credentialCreate the credential to create
+     * @return creation result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static CreateResult<Credential> createCredential(final CimiClient client, final CredentialCreate credentialCreate)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getCredentials() == null) {
@@ -85,6 +115,19 @@ public class Credential extends Resource<CimiCredential> {
         return new CreateResult<Credential>(job, cred);
     }
 
+    /**
+     * Retrieves the collection of credentials visible to the client.
+     * 
+     * @param client the client
+     * @param queryParams optional query parameters
+     * @return the credentials
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static List<Credential> getCredentials(final CimiClient client, final QueryParams... queryParams)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getCredentials() == null) {
@@ -104,9 +147,23 @@ public class Credential extends Resource<CimiCredential> {
         return result;
     }
 
-    public static Credential getCredentialByReference(final CimiClient client, final String ref,
+    /**
+     * Retrieves the credential with the given id.
+     * 
+     * @param client the client
+     * @param id the id of the resource
+     * @param queryParams optional query parameters
+     * @return the credential by reference
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public static Credential getCredentialByReference(final CimiClient client, final String id,
         final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
-        return new Credential(client, client.getCimiObjectByReference(ref, CimiCredential.class, queryParams));
+        return new Credential(client, client.getCimiObjectByReference(id, CimiCredential.class, queryParams));
     }
 
 }

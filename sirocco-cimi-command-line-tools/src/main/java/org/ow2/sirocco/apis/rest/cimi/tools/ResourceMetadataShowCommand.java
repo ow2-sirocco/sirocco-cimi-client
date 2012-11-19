@@ -83,7 +83,7 @@ public class ResourceMetadataShowCommand implements Command {
                 if (attributeMetadata.getNamespace() != null) {
                     sb.append(" namespace=" + attributeMetadata.getNamespace());
                 }
-                sb.append(" required=" + attributeMetadata.getRequired());
+                sb.append(" required=" + attributeMetadata.isRequired());
                 table.addCell(sb.toString());
             }
         }

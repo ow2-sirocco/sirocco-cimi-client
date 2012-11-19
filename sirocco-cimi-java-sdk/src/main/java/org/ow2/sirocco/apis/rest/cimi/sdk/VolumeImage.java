@@ -35,16 +35,20 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeImageCollectio
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
 /**
- * Image that can be placed on a pre-loaded Volume
+ * Image that can be placed on a pre-loaded Volume.
  */
 public class VolumeImage extends Resource<CimiVolumeImage> {
+
     /**
-     * VolumeImage state
+     * VolumeImage state.
      */
     public static enum State {
         CREATING, AVAILABLE, DELETING, DELETED, ERROR
     }
 
+    /**
+     * Instantiates a new volume image.
+     */
     public VolumeImage() {
         super(null, new CimiVolumeImage());
     }
@@ -58,22 +62,45 @@ public class VolumeImage extends Resource<CimiVolumeImage> {
         super(cimiClient, cimiVolumeImage);
     }
 
-    public CimiVolumeImage getCimiVolumeImage() {
-        return this.cimiObject;
-    }
-
+    /**
+     * Gets the state of the volume image.
+     * 
+     * @return the state of the volume image
+     */
     public State getState() {
         return State.valueOf(this.cimiObject.getState());
     }
 
+    /**
+     * Gets the image location.
+     * 
+     * @return the image location
+     */
     public String getImageLocation() {
         return this.cimiObject.getImageLocation().getHref();
     }
 
-    public boolean getBootable() {
+    /**
+     * True if this volume image is bootable.
+     * 
+     * @return true if this volume image is bootable
+     */
+    public boolean isBootable() {
         return this.cimiObject.getBootable();
     }
 
+    /**
+     * Deletes this volume image.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
@@ -87,6 +114,19 @@ public class VolumeImage extends Resource<CimiVolumeImage> {
         }
     }
 
+    /**
+     * Creates a new volume image.
+     * 
+     * @param client the CIMI client
+     * @param volumeImage the volume image to create
+     * @return creation result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static CreateResult<VolumeImage> createVolumeImage(final CimiClient client, final VolumeImage volumeImage)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getVolumeImages() == null) {
@@ -105,6 +145,19 @@ public class VolumeImage extends Resource<CimiVolumeImage> {
         return new CreateResult<VolumeImage>(job, createdVolumeConfiguration);
     }
 
+    /**
+     * Retrieves the collection of volume images visible to the client
+     * 
+     * @param client the CIMI client
+     * @param queryParams optional query parameters
+     * @return the volume images visible to the client
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static List<VolumeImage> getVolumeImages(final CimiClient client, final QueryParams... queryParams)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getVolumeImages() == null) {
@@ -124,9 +177,23 @@ public class VolumeImage extends Resource<CimiVolumeImage> {
         return result;
     }
 
-    public static VolumeImage getVolumeImageByReference(final CimiClient client, final String ref,
+    /**
+     * Retrieves the volume image with the given id.
+     * 
+     * @param client the client
+     * @param id the id of the resource
+     * @param queryParams optional query parameters
+     * @return the volume image by reference
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public static VolumeImage getVolumeImageByReference(final CimiClient client, final String id,
         final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
-        return new VolumeImage(client, client.getCimiObjectByReference(ref, CimiVolumeImage.class, queryParams));
+        return new VolumeImage(client, client.getCimiObjectByReference(id, CimiVolumeImage.class, queryParams));
     }
 
 }

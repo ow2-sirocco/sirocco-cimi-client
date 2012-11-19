@@ -43,7 +43,7 @@ import com.sun.jersey.api.json.JSONConfiguration;
 
 /**
  * Plugin implementing token-based authentication through the OpenStack Keystone
- * service
+ * service.
  */
 public class OpenStackKeystoneAuthPlugin implements AuthPlugin {
 
@@ -103,6 +103,9 @@ public class OpenStackKeystoneAuthPlugin implements AuthPlugin {
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.ow2.sirocco.apis.rest.cimi.sdk.AuthPlugin#authenticate(java.lang.String, java.lang.String)
+     */
     @Override
     public Map<String, String> authenticate(final String user, final String password) throws CimiClientException {
         String[] tenantAndUser = user.split(":");

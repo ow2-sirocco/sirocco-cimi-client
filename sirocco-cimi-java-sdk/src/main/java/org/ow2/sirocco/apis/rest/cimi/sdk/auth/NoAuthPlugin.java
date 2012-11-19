@@ -31,10 +31,16 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.AuthPlugin;
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClientException;
 
 /**
- * Plugin implementing no authentication
+ * Plugin implementing no authentication.
  */
 public class NoAuthPlugin implements AuthPlugin {
 
+    /*
+     * (non-Javadoc)
+     * @see
+     * org.ow2.sirocco.apis.rest.cimi.sdk.AuthPlugin#authenticate(java.lang.
+     * String, java.lang.String)
+     */
     @Override
     public Map<String, String> authenticate(final String user, final String password) throws CimiClientException {
         return Collections.emptyMap();

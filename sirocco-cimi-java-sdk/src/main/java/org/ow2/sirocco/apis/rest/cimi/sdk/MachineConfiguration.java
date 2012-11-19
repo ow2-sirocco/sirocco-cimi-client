@@ -38,17 +38,22 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineConfiguration
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
 /**
- * Hardware resource settings (CPU, memory, disk) of a to-be-created Machine
+ * Hardware resource settings (CPU, memory, disk) of a to-be-created Machine.
  */
 public class MachineConfiguration extends Resource<CimiMachineConfiguration> {
+
     /**
-     * Disk specification
+     * Disk specification.
      */
     public static class Disk {
+
+        /** The capacity of the disk in kilobytes. */
         public int capacity;
 
+        /** The format of the disk. */
         public String format;
 
+        /** The initial location of the fisk. */
         public String initialLocation;
 
         static Disk from(final CimiDiskConfiguration diskConfig) {
@@ -60,6 +65,9 @@ public class MachineConfiguration extends Resource<CimiMachineConfiguration> {
         }
     }
 
+    /**
+     * Instantiates a new machine configuration.
+     */
     public MachineConfiguration() {
         super(null, new CimiMachineConfiguration());
     }
@@ -73,22 +81,47 @@ public class MachineConfiguration extends Resource<CimiMachineConfiguration> {
         super(cimiClient, cimiObject);
     }
 
+    /**
+     * Gets the number of CPUs.
+     * 
+     * @return the number of CPUs
+     */
     public int getCpu() {
         return this.cimiObject.getCpu();
     }
 
+    /**
+     * Sets the number of CPUs.
+     * 
+     * @param cpu the number of CPUs
+     */
     public void setCpu(final int cpu) {
         this.cimiObject.setCpu(cpu);
     }
 
+    /**
+     * Gets the size of the memory in kibibytes.
+     * 
+     * @return the size of the memory in kibibytes
+     */
     public int getMemory() {
         return this.cimiObject.getMemory();
     }
 
+    /**
+     * Sets the size of the memory in kibibytes.
+     * 
+     * @param memory the size of the memory in kibibytes
+     */
     public void setMemory(final int memory) {
         this.cimiObject.setMemory(memory);
     }
 
+    /**
+     * Gets the local disks.
+     * 
+     * @return the local disks
+     */
     public Disk[] getDisks() {
         Disk[] disks = new Disk[this.cimiObject.getDisks().length];
         for (int i = 0; i < disks.length; i++) {
@@ -116,10 +149,27 @@ public class MachineConfiguration extends Resource<CimiMachineConfiguration> {
         return diskConfigs;
     }
 
+    /**
+     * Sets the local disks.
+     * 
+     * @param disks the local disks
+     */
     public void setDisks(final Disk[] disks) {
         this.cimiObject.setDisks(MachineConfiguration.diskArrayToCimiDiskConfigurationArray(disks));
     }
 
+    /**
+     * Deletes this configuration.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
@@ -133,6 +183,19 @@ public class MachineConfiguration extends Resource<CimiMachineConfiguration> {
         }
     }
 
+    /**
+     * Creates a new machine configuration.
+     * 
+     * @param client the CIMI client
+     * @param machineConfig the machine config to create
+     * @return creation result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static CreateResult<MachineConfiguration> createMachineConfiguration(final CimiClient client,
         final MachineConfiguration machineConfig) throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getMachineConfigs() == null) {
@@ -153,6 +216,20 @@ public class MachineConfiguration extends Resource<CimiMachineConfiguration> {
         return new CreateResult<MachineConfiguration>(job, createdMachineConfig);
     }
 
+    /**
+     * Updates this machine configuration.
+     * 
+     * @param client the client
+     * @param id the id of the machine config to update
+     * @param attributeValues the attribute values
+     * @return the update result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static UpdateResult<MachineConfiguration> updateMachineConfiguration(final CimiClient client, final String id,
         final Map<String, Object> attributeValues) throws CimiClientException, CimiProviderException {
         CimiMachineConfiguration cimiObject = new CimiMachineConfiguration();
@@ -186,6 +263,19 @@ public class MachineConfiguration extends Resource<CimiMachineConfiguration> {
         return new UpdateResult<MachineConfiguration>(job, machineConfig);
     }
 
+    /**
+     * Retrieves the collection of machine configurations visible to the client
+     * 
+     * @param client the client
+     * @param queryParams optional query parameters
+     * @return the machine configurations
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static List<MachineConfiguration> getMachineConfigurations(final CimiClient client, final QueryParams... queryParams)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getMachineConfigs() == null) {
@@ -205,10 +295,24 @@ public class MachineConfiguration extends Resource<CimiMachineConfiguration> {
         return result;
     }
 
-    public static MachineConfiguration getMachineConfigurationByReference(final CimiClient client, final String ref,
+    /**
+     * Retrieves the machine configuration with the given id.
+     * 
+     * @param client the client
+     * @param id the id of the resource
+     * @param queryParams optional query parameters
+     * @return the machine configuration by reference
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public static MachineConfiguration getMachineConfigurationByReference(final CimiClient client, final String id,
         final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
-        return new MachineConfiguration(client, client.getCimiObjectByReference(ref, CimiMachineConfiguration.class,
-            queryParams));
+        return new MachineConfiguration(client,
+            client.getCimiObjectByReference(id, CimiMachineConfiguration.class, queryParams));
     }
 
 }

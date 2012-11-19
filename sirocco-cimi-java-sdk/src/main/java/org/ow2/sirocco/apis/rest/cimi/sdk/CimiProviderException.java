@@ -38,7 +38,7 @@ public class CimiProviderException extends CimiClientException {
     private Date timeOfStatusChange;
 
     /**
-     * Constructs a CimiProviderException with the specified detailed message
+     * Constructs a CimiProviderException with the specified detailed message.
      * 
      * @param message the detail message
      */
@@ -60,22 +60,27 @@ public class CimiProviderException extends CimiClientException {
     }
 
     /**
-     * Human-readable string that provides information about the status of the
-     * Job.
+     * Human-readable string that provides information about the error
+     * 
+     * @return the status message
      */
     public String getStatusMessage() {
         return this.statusMessage;
     }
 
     /**
-     * Last time that the status of the Job changed
+     * Time at which the error occurred
+     * 
+     * @return the time of status change
      */
     public Date getTimeOfStatusChange() {
         return this.timeOfStatusChange;
     }
 
     /**
-     * Operation return code
+     * Operation return code.
+     * 
+     * @return the return code
      */
     public Integer getReturnCode() {
         return this.returnCode;

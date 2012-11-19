@@ -37,25 +37,30 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineNetworkInterf
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
 /**
- * Network interface of a Machine
+ * Network interface of a Machine.
  */
 public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterface> {
+
+    /** A unique URI denoting this resource type */
     public static final String TYPE_URI = "http://schemas.dmtf.org/cimi/1/MachineNetworkInterface";
 
     /**
-     * NIC state
+     * NIC state.
      */
     public static enum State {
         Active, Passive, Disabled
     }
 
     /**
-     * NIC type
+     * NIC type.
      */
     public static enum Type {
         PUBLIC, PRIVATE
     }
 
+    /**
+     * Instantiates a new machine network interface.
+     */
     public MachineNetworkInterface() {
         super(null, new CimiMachineNetworkInterface());
     }
@@ -69,6 +74,17 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
         super(cimiClient, cimiMachineNetworkInterface);
     }
 
+    /**
+     * Gets the addresses of this network interface.
+     * 
+     * @return the addresses
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public List<Address> getAddresses() throws CimiClientException, CimiProviderException {
         String href = this.cimiObject.getAddresses().getHref();
         if (href == null) {
@@ -88,26 +104,63 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
         return result;
     }
 
+    /**
+     * Gets the network of this network interface.
+     * 
+     * @return the network
+     */
     public Network getNetwork() {
         return this.cimiObject.getNetwork() != null ? new Network(this.cimiClient, this.cimiObject.getNetwork()) : null;
     }
 
+    /**
+     * Gets the state of this network interface.
+     * 
+     * @return the state of this network interface
+     */
     public State getState() {
         return State.valueOf(this.cimiObject.getState());
     }
 
+    /**
+     * Gets the type of this network interface.
+     * 
+     * @return the type of this network interface
+     */
     public Type getType() {
         return Type.valueOf(this.cimiObject.getNetworkType());
     }
 
+    /**
+     * Gets the mac address.
+     * 
+     * @return the mac address
+     */
     public String getMacAddress() {
         return this.cimiObject.getMacAddress();
     }
 
+    /**
+     * Gets the mtu.
+     * 
+     * @return the mtu
+     */
     public int getMtu() {
         return this.cimiObject.getMtu();
     }
 
+    /**
+     * Deletes this network interface.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
@@ -121,8 +174,23 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
         }
     }
 
+    /**
+     * Creates a new machine network interface.
+     * 
+     * @param client the CIMI client
+     * @param machineId the machine id
+     * @param machineNetworkInterface the machine network interface to create
+     * @return creation result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static CreateResult<MachineNetworkInterface> createMachineNetworkInterface(final CimiClient client,
-        final String machineId, final MachineNetworkInterface machineNetworkInterface) throws CimiClientException, CimiProviderException {
+        final String machineId, final MachineNetworkInterface machineNetworkInterface) throws CimiClientException,
+        CimiProviderException {
         Machine machine = Machine.getMachineByReference(client, machineId, QueryParams.builder().expand("networkInterfaces")
             .build());
         String addRef = Helper.findOperation("add", machine.cimiObject.getNetworkInterfaces());
@@ -137,6 +205,20 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
         return new CreateResult<MachineNetworkInterface>(job, createdMachineNetworkInterface);
     }
 
+    /**
+     * Retrieves the machine network interfaces belonging to a given machine.
+     * 
+     * @param client the client
+     * @param machineId the machine id
+     * @param queryParams optional query parameters
+     * @return the machine network interfaces
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static List<MachineNetworkInterface> getMachineNetworkInterfaces(final CimiClient client, final String machineId,
         final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
         Machine machine = Machine.getMachineByReference(client, machineId);
@@ -158,9 +240,23 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
         return result;
     }
 
-    public static MachineNetworkInterface getMachineNetworkInterfaceByReference(final CimiClient client, final String ref,
+    /**
+     * Retrieves the machine network interface with the given id.
+     * 
+     * @param client the client
+     * @param id the id of the resource
+     * @param queryParams optional query parameters
+     * @return the machine network interface by reference
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public static MachineNetworkInterface getMachineNetworkInterfaceByReference(final CimiClient client, final String id,
         final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
-        return new MachineNetworkInterface(client, client.getCimiObjectByReference(ref, CimiMachineNetworkInterface.class,
+        return new MachineNetworkInterface(client, client.getCimiObjectByReference(id, CimiMachineNetworkInterface.class,
             queryParams));
     }
 

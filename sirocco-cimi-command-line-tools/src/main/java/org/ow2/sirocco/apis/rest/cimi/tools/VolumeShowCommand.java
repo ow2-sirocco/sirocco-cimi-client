@@ -71,7 +71,7 @@ public class VolumeShowCommand implements Command {
         }
         if (showParams.isSelected("bootable")) {
             table.addCell("bootable");
-            table.addCell(Boolean.toString(volume.getBootable()));
+            table.addCell(Boolean.toString(volume.isBootable()));
         }
 
         System.out.println(table.render());

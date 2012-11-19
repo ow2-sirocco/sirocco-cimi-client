@@ -65,7 +65,7 @@ public class VolumeListCommand implements Command {
                 table.addCell(Integer.toString(volume.getCapacity()) + "KB");
             }
             if (this.listParams.isSelected("bootable")) {
-                table.addCell(Boolean.toString(volume.getBootable()));
+                table.addCell(Boolean.toString(volume.isBootable()));
             }
         }
         System.out.println(table.render());

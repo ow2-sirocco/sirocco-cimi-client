@@ -35,9 +35,13 @@ import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiCredentialTemplateCo
 import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.CimiResult;
 
 /**
- * Configuration values for realizing a Credential resource
+ * Configuration values for realizing a Credential resource.
  */
 public class CredentialTemplate extends Resource<CimiCredentialTemplate> {
+
+    /**
+     * Instantiates a new credential template.
+     */
     public CredentialTemplate() {
         super(null, new CimiCredentialTemplate());
     }
@@ -55,6 +59,18 @@ public class CredentialTemplate extends Resource<CimiCredentialTemplate> {
         super(cimiClient, cimiObject);
     }
 
+    /**
+     * Deletes this credential template.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public Job delete() throws CimiClientException, CimiProviderException {
         String deleteRef = Helper.findOperation("delete", this.cimiObject);
         if (deleteRef == null) {
@@ -68,6 +84,19 @@ public class CredentialTemplate extends Resource<CimiCredentialTemplate> {
         }
     }
 
+    /**
+     * Creates a new credential template.
+     * 
+     * @param client the CIMI client
+     * @param credentialTemplate the credential template tp create
+     * @return creation result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static CreateResult<CredentialTemplate> createCredentialTemplate(final CimiClient client,
         final CredentialTemplate credentialTemplate) throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getCredentialTemplates() == null) {
@@ -88,6 +117,19 @@ public class CredentialTemplate extends Resource<CimiCredentialTemplate> {
         return new CreateResult<CredentialTemplate>(job, credTemplate);
     }
 
+    /**
+     * Retrieves the collection of credential templates visible to the client.
+     * 
+     * @param client the client
+     * @param queryParams optional query parameters
+     * @return the credential templates
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
     public static List<CredentialTemplate> getCredentialTemplates(final CimiClient client, final QueryParams... queryParams)
         throws CimiClientException, CimiProviderException {
         if (client.cloudEntryPoint.getCredentialTemplates() == null) {
@@ -107,9 +149,23 @@ public class CredentialTemplate extends Resource<CimiCredentialTemplate> {
         return result;
     }
 
-    public static CredentialTemplate getCredentialTemplateByReference(final CimiClient client, final String ref,
+    /**
+     * Retrieves the credential template with the given id.
+     * 
+     * @param client the client
+     * @param id the id of the resource
+     * @param queryParams optional query parameters
+     * @return the credential template by reference
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public static CredentialTemplate getCredentialTemplateByReference(final CimiClient client, final String id,
         final QueryParams... queryParams) throws CimiClientException, CimiProviderException {
-        return new CredentialTemplate(client, client.getCimiObjectByReference(ref, CimiCredentialTemplate.class, queryParams));
+        return new CredentialTemplate(client, client.getCimiObjectByReference(id, CimiCredentialTemplate.class, queryParams));
     }
 
 }

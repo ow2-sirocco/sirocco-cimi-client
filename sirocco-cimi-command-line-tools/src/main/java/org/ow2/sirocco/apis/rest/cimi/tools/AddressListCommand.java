@@ -59,7 +59,7 @@ public class AddressListCommand implements Command {
                 table.addCell(address.getIp());
             }
             if (this.listParams.isSelected("allocation")) {
-                table.addCell(address.getAllocation());
+                table.addCell(address.getAllocation().toString());
             }
         }
         System.out.println(table.render());
