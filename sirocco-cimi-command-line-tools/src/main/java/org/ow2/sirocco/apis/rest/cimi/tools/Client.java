@@ -123,6 +123,7 @@ public class Client {
 
             command.execute(cimiClient);
         } catch (ParameterException ex) {
+            System.out.println(ex.getMessage());
             // find command name if any
             for (String s : args) {
                 if (!s.startsWith("-")) {
