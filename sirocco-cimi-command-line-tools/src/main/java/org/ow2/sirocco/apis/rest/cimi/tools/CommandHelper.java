@@ -53,40 +53,40 @@ public class CommandHelper {
         }
 
         if (selectParam.isSelected("name")) {
-            table.addCell("name");
-            table.addCell(resource.getName());
+            if (resource.getName() != null) {
+                table.addCell("name");
+                table.addCell(resource.getName());
+            }
         }
 
         if (selectParam.isSelected("description")) {
-            table.addCell("description");
-            table.addCell(resource.getDescription());
+            if (resource.getDescription() != null) {
+                table.addCell("description");
+                table.addCell(resource.getDescription());
+            }
         }
 
         if (selectParam.isSelected("created")) {
-            table.addCell("created");
             if (resource.getCreated() != null) {
+                table.addCell("created");
                 table.addCell(resource.getCreated().toString());
-            } else {
-                table.addCell("");
             }
         }
         if (selectParam.isSelected("updated")) {
-            table.addCell("updated");
             if (resource.getUpdated() != null) {
+                table.addCell("updated");
                 table.addCell(resource.getUpdated().toString());
-            } else {
-                table.addCell("");
             }
         }
         if (selectParam.isSelected("properties")) {
-            table.addCell("properties");
-            StringBuffer sb = new StringBuffer();
             if (resource.getProperties() != null) {
+                table.addCell("properties");
+                StringBuffer sb = new StringBuffer();
                 for (Map.Entry<String, String> prop : resource.getProperties().entrySet()) {
                     sb.append("(" + prop.getKey() + "," + prop.getValue() + ") ");
                 }
+                table.addCell(sb.toString());
             }
-            table.addCell(sb.toString());
         }
         return table;
     }
@@ -131,12 +131,20 @@ public class CommandHelper {
         }
     }
 
+    public static void printResourceExtensionAttributes(final Table table, final Resource<?> resource) {
+        if (resource.getExtensionAttributes() != null) {
+            for (Map.Entry<String, Object> entry : resource.getExtensionAttributes().entrySet()) {
+                table.addCell(entry.getKey());
+                table.addCell(entry.getValue().toString());
+            }
+        }
+    }
+
     public static String printKibibytesValue(final int val) {
         String result;
         if (val < 1024) {
             result = val + " KB";
-        }
-        if (val < 1024 * 1024) {
+        } else if (val < 1024 * 1024) {
             result = String.format("%.0f MB", val / 1024.0f);
         } else {
             result = String.format("%.0f GB", ((float) val) / (1024 * 1024));
@@ -148,8 +156,7 @@ public class CommandHelper {
         String result;
         if (val < 1000) {
             result = val + " KB";
-        }
-        if (val < 1000 * 1000) {
+        } else if (val < 1000 * 1000) {
             result = String.format("%.0f MB", val / 1000.0f);
         } else {
             result = String.format("%.0f GB", ((float) val) / (1000 * 1000));
