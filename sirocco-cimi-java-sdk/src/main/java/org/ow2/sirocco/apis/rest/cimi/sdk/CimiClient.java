@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiCloudEntryPoint;
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
+import org.ow2.sirocco.apis.rest.cimi.domain.CimiObjectCommonAbstract;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -60,6 +61,10 @@ public class CimiClient {
     private static final String CIMI_QUERY_LAST_KEYWORD = "$last";
 
     private static final String CIMI_QUERY_SELECT_KEYWORD = "$select";
+
+    private static final String CIMI_JOB_URI_HEADER = "CIMI-Job-URI";
+
+    private static final String CIMI_LOCATION_HEADER = "Location";
 
     private static final String CIMICLIENT_AUTH_PLUGIN_CLASS_PROP = "CIMICLIENT_AUTH_PLUGIN_CLASS";
 
@@ -231,6 +236,9 @@ public class CimiClient {
         } else if (response.getStatus() == 501) {
             String message = response.getEntity(String.class);
             throw new CimiProviderException("Not implemented: " + message);
+        } else if (response.getStatus() == 502) {
+            String message = response.getEntity(String.class);
+            throw new CimiProviderException("Bad gateway: " + message);
         }
     }
 
@@ -355,9 +363,13 @@ public class CimiClient {
             this.handleResponseStatus(response);
             if (response.getStatus() == 202) {
                 if (response.getLength() > 0
-                    || (response.getType().equals(MediaType.APPLICATION_XML_TYPE) || response.getType().equals(
-                        MediaType.APPLICATION_JSON_TYPE))) {
+                    || (response.getType() != null && (response.getType().equals(MediaType.APPLICATION_XML_TYPE) || response
+                        .getType().equals(MediaType.APPLICATION_JSON_TYPE)))) {
                     return response.getEntity(CimiJob.class);
+                }
+                String jobId = response.getHeaders().getFirst(CimiClient.CIMI_JOB_URI_HEADER);
+                if (jobId != null) {
+                    return new CimiJob(jobId);
                 }
             }
         } catch (ClientHandlerException e) {
@@ -377,14 +389,40 @@ public class CimiClient {
             if (response.getStatus() == 201) {
                 V resource = null;
                 if (response.getLength() > 0
-                    || (response.getType().equals(MediaType.APPLICATION_XML_TYPE) || response.getType().equals(
-                        MediaType.APPLICATION_JSON_TYPE))) {
+                    || (response.getType() != null && (response.getType().equals(MediaType.APPLICATION_XML_TYPE) || response
+                        .getType().equals(MediaType.APPLICATION_JSON_TYPE)))) {
                     resource = response.getEntity(outputClazz);
+                } else {
+                    String resourceId = response.getHeaders().getFirst(CimiClient.CIMI_LOCATION_HEADER);
+                    try {
+                        resource = outputClazz.newInstance();
+                        ((CimiObjectCommonAbstract) resource).setId(resourceId);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 createResult = new CimiResult<V>(null, resource);
             } else if (response.getStatus() == 202) {
-                CimiJob job = response.getEntity(CimiJob.class);
-                createResult = new CimiResult<V>(job, null);
+                CimiJob job = null;
+                V resource = null;
+                String jobId = response.getHeaders().getFirst(CimiClient.CIMI_JOB_URI_HEADER);
+                if (jobId != null) {
+                    job = new CimiJob(jobId);
+                }
+                if (response.getLength() > 0
+                    || (response.getType() != null && (response.getType().equals(MediaType.APPLICATION_XML_TYPE) || response
+                        .getType().equals(MediaType.APPLICATION_JSON_TYPE)))) {
+                    resource = response.getEntity(outputClazz);
+                } else {
+                    String resourceId = response.getHeaders().getFirst(CimiClient.CIMI_LOCATION_HEADER);
+                    try {
+                        resource = outputClazz.newInstance();
+                        ((CimiObjectCommonAbstract) resource).setId(resourceId);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                createResult = new CimiResult<V>(job, resource);
             }
             return createResult;
         } catch (ClientHandlerException e) {
@@ -408,8 +446,18 @@ public class CimiClient {
                 }
                 updateResult = new CimiResult<V>(null, resource);
             } else if (response.getStatus() == 202) {
-                CimiJob job = response.getEntity(CimiJob.class);
-                updateResult = new CimiResult<V>(job, null);
+                CimiJob job = null;
+                V resource = null;
+                String jobId = response.getHeaders().getFirst(CimiClient.CIMI_JOB_URI_HEADER);
+                if (jobId != null) {
+                    job = new CimiJob(jobId);
+                }
+                if (response.getLength() > 0
+                    || (response.getType() != null && (response.getType().equals(MediaType.APPLICATION_XML_TYPE) || response
+                        .getType().equals(MediaType.APPLICATION_JSON_TYPE)))) {
+                    resource = (V) response.getEntity(input.getClass());
+                }
+                updateResult = new CimiResult<V>(job, resource);
             }
             return updateResult;
         } catch (ClientHandlerException e) {
@@ -424,7 +472,17 @@ public class CimiClient {
                 .delete(ClientResponse.class);
             this.handleResponseStatus(response);
             if (response.getStatus() == 202) {
-                CimiJob job = response.getEntity(CimiJob.class);
+                CimiJob job = null;
+                if (response.getLength() > 0
+                    || (response.getType() != null && (response.getType().equals(MediaType.APPLICATION_XML_TYPE) || response
+                        .getType().equals(MediaType.APPLICATION_JSON_TYPE)))) {
+                    job = response.getEntity(CimiJob.class);
+                } else {
+                    String jobId = response.getHeaders().getFirst(CimiClient.CIMI_JOB_URI_HEADER);
+                    if (jobId != null) {
+                        job = new CimiJob(jobId);
+                    }
+                }
                 return job;
             } else {
                 return null;
