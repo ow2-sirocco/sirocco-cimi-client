@@ -34,6 +34,7 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.MachineCreate;
 import org.ow2.sirocco.apis.rest.cimi.sdk.MachineTemplate;
 
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "create machine")
@@ -70,7 +71,7 @@ public class MachineCreateCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
         if (this.templateId == null && (this.configId == null || this.imageId == null)) {
-            throw new CimiClientException("You need to specify either a template id or both a config id and an image id");
+            throw new ParameterException("You need to specify either a template id or both a config id and an image id");
         }
         MachineCreate machineCreate = new MachineCreate();
         MachineTemplate machineTemplate;
@@ -96,11 +97,10 @@ public class MachineCreateCommand implements Command {
         }
         CreateResult<Machine> result = Machine.createMachine(cimiClient, machineCreate);
         if (result.getJob() != null) {
-            System.out.println("Machine " + result.getJob().getTargetResourceRef() + " being created");
+            System.out.println("Job:");
             JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
-        } else {
-            MachineShowCommand.printMachine(result.getResource(), new ResourceSelectExpandParams());
         }
-
+        System.out.println("Machine:");
+        MachineShowCommand.printMachine(result.getResource(), new ResourceSelectExpandParams());
     }
 }

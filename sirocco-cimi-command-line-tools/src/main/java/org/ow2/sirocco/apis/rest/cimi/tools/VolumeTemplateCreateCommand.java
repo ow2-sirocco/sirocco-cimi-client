@@ -73,11 +73,11 @@ public class VolumeTemplateCreateCommand implements Command {
 
         CreateResult<VolumeTemplate> result = VolumeTemplate.createVolumeTemplate(cimiClient, volumeTemplate);
         if (result.getJob() != null) {
-            System.out.println("VolumeTemplate " + result.getJob().getTargetResourceRef() + " being created");
+            System.out.println("Job:");
             JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
-        } else {
-            VolumeTemplateShowCommand.printVolumeTemplate(result.getResource(), new ResourceSelectExpandParams());
         }
+        System.out.println("VolumeTemplate:");
+        VolumeTemplateShowCommand.printVolumeTemplate(result.getResource(), new ResourceSelectExpandParams());
     }
 
 }

@@ -50,6 +50,7 @@ public class SystemDeleteCommand implements Command {
         Job job = system.delete();
         java.lang.System.out.println("System " + this.systemIds.get(0) + " being deleted");
         if (job != null) {
+            java.lang.System.out.println("Job:");
             JobShowCommand.printJob(job, new ResourceSelectExpandParams());
         }
     }

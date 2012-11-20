@@ -50,6 +50,7 @@ public class VolumeDeleteCommand implements Command {
         Job job = volume.delete();
         System.out.println("Volume " + this.volumeIds.get(0) + " being deleted");
         if (job != null) {
+            System.out.println("Job:");
             JobShowCommand.printJob(job, new ResourceSelectExpandParams());
         }
     }

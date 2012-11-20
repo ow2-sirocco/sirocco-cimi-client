@@ -40,7 +40,7 @@ public class MachineListCommand implements Command {
     public static String COMMAND_NAME = "machine-list";
 
     @ParametersDelegate
-    private ResourceListParams listParams = new ResourceListParams("id", "name", "created", "state", "cpu", "memory", "disks");
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "created", "state");
 
     @Override
     public String getName() {
@@ -63,7 +63,7 @@ public class MachineListCommand implements Command {
                 table.addCell(Integer.toString(machine.getCpu()));
             }
             if (this.listParams.isSelected("memory")) {
-                table.addCell(Integer.toString(machine.getMemory()));
+                table.addCell(CommandHelper.printKibibytesValue(machine.getMemory()));
             }
 
             if (this.listParams.isSelected("disks")) {
@@ -73,7 +73,7 @@ public class MachineListCommand implements Command {
                     if (i > 0) {
                         sb.append(", ");
                     }
-                    sb.append(disks.get(i).getCapacity());
+                    sb.append(CommandHelper.printKilobytesValue(disks.get(i).getCapacity()));
                 }
                 table.addCell((sb.toString()));
             }

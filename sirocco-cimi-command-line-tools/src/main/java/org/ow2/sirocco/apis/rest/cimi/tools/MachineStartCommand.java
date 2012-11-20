@@ -50,6 +50,7 @@ public class MachineStartCommand implements Command {
         Job job = machine.start();
         System.out.println("Starting machine " + this.machineIds.get(0));
         if (job != null) {
+            System.out.println("Job:");
             JobShowCommand.printJob(job, new ResourceSelectExpandParams());
         }
     }

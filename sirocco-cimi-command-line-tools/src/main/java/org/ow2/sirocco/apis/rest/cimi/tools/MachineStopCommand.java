@@ -50,6 +50,7 @@ public class MachineStopCommand implements Command {
         Job job = machine.stop();
         System.out.println("Stopping machine " + this.machineIds.get(0));
         if (job != null) {
+            System.out.println("Job:");
             JobShowCommand.printJob(job, new ResourceSelectExpandParams());
         }
     }

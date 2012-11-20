@@ -73,11 +73,10 @@ public class VolumeConfigCreateCommand implements Command {
 
         CreateResult<VolumeConfiguration> result = VolumeConfiguration.createVolumeConfiguration(cimiClient, volumeConfig);
         if (result.getJob() != null) {
-            java.lang.System.out.println("VolumeConfiguration " + result.getJob().getTargetResourceRef() + " being created");
+            System.out.println("Job:");
             JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
-        } else {
-            VolumeConfigShowCommand.printVolumeConfig(result.getResource(), new ResourceSelectExpandParams());
         }
-
+        System.out.println("VolumeConfiguration:");
+        VolumeConfigShowCommand.printVolumeConfig(result.getResource(), new ResourceSelectExpandParams());
     }
 }

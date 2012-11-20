@@ -35,6 +35,7 @@ import org.ow2.sirocco.apis.rest.cimi.sdk.VolumeCreate;
 import org.ow2.sirocco.apis.rest.cimi.sdk.VolumeTemplate;
 
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "create volume")
@@ -65,7 +66,7 @@ public class VolumeCreateCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
         if (this.templateId == null && this.configId == null && this.capacityMB == null) {
-            throw new CimiClientException("You need to provide either a template id, a config id or a capacity");
+            throw new ParameterException("You need to provide either a template id, a config id or a capacity");
         }
         VolumeCreate volumeCreate = new VolumeCreate();
         VolumeTemplate volumeTemplate;
@@ -94,11 +95,10 @@ public class VolumeCreateCommand implements Command {
         }
         CreateResult<Volume> result = Volume.createVolume(cimiClient, volumeCreate);
         if (result.getJob() != null) {
-            System.out.println("Volume " + result.getJob().getTargetResourceRef() + " being created");
+            System.out.println("Job:");
             JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
-        } else {
-            VolumeShowCommand.printVolume(result.getResource(), new ResourceSelectExpandParams());
         }
-
+        System.out.println("Volume being created:");
+        VolumeShowCommand.printVolume(result.getResource(), new ResourceSelectExpandParams());
     }
 }

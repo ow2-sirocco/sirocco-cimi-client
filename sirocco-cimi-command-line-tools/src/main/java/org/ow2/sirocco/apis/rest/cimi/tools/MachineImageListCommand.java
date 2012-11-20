@@ -59,7 +59,11 @@ public class MachineImageListCommand implements Command {
                 table.addCell(machineImage.getState().toString());
             }
             if (this.listParams.isSelected("type")) {
-                table.addCell(machineImage.getType().toString());
+                if (machineImage.getType() != null) {
+                    table.addCell(machineImage.getType().toString());
+                } else {
+                    table.addCell("");
+                }
             }
             if (this.listParams.isSelected("imageLocation")) {
                 table.addCell(machineImage.getImageLocation());

@@ -91,11 +91,11 @@ public class MachineTemplateCreateCommand implements Command {
 
         CreateResult<MachineTemplate> result = MachineTemplate.createMachineTemplate(cimiClient, machineTemplate);
         if (result.getJob() != null) {
-            System.out.println("MachineTemplate " + result.getJob().getTargetResourceRef() + " being created");
+            System.out.println("Job:");
             JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
-        } else {
-            MachineTemplateShowCommand.printMachineTemplate(result.getResource(), new ResourceSelectExpandParams());
         }
+        System.out.println("Machine Template:");
+        MachineTemplateShowCommand.printMachineTemplate(result.getResource(), new ResourceSelectExpandParams());
     }
 
 }
