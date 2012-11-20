@@ -59,11 +59,11 @@ public class MachineVolumeShowCommand implements Command {
         throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(machineVolume, showParams);
 
-        if (showParams.isSelected("initialLocation")) {
+        if (showParams.isSelected("initialLocation") && machineVolume.getInitialLocation() != null) {
             table.addCell("initial location");
-            table.addCell(machineVolume.getVolume().getId());
+            table.addCell(machineVolume.getInitialLocation());
         }
-        if (showParams.isSelected("volume")) {
+        if (showParams.isSelected("volume") && machineVolume.getVolume() != null) {
             table.addCell("volume");
             table.addCell(machineVolume.getVolume().getId());
         }

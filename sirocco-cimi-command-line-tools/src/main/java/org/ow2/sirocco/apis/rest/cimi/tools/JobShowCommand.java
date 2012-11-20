@@ -57,45 +57,30 @@ public class JobShowCommand implements Command {
     public static void printJob(final Job job, final ResourceSelectExpandParams showParams) throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(job, showParams);
 
-        if (showParams.isSelected("state")) {
+        if (showParams.isSelected("state") && job.getState() != null) {
             table.addCell("state");
             table.addCell(job.getState().toString());
         }
-        if (showParams.isSelected("action")) {
+        if (showParams.isSelected("action") && job.getAction() != null) {
             table.addCell("action");
             table.addCell(job.getAction());
         }
-        if (showParams.isSelected("targetResource")) {
+        if (showParams.isSelected("targetResource") && job.getTargetResourceRef() != null) {
             table.addCell("target resource");
             table.addCell(job.getTargetResourceRef());
         }
-        if (showParams.isSelected("affectedResources")) {
+        if (showParams.isSelected("affectedResources") && job.getAffectedResourceRefs() != null
+            && job.getAffectedResourceRefs().length > 0) {
             table.addCell("affected resources");
-            if (job.getAffectedResourceRefs().length > 0) {
-                table.addCell(job.getAffectedResourceRefs()[0]);
-            } else {
-                table.addCell("");
-            }
+            table.addCell(job.getAffectedResourceRefs()[0]);
         }
-        if (showParams.isSelected("statusMessage")) {
+        if (showParams.isSelected("statusMessage") && job.getStatusMessage() != null) {
             table.addCell("status message");
             table.addCell(job.getStatusMessage());
         }
-        if (showParams.isSelected("timeOfStatusChange")) {
+        if (showParams.isSelected("timeOfStatusChange") && job.getTimeOfStatusChange() != null) {
             table.addCell("time of status change");
-            if (job.getTimeOfStatusChange() != null) {
-                table.addCell(job.getTimeOfStatusChange().toString());
-            } else {
-                table.addCell("");
-            }
-        }
-        if (showParams.isSelected("parentJob")) {
-            table.addCell("parent job");
-            table.addCell("");
-        }
-        if (showParams.isSelected("nestedJobs")) {
-            table.addCell("nested jobs");
-            table.addCell("");
+            table.addCell(job.getTimeOfStatusChange().toString());
         }
 
         System.out.println(table.render());

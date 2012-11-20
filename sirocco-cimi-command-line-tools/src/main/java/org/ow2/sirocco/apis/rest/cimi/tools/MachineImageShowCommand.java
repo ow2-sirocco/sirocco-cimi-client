@@ -64,7 +64,11 @@ public class MachineImageShowCommand implements Command {
         }
         if (showParams.isSelected("type")) {
             table.addCell("type");
-            table.addCell(machineImage.getType().toString());
+            if (machineImage.getType() != null) {
+                table.addCell(machineImage.getType().toString());
+            } else {
+                table.addCell("");
+            }
         }
         if (showParams.isSelected("imageLocation")) {
             table.addCell("image location");

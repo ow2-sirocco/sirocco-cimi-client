@@ -57,19 +57,19 @@ public class VolumeShowCommand implements Command {
     public static void printVolume(final Volume volume, final ResourceSelectExpandParams showParams) throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(volume, showParams);
 
-        if (showParams.isSelected("state")) {
+        if (showParams.isSelected("state") && volume.getState() != null) {
             table.addCell("state");
             table.addCell(volume.getState().toString());
         }
-        if (showParams.isSelected("type")) {
+        if (showParams.isSelected("type") && volume.getType() != null) {
             table.addCell("type");
             table.addCell(volume.getType());
         }
-        if (showParams.isSelected("capacity")) {
+        if (showParams.isSelected("capacity") && volume.getCapacity() != null) {
             table.addCell("capacity");
             table.addCell(CommandHelper.printKilobytesValue(volume.getCapacity()));
         }
-        if (showParams.isSelected("bootable")) {
+        if (showParams.isSelected("bootable") && volume.isBootable() != null) {
             table.addCell("bootable");
             table.addCell(Boolean.toString(volume.isBootable()));
         }

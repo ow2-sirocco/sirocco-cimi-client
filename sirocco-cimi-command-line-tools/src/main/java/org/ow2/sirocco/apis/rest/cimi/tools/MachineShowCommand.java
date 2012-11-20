@@ -56,44 +56,49 @@ public class MachineShowCommand implements Command {
         MachineShowCommand.printMachine(machine, this.showParams);
     }
 
-    public static void printMachine(final Machine machine, final ResourceSelectExpandParams showParams) throws CimiClientException {
+    public static void printMachine(final Machine machine, final ResourceSelectExpandParams showParams)
+        throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(machine, showParams);
 
-        if (showParams.isSelected("state")) {
+        if (showParams.isSelected("state") && machine.getState() != null) {
             table.addCell("state");
             table.addCell(machine.getState().toString());
         }
-        if (showParams.isSelected("cpu")) {
+        if (showParams.isSelected("cpu") && machine.getCpu() != null) {
             table.addCell("cpu");
             table.addCell(Integer.toString(machine.getCpu()));
         }
-        if (showParams.isSelected("memory")) {
+        if (showParams.isSelected("memory") && machine.getMemory() != null) {
             table.addCell("memory");
             table.addCell(CommandHelper.printKibibytesValue(machine.getMemory()));
         }
 
         if (showParams.isSelected("disks")) {
-            table.addCell("disks");
-            StringBuffer sb = new StringBuffer();
             List<Disk> disks = machine.getDisks();
-            for (int i = 0; i < disks.size(); i++) {
-                if (i > 0) {
-                    sb.append(", ");
+            if (disks != null) {
+                table.addCell("disks");
+                StringBuffer sb = new StringBuffer();
+
+                for (int i = 0; i < disks.size(); i++) {
+                    if (i > 0) {
+                        sb.append(", ");
+                    }
+                    sb.append(CommandHelper.printKilobytesValue(disks.get(i).getCapacity()));
                 }
-                sb.append(CommandHelper.printKilobytesValue(disks.get(i).getCapacity()));
+                table.addCell((sb.toString()));
             }
-            table.addCell((sb.toString()));
         }
 
         if (showParams.isSelected("networkInterfaces")) {
-            table.addCell("IP addresses");
-            StringBuffer sb = new StringBuffer();
-            for (MachineNetworkInterface nic : machine.getNetworkInterfaces()) {
-                if (!nic.getAddresses().isEmpty()) {
-                    sb.append(nic.getType() + "=" + nic.getAddresses().get(0).getIp() + " ");
+            List<MachineNetworkInterface> nics = machine.getNetworkInterfaces();
+            if (nics != null) {
+                for (MachineNetworkInterface nic : machine.getNetworkInterfaces()) {
+                    if (!nic.getAddresses().isEmpty()) {
+                        table.addCell(nic.getType().toString().toLowerCase() + " IP");
+                        table.addCell(nic.getAddresses().get(0).getIp());
+                    }
                 }
             }
-            table.addCell(sb.toString());
         }
 
         System.out.println(table.render());
