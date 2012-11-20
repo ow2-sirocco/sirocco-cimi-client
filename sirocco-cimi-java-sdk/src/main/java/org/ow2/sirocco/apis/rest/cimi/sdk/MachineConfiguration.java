@@ -86,7 +86,7 @@ public class MachineConfiguration extends Resource<CimiMachineConfiguration> {
      * 
      * @return the number of CPUs
      */
-    public int getCpu() {
+    public Integer getCpu() {
         return this.cimiObject.getCpu();
     }
 
@@ -104,7 +104,7 @@ public class MachineConfiguration extends Resource<CimiMachineConfiguration> {
      * 
      * @return the size of the memory in kibibytes
      */
-    public int getMemory() {
+    public Integer getMemory() {
         return this.cimiObject.getMemory();
     }
 

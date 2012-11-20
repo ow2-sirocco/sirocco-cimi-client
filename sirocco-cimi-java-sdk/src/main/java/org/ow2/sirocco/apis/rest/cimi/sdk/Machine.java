@@ -74,7 +74,11 @@ public class Machine extends Resource<CimiMachine> {
      * @return the state of this machine
      */
     public State getState() {
-        return State.valueOf(this.cimiObject.getState());
+        if (this.cimiObject.getState() != null) {
+            return State.valueOf(this.cimiObject.getState());
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -82,7 +86,7 @@ public class Machine extends Resource<CimiMachine> {
      * 
      * @return the number of CPUs of this machine
      */
-    public int getCpu() {
+    public Integer getCpu() {
         return this.cimiObject.getCpu();
     }
 
@@ -91,7 +95,7 @@ public class Machine extends Resource<CimiMachine> {
      * 
      * @return the size of the memory of this machine in kibibytes
      */
-    public int getMemory() {
+    public Integer getMemory() {
         return this.cimiObject.getMemory();
     }
 
@@ -107,14 +111,17 @@ public class Machine extends Resource<CimiMachine> {
      *         request, or a server side issue.
      */
     public List<Disk> getDisks() throws CimiClientException, CimiProviderException {
-        List<Disk> disks = new ArrayList<Disk>();
-        if (this.cimiObject.getDisks() == null || this.cimiObject.getDisks().getArray() == null) {
+        List<Disk> disks = null;
+        if (this.cimiObject.getDisks() != null && this.cimiObject.getDisks().getArray() == null) {
             CimiMachineDiskCollectionRoot cimiDisks = this.cimiClient.getRequest(
                 this.cimiClient.extractPath(this.cimiObject.getDisks().getHref()), CimiMachineDiskCollectionRoot.class);
             this.cimiObject.setDisks(cimiDisks);
         }
-        for (CimiMachineDisk cimiDisk : this.cimiObject.getDisks().getArray()) {
-            disks.add(new Disk(this.cimiClient, cimiDisk));
+        if (this.cimiObject.getDisks() != null) {
+            disks = new ArrayList<Disk>();
+            for (CimiMachineDisk cimiDisk : this.cimiObject.getDisks().getArray()) {
+                disks.add(new Disk(this.cimiClient, cimiDisk));
+            }
         }
         return disks;
     }
@@ -141,10 +148,9 @@ public class Machine extends Resource<CimiMachine> {
                 this.cimiObject.getNetworkInterfaces().setArray(cimiNics.getArray());
             }
         }
-
         if (this.cimiObject.getNetworkInterfaces() != null && this.cimiObject.getNetworkInterfaces().getArray() != null) {
             for (CimiMachineNetworkInterface cimiNic : this.cimiObject.getNetworkInterfaces().getArray()) {
-                if (cimiNic.getAddresses().getArray() == null) {
+                if (cimiNic.getAddresses().getArray() == null && cimiNic.getAddresses().getHref() != null) {
                     CimiMachineNetworkInterfaceAddressCollectionRoot addresses = this.cimiClient
                         .getRequest(this.cimiClient.extractPath(cimiNic.getAddresses().getHref()),
                             CimiMachineNetworkInterfaceAddressCollectionRoot.class, QueryParams.builder().expand("address")

@@ -68,7 +68,11 @@ public class VolumeImage extends Resource<CimiVolumeImage> {
      * @return the state of the volume image
      */
     public State getState() {
-        return State.valueOf(this.cimiObject.getState());
+        if (this.cimiObject.getState() != null) {
+            return State.valueOf(this.cimiObject.getState());
+        } else {
+            return null;
+        }
     }
 
     /**

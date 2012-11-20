@@ -78,7 +78,11 @@ public class MachineImage extends Resource<CimiMachineImage> {
      * @return the state of this machine image
      */
     public State getState() {
-        return State.valueOf(this.cimiObject.getState());
+        if (this.cimiObject.getState() != null) {
+            return State.valueOf(this.cimiObject.getState().toUpperCase());
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -87,7 +91,11 @@ public class MachineImage extends Resource<CimiMachineImage> {
      * @return the type of this machine image
      */
     public Type getType() {
-        return Type.valueOf(this.cimiObject.getType());
+        if (this.cimiObject.getType() != null) {
+            return Type.valueOf(this.cimiObject.getType());
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -96,7 +104,11 @@ public class MachineImage extends Resource<CimiMachineImage> {
      * @return the image location of this machine image
      */
     public String getImageLocation() {
-        return this.cimiObject.getImageLocation().getHref();
+        if (this.cimiObject.getImageLocation() != null) {
+            return this.cimiObject.getImageLocation().getHref();
+        } else {
+            return null;
+        }
     }
 
     /**

@@ -32,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
-import org.ow2.sirocco.apis.rest.cimi.domain.NestedJob;
 import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiJobCollectionRoot;
 
 /**
@@ -60,7 +59,11 @@ public class Job extends Resource<CimiJob> {
      * @return the state
      */
     public State getState() {
-        return State.valueOf(this.cimiObject.getStatus());
+        if (this.cimiObject.getStatus() != null) {
+            return State.valueOf(this.cimiObject.getStatus());
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -70,7 +73,11 @@ public class Job extends Resource<CimiJob> {
      * @return the target resource ref
      */
     public String getTargetResourceRef() {
-        return this.cimiObject.getTargetResource().getHref();
+        if (this.cimiObject.getTargetResource() != null) {
+            return this.cimiObject.getTargetResource().getHref();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -132,15 +139,6 @@ public class Job extends Resource<CimiJob> {
      */
     public Integer getProgress() {
         return this.cimiObject.getProgress();
-    }
-
-    /**
-     * Subordinate Job resources.
-     * 
-     * @return the nested jobs
-     */
-    public NestedJob[] getNestedJobs() {
-        return this.cimiObject.getNestedJobs();
     }
 
     /**

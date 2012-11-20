@@ -66,7 +66,11 @@ public class Volume extends Resource<CimiVolume> {
      * @return the state of this volume
      */
     public State getState() {
-        return State.valueOf(this.cimiObject.getState());
+        if (this.cimiObject.getState() != null) {
+            return State.valueOf(this.cimiObject.getState());
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -83,7 +87,7 @@ public class Volume extends Resource<CimiVolume> {
      * 
      * @return the capacity of this volume in kilobytes
      */
-    public int getCapacity() {
+    public Integer getCapacity() {
         return this.cimiObject.getCapacity();
     }
 
@@ -92,7 +96,7 @@ public class Volume extends Resource<CimiVolume> {
      * 
      * @return true if this volume is bootable
      */
-    public boolean isBootable() {
+    public Boolean isBootable() {
         return this.cimiObject.getBootable();
     }
 

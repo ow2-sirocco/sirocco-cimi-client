@@ -63,7 +63,7 @@ public class Disk extends Resource<CimiMachineDisk> {
      * 
      * @return the capacity of this disk in kilobytes
      */
-    public int getCapacity() {
+    public Integer getCapacity() {
         return this.cimiObject.getCapacity();
     }
 

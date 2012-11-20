@@ -78,7 +78,7 @@ public class VolumeConfiguration extends Resource<CimiVolumeConfiguration> {
      * 
      * @return the capacity of the volume to be created in kilobytes
      */
-    public int getCapacity() {
+    public Integer getCapacity() {
         return this.cimiObject.getCapacity();
     }
 

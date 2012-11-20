@@ -65,7 +65,11 @@ public class MachineVolume extends Resource<CimiMachineVolume> {
      * @return the attached volume
      */
     public Volume getVolume() {
-        return new Volume(this.cimiClient, this.cimiObject.getVolume());
+        if (this.cimiObject.getVolume() != null) {
+            return new Volume(this.cimiClient, this.cimiObject.getVolume());
+        } else {
+            return null;
+        }
     }
 
     /**

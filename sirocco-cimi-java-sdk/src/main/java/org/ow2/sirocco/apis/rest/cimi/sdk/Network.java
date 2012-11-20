@@ -61,7 +61,11 @@ public class Network extends Resource<CimiNetwork> {
      * @return the state of this network
      */
     public State getState() {
-        return State.valueOf(this.cimiObject.getState());
+        if (this.cimiObject.getState() != null) {
+            return State.valueOf(this.cimiObject.getState());
+        } else {
+            return null;
+        }
     }
 
     /**

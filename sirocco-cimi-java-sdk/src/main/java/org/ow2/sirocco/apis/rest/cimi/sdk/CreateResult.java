@@ -59,7 +59,7 @@ public class CreateResult<E> {
     /**
      * Gets the created resource.
      * 
-     * @return the created resource or null if not returned by the CIMI provider
+     * @return the created resource
      */
     public E getResource() {
         return this.resource;

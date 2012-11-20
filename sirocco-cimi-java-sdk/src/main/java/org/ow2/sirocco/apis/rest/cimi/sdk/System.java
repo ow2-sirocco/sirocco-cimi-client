@@ -66,7 +66,11 @@ public class System extends Resource<CimiSystem> {
      * @return the state of this system
      */
     public State getState() {
-        return State.valueOf(this.cimiObject.getState());
+        if (this.cimiObject.getState() != null) {
+            return State.valueOf(this.cimiObject.getState());
+        } else {
+            return null;
+        }
     }
 
     /**
