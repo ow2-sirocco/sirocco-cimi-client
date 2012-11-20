@@ -58,25 +58,17 @@ public class MachineImageShowCommand implements Command {
     public static void printMachineImage(final MachineImage machineImage, final ResourceSelectExpandParams showParams) {
         Table table = CommandHelper.createResourceShowTable(machineImage, showParams);
 
-        if (showParams.isSelected("state")) {
+        if (showParams.isSelected("state") && machineImage.getState() != null) {
             table.addCell("state");
             table.addCell(machineImage.getState().toString());
         }
-        if (showParams.isSelected("type")) {
+        if (showParams.isSelected("type") && machineImage.getType() != null) {
             table.addCell("type");
-            if (machineImage.getType() != null) {
-                table.addCell(machineImage.getType().toString());
-            } else {
-                table.addCell("");
-            }
+            table.addCell(machineImage.getType().toString());
         }
-        if (showParams.isSelected("imageLocation")) {
+        if (showParams.isSelected("imageLocation") && machineImage.getImageLocation() != null) {
             table.addCell("image location");
             table.addCell(machineImage.getImageLocation());
-        }
-        if (showParams.isSelected("related image")) {
-            table.addCell("related image");
-            // TODO
         }
 
         System.out.println(table.render());
