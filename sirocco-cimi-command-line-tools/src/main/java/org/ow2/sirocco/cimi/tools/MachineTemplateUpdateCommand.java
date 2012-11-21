@@ -93,7 +93,7 @@ public class MachineTemplateUpdateCommand implements Command {
         UpdateResult<MachineTemplate> result = MachineTemplate.updateMachineTemplate(cimiClient,
             this.machineTemplateIds.get(0), attributeValues);
         if (result.getJob() != null) {
-            System.out.println("MachineTemplate " + result.getJob().getTargetResourceRef() + " being updated");
+            System.out.println("MachineTemplate " + this.machineTemplateIds.get(0) + " being updated");
             JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
         } else {
             System.out.println("MachineTemplate: " + this.machineTemplateIds.get(0) + " updated");

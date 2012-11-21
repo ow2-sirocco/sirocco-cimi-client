@@ -32,8 +32,8 @@ import java.util.Map;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.MachineConfiguration;
-import org.ow2.sirocco.cimi.sdk.UpdateResult;
 import org.ow2.sirocco.cimi.sdk.MachineConfiguration.Disk;
+import org.ow2.sirocco.cimi.sdk.UpdateResult;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -89,7 +89,8 @@ public class MachineConfigUpdateCommand implements Command {
             attributeValues.put("memory", this.memoryInKB);
         }
 
-        if (this.diskSizes != null) {
+        if (this.diskSizes != null && this.diskSizes.size() > 0) {
+            System.out.println("SIZE=" + this.diskSizes.size());
             Disk disks[] = new Disk[this.diskSizes.size()];
             for (int i = 0; i < disks.length; i++) {
                 disks[i] = new Disk();
@@ -101,7 +102,7 @@ public class MachineConfigUpdateCommand implements Command {
         UpdateResult<MachineConfiguration> result = MachineConfiguration.updateMachineConfiguration(cimiClient,
             this.machineConfigId.get(0), attributeValues);
         if (result.getJob() != null) {
-            System.out.println("MachineConfig " + result.getJob().getTargetResourceRef() + " being updated");
+            System.out.println("MachineConfig " + this.machineConfigId.get(0) + " being updated");
             JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
         } else {
             System.out.println("MachineConfig: " + this.machineConfigId + " updated");
