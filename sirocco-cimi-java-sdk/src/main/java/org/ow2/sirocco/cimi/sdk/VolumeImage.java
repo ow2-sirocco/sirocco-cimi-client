@@ -28,11 +28,11 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiVolumeImage;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeImageCollection;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeImageCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
+import org.ow2.sirocco.cimi.server.domain.CimiJob;
+import org.ow2.sirocco.cimi.server.domain.CimiVolumeImage;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiVolumeImageCollection;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiVolumeImageCollectionRoot;
 
 /**
  * Image that can be placed on a pre-loaded Volume.

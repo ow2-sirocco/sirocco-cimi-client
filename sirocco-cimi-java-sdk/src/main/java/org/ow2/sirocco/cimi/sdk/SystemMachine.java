@@ -24,7 +24,7 @@
  */
 package org.ow2.sirocco.cimi.sdk;
 
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiSystemMachine;
+import org.ow2.sirocco.cimi.server.domain.CimiSystemMachine;
 
 /**
  * Represents a Machine within a System.

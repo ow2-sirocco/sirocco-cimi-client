@@ -40,7 +40,7 @@ public class BasicAuthPlugin implements AuthPlugin {
     /*
      * (non-Javadoc)
      * @see
-     * org.ow2.sirocco.apis.rest.cimi.sdk.AuthPlugin#authenticate(java.lang.
+     * org.ow2.sirocco.cimi.server.sdk.AuthPlugin#authenticate(java.lang.
      * String, java.lang.String)
      */
     @Override

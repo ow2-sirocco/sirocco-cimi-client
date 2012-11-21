@@ -28,7 +28,7 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiCredentialCreate;
+import org.ow2.sirocco.cimi.server.domain.CimiCredentialCreate;
 
 /**
  * Helper class used to create a Credential.

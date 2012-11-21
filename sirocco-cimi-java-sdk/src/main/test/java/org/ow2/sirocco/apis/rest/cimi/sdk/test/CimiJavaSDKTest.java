@@ -1,18 +1,18 @@
-package org.ow2.sirocco.apis.rest.cimi.sdk.test;
+package org.ow2.sirocco.cimi.server.sdk.test;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient;
-import org.ow2.sirocco.apis.rest.cimi.sdk.CimiClient.Options;
-import org.ow2.sirocco.apis.rest.cimi.sdk.Job;
-import org.ow2.sirocco.apis.rest.cimi.sdk.Machine;
-import org.ow2.sirocco.apis.rest.cimi.sdk.MachineConfiguration;
-import org.ow2.sirocco.apis.rest.cimi.sdk.MachineConfiguration.Disk;
-import org.ow2.sirocco.apis.rest.cimi.sdk.MachineCreate;
-import org.ow2.sirocco.apis.rest.cimi.sdk.MachineImage;
-import org.ow2.sirocco.apis.rest.cimi.sdk.MachineTemplate;
+import org.ow2.sirocco.cimi.server.sdk.CimiClient;
+import org.ow2.sirocco.cimi.server.sdk.CimiClient.Options;
+import org.ow2.sirocco.cimi.server.sdk.Job;
+import org.ow2.sirocco.cimi.server.sdk.Machine;
+import org.ow2.sirocco.cimi.server.sdk.MachineConfiguration;
+import org.ow2.sirocco.cimi.server.sdk.MachineConfiguration.Disk;
+import org.ow2.sirocco.cimi.server.sdk.MachineCreate;
+import org.ow2.sirocco.cimi.server.sdk.MachineImage;
+import org.ow2.sirocco.cimi.server.sdk.MachineTemplate;
 
 public class CimiJavaSDKTest {
     private String userName = "sirocco-test";

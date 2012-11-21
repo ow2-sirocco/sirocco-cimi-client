@@ -28,12 +28,12 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiComponentDescriptor;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiSystemTemplate;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiSystemTemplateCollection;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiSystemTemplateCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
+import org.ow2.sirocco.cimi.server.domain.CimiComponentDescriptor;
+import org.ow2.sirocco.cimi.server.domain.CimiJob;
+import org.ow2.sirocco.cimi.server.domain.CimiSystemTemplate;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiSystemTemplateCollection;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiSystemTemplateCollectionRoot;
 
 /**
  * Set of hardware and software settings required to create a System. A

@@ -27,9 +27,9 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiNetwork;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiNetworkCollection;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiNetworkCollectionRoot;
+import org.ow2.sirocco.cimi.server.domain.CimiNetwork;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiNetworkCollection;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiNetworkCollectionRoot;
 
 /**
  * L2 Network.

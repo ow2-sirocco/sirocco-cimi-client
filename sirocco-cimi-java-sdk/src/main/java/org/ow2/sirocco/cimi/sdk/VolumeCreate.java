@@ -28,7 +28,7 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiVolumeCreate;
+import org.ow2.sirocco.cimi.server.domain.CimiVolumeCreate;
 
 /**
  * Helper class used to create a Volume.

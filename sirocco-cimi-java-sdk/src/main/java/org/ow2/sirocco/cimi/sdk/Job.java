@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiJobCollectionRoot;
+import org.ow2.sirocco.cimi.server.domain.CimiJob;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiJobCollectionRoot;
 
 /**
  * Task performed by a CIMI provider.
@@ -215,7 +215,7 @@ public class Job extends Resource<CimiJob> {
         if (client.cloudEntryPoint.getJobs() == null) {
             throw new CimiClientException("Unsupported operation");
         }
-        org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiJobCollection jobCollection = client.getRequest(
+        org.ow2.sirocco.cimi.server.domain.collection.CimiJobCollection jobCollection = client.getRequest(
             client.extractPath(client.cloudEntryPoint.getJobs().getHref()), CimiJobCollectionRoot.class, queryParams);
 
         List<Job> result = new ArrayList<Job>();

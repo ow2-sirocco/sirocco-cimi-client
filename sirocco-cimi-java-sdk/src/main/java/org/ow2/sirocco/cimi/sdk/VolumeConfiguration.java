@@ -28,11 +28,11 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiVolumeConfiguration;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeConfigurationCollection;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeConfigurationCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
+import org.ow2.sirocco.cimi.server.domain.CimiJob;
+import org.ow2.sirocco.cimi.server.domain.CimiVolumeConfiguration;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiVolumeConfigurationCollection;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiVolumeConfigurationCollectionRoot;
 
 /**
  * Set of hardware settings used to create a Volume.

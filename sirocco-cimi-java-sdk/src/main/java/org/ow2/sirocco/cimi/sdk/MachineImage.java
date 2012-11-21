@@ -30,12 +30,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineImage;
-import org.ow2.sirocco.apis.rest.cimi.domain.ImageLocation;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineImageCollection;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineImageCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
+import org.ow2.sirocco.cimi.server.domain.CimiJob;
+import org.ow2.sirocco.cimi.server.domain.CimiMachineImage;
+import org.ow2.sirocco.cimi.server.domain.ImageLocation;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineImageCollection;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineImageCollectionRoot;
 
 /**
  * Machine image used to instantiate a Machine.

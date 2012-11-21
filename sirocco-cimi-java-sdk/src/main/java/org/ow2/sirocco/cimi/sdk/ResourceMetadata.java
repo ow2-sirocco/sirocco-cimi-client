@@ -25,9 +25,9 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiResourceMetadata;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiResourceMetadataCollection;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiResourceMetadataCollectionRoot;
+import org.ow2.sirocco.cimi.server.domain.CimiResourceMetadata;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiResourceMetadataCollection;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiResourceMetadataCollectionRoot;
 
 /**
  * Resource metadata.

@@ -30,15 +30,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiAddress;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineConfiguration;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineImage;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineTemplate;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineTemplateNetworkInterface;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineTemplateCollection;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineTemplateCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
+import org.ow2.sirocco.cimi.server.domain.CimiAddress;
+import org.ow2.sirocco.cimi.server.domain.CimiJob;
+import org.ow2.sirocco.cimi.server.domain.CimiMachineConfiguration;
+import org.ow2.sirocco.cimi.server.domain.CimiMachineImage;
+import org.ow2.sirocco.cimi.server.domain.CimiMachineTemplate;
+import org.ow2.sirocco.cimi.server.domain.CimiMachineTemplateNetworkInterface;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineTemplateCollection;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineTemplateCollectionRoot;
 
 /**
  * Set of hardware and software settings required to create a Machine.

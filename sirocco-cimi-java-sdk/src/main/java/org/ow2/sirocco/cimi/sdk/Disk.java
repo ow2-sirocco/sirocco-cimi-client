@@ -28,11 +28,11 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiMachineDisk;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineDiskCollection;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiMachineDiskCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
+import org.ow2.sirocco.cimi.server.domain.CimiJob;
+import org.ow2.sirocco.cimi.server.domain.CimiMachineDisk;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineDiskCollection;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineDiskCollectionRoot;
 
 /**
  * Disk (local storage) of a Machine.

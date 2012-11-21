@@ -104,7 +104,7 @@ public class OpenStackKeystoneAuthPlugin implements AuthPlugin {
     }
 
     /* (non-Javadoc)
-     * @see org.ow2.sirocco.apis.rest.cimi.sdk.AuthPlugin#authenticate(java.lang.String, java.lang.String)
+     * @see org.ow2.sirocco.cimi.server.sdk.AuthPlugin#authenticate(java.lang.String, java.lang.String)
      */
     @Override
     public Map<String, String> authenticate(final String user, final String password) throws CimiClientException {

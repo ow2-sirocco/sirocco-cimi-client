@@ -28,11 +28,11 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiJob;
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiVolume;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeCollection;
-import org.ow2.sirocco.apis.rest.cimi.domain.collection.CimiVolumeCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
+import org.ow2.sirocco.cimi.server.domain.CimiJob;
+import org.ow2.sirocco.cimi.server.domain.CimiVolume;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiVolumeCollection;
+import org.ow2.sirocco.cimi.server.domain.collection.CimiVolumeCollectionRoot;
 
 /**
  * Unit of persistent storage at either the block or the file-system level. A

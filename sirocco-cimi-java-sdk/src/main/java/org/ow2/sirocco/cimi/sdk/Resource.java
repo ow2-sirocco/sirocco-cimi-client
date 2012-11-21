@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ow2.sirocco.apis.rest.cimi.domain.CimiObjectCommonAbstract;
+import org.ow2.sirocco.cimi.server.domain.CimiObjectCommonAbstract;
 
 /**
  * Base class of all first-class CIMI resources.
