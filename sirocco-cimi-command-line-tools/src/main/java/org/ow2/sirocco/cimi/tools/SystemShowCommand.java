@@ -57,7 +57,7 @@ public class SystemShowCommand implements Command {
     public static void printSystem(final System system, final ResourceSelectExpandParams showParams) throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(system, showParams);
 
-        if (showParams.isSelected("state")) {
+        if (showParams.isSelected("state") && system.getState() != null) {
             table.addCell("state");
             table.addCell(system.getState().toString());
         }
