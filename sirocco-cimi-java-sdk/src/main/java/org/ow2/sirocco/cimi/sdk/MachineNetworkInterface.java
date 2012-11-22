@@ -28,13 +28,13 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ow2.sirocco.cimi.domain.CimiJob;
+import org.ow2.sirocco.cimi.domain.CimiMachineNetworkInterface;
+import org.ow2.sirocco.cimi.domain.CimiMachineNetworkInterfaceAddress;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineNetworkInterfaceAddressCollectionRoot;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineNetworkInterfaceCollection;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineNetworkInterfaceCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
-import org.ow2.sirocco.cimi.server.domain.CimiJob;
-import org.ow2.sirocco.cimi.server.domain.CimiMachineNetworkInterface;
-import org.ow2.sirocco.cimi.server.domain.CimiMachineNetworkInterfaceAddress;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineNetworkInterfaceAddressCollectionRoot;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineNetworkInterfaceCollection;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineNetworkInterfaceCollectionRoot;
 
 /**
  * Network interface of a Machine.

@@ -28,11 +28,11 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ow2.sirocco.cimi.domain.CimiCredentialTemplate;
+import org.ow2.sirocco.cimi.domain.CimiJob;
+import org.ow2.sirocco.cimi.domain.collection.CimiCredentialTemplateCollection;
+import org.ow2.sirocco.cimi.domain.collection.CimiCredentialTemplateCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
-import org.ow2.sirocco.cimi.server.domain.CimiCredentialTemplate;
-import org.ow2.sirocco.cimi.server.domain.CimiJob;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiCredentialTemplateCollection;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiCredentialTemplateCollectionRoot;
 
 /**
  * Configuration values for realizing a Credential resource.

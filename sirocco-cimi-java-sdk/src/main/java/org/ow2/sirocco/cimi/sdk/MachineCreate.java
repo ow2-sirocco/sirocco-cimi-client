@@ -28,7 +28,7 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ow2.sirocco.cimi.server.domain.CimiMachineCreate;
+import org.ow2.sirocco.cimi.domain.CimiMachineCreate;
 
 /**
  * Helper class to create a Machine.

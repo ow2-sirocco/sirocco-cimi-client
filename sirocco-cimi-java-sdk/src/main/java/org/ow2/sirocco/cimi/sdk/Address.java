@@ -27,9 +27,9 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ow2.sirocco.cimi.server.domain.CimiAddress;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiAddressCollection;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiAddressCollectionRoot;
+import org.ow2.sirocco.cimi.domain.CimiAddress;
+import org.ow2.sirocco.cimi.domain.collection.CimiAddressCollection;
+import org.ow2.sirocco.cimi.domain.collection.CimiAddressCollectionRoot;
 
 /**
  * IP address, and its associated metadata, for a particular Network.

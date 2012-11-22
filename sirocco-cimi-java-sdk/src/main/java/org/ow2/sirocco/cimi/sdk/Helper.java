@@ -25,8 +25,8 @@
 
 package org.ow2.sirocco.cimi.sdk;
 
-import org.ow2.sirocco.cimi.server.domain.CimiOperation;
-import org.ow2.sirocco.cimi.server.domain.CimiResource;
+import org.ow2.sirocco.cimi.domain.CimiOperation;
+import org.ow2.sirocco.cimi.domain.CimiResource;
 
 class Helper {
 

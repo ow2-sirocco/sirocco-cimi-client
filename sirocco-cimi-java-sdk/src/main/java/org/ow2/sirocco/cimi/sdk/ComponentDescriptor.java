@@ -26,10 +26,10 @@ package org.ow2.sirocco.cimi.sdk;
 
 import java.util.Map;
 
-import org.ow2.sirocco.cimi.server.domain.CimiComponentDescriptor;
-import org.ow2.sirocco.cimi.server.domain.CimiCredentialTemplate;
-import org.ow2.sirocco.cimi.server.domain.CimiMachineTemplate;
-import org.ow2.sirocco.cimi.server.domain.CimiVolumeTemplate;
+import org.ow2.sirocco.cimi.domain.CimiComponentDescriptor;
+import org.ow2.sirocco.cimi.domain.CimiCredentialTemplate;
+import org.ow2.sirocco.cimi.domain.CimiMachineTemplate;
+import org.ow2.sirocco.cimi.domain.CimiVolumeTemplate;
 
 /**
  * Component of a SystemTemplate. For each component descriptor, the

@@ -28,12 +28,12 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ow2.sirocco.cimi.domain.CimiJob;
+import org.ow2.sirocco.cimi.domain.CimiMachineVolume;
+import org.ow2.sirocco.cimi.domain.CimiVolume;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineVolumeCollection;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineVolumeCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
-import org.ow2.sirocco.cimi.server.domain.CimiJob;
-import org.ow2.sirocco.cimi.server.domain.CimiMachineVolume;
-import org.ow2.sirocco.cimi.server.domain.CimiVolume;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineVolumeCollection;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineVolumeCollectionRoot;
 
 /**
  * Represents the attachment of a Volume to a Machine.

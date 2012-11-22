@@ -30,18 +30,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.ow2.sirocco.cimi.domain.ActionType;
+import org.ow2.sirocco.cimi.domain.CimiAction;
+import org.ow2.sirocco.cimi.domain.CimiJob;
+import org.ow2.sirocco.cimi.domain.CimiMachine;
+import org.ow2.sirocco.cimi.domain.CimiMachineDisk;
+import org.ow2.sirocco.cimi.domain.CimiMachineNetworkInterface;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineCollection;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineCollectionRoot;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineDiskCollectionRoot;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineNetworkInterfaceAddressCollectionRoot;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineNetworkInterfaceCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
-import org.ow2.sirocco.cimi.server.domain.ActionType;
-import org.ow2.sirocco.cimi.server.domain.CimiAction;
-import org.ow2.sirocco.cimi.server.domain.CimiJob;
-import org.ow2.sirocco.cimi.server.domain.CimiMachine;
-import org.ow2.sirocco.cimi.server.domain.CimiMachineDisk;
-import org.ow2.sirocco.cimi.server.domain.CimiMachineNetworkInterface;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineCollection;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineCollectionRoot;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineDiskCollectionRoot;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineNetworkInterfaceAddressCollectionRoot;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineNetworkInterfaceCollectionRoot;
 
 /**
  * Instantiated compute resource that encapsulates CPU and Memory and local

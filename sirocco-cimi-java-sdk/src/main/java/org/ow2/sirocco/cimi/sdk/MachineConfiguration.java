@@ -30,12 +30,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.ow2.sirocco.cimi.domain.CimiDiskConfiguration;
+import org.ow2.sirocco.cimi.domain.CimiJob;
+import org.ow2.sirocco.cimi.domain.CimiMachineConfiguration;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineConfigurationCollection;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineConfigurationCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
-import org.ow2.sirocco.cimi.server.domain.CimiDiskConfiguration;
-import org.ow2.sirocco.cimi.server.domain.CimiJob;
-import org.ow2.sirocco.cimi.server.domain.CimiMachineConfiguration;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineConfigurationCollection;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiMachineConfigurationCollectionRoot;
 
 /**
  * Hardware resource settings (CPU, memory, disk) of a to-be-created Machine.

@@ -28,15 +28,15 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ow2.sirocco.cimi.domain.ActionType;
+import org.ow2.sirocco.cimi.domain.CimiAction;
+import org.ow2.sirocco.cimi.domain.CimiJob;
+import org.ow2.sirocco.cimi.domain.CimiSystem;
+import org.ow2.sirocco.cimi.domain.CimiSystemMachine;
+import org.ow2.sirocco.cimi.domain.collection.CimiSystemCollection;
+import org.ow2.sirocco.cimi.domain.collection.CimiSystemCollectionRoot;
+import org.ow2.sirocco.cimi.domain.collection.CimiSystemMachineCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
-import org.ow2.sirocco.cimi.server.domain.ActionType;
-import org.ow2.sirocco.cimi.server.domain.CimiAction;
-import org.ow2.sirocco.cimi.server.domain.CimiJob;
-import org.ow2.sirocco.cimi.server.domain.CimiSystem;
-import org.ow2.sirocco.cimi.server.domain.CimiSystemMachine;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiSystemCollection;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiSystemCollectionRoot;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiSystemMachineCollectionRoot;
 
 /**
  * Resource that combines one or more Machines, Volumes and Networks and that

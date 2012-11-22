@@ -30,9 +30,9 @@ import java.util.Map.Entry;
 
 import javax.ws.rs.core.MediaType;
 
-import org.ow2.sirocco.cimi.server.domain.CimiCloudEntryPoint;
-import org.ow2.sirocco.cimi.server.domain.CimiJob;
-import org.ow2.sirocco.cimi.server.domain.CimiObjectCommonAbstract;
+import org.ow2.sirocco.cimi.domain.CimiCloudEntryPoint;
+import org.ow2.sirocco.cimi.domain.CimiJob;
+import org.ow2.sirocco.cimi.domain.CimiObjectCommonAbstract;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;

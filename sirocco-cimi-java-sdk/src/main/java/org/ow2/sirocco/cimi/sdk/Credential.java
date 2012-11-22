@@ -28,11 +28,11 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ow2.sirocco.cimi.domain.CimiCredential;
+import org.ow2.sirocco.cimi.domain.CimiJob;
+import org.ow2.sirocco.cimi.domain.collection.CimiCredentialCollection;
+import org.ow2.sirocco.cimi.domain.collection.CimiCredentialCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
-import org.ow2.sirocco.cimi.server.domain.CimiCredential;
-import org.ow2.sirocco.cimi.server.domain.CimiJob;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiCredentialCollection;
-import org.ow2.sirocco.cimi.server.domain.collection.CimiCredentialCollectionRoot;
 
 /**
  * Information required to create the initial administrative superuser of a
