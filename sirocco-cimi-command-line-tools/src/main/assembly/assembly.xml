@@ -45,8 +45,8 @@
       <fileMode>755</fileMode>
     </fileSet>
     <fileSet>
-      <directory>${basedir}/src/main/conf</directory>
-      <outputDirectory>conf</outputDirectory>
+      <directory>${basedir}/src/main/etc</directory>
+      <outputDirectory>etc</outputDirectory>
     </fileSet>
   </fileSets>
   <dependencySets>
