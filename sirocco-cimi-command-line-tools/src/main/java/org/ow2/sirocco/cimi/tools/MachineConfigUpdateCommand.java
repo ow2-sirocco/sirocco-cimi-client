@@ -90,7 +90,6 @@ public class MachineConfigUpdateCommand implements Command {
         }
 
         if (this.diskSizes != null && this.diskSizes.size() > 0) {
-            System.out.println("SIZE=" + this.diskSizes.size());
             Disk disks[] = new Disk[this.diskSizes.size()];
             for (int i = 0; i < disks.length; i++) {
                 disks[i] = new Disk();
