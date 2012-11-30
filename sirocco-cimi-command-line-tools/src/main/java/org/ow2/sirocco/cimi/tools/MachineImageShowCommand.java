@@ -50,8 +50,19 @@ public class MachineImageShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        MachineImage machineImage = MachineImage.getMachineImageByReference(cimiClient, this.machineImageIds.get(0),
-            this.showParams.getQueryParams());
+        MachineImage machineImage;
+        if (CommandHelper.isResourceIdentifier(this.machineImageIds.get(0))) {
+            machineImage = MachineImage.getMachineImageByReference(cimiClient, this.machineImageIds.get(0),
+                this.showParams.getQueryParams());
+        } else {
+            List<MachineImage> images = MachineImage.getMachineImages(cimiClient, this.showParams.getQueryParams().toBuilder()
+                .filter("name='" + this.machineImageIds.get(0) + "'").build());
+            if (images.isEmpty()) {
+                System.err.println("No machine image with name " + this.machineImageIds.get(0));
+                System.exit(-1);
+            }
+            machineImage = images.get(0);
+        }
         MachineImageShowCommand.printMachineImage(machineImage, this.showParams);
     }
 

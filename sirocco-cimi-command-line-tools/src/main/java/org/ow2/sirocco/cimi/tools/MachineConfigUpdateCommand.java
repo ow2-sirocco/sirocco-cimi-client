@@ -33,6 +33,7 @@ import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.MachineConfiguration;
 import org.ow2.sirocco.cimi.sdk.MachineConfiguration.Disk;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 import org.ow2.sirocco.cimi.sdk.UpdateResult;
 
 import com.beust.jcommander.Parameter;
@@ -97,9 +98,21 @@ public class MachineConfigUpdateCommand implements Command {
             }
             attributeValues.put("disks", disks);
         }
+        String configId;
+        if (CommandHelper.isResourceIdentifier(this.machineConfigId.get(0))) {
+            configId = this.machineConfigId.get(0);
+        } else {
+            List<MachineConfiguration> configs = MachineConfiguration.getMachineConfigurations(cimiClient, QueryParams
+                .builder().filter("name='" + this.machineConfigId.get(0) + "'").build());
+            if (configs.isEmpty()) {
+                System.err.println("No machine config with name " + this.machineConfigId.get(0));
+                System.exit(-1);
+            }
+            configId = configs.get(0).getId();
+        }
 
-        UpdateResult<MachineConfiguration> result = MachineConfiguration.updateMachineConfiguration(cimiClient,
-            this.machineConfigId.get(0), attributeValues);
+        UpdateResult<MachineConfiguration> result = MachineConfiguration.updateMachineConfiguration(cimiClient, configId,
+            attributeValues);
         if (result.getJob() != null) {
             System.out.println("MachineConfig " + this.machineConfigId.get(0) + " being updated");
             JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());

@@ -50,8 +50,19 @@ public class SystemTemplateShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        SystemTemplate systemTemplate = SystemTemplate.getSystemTemplateByReference(cimiClient, this.systemTemplateIds.get(0),
-            this.showParams.getQueryParams());
+        SystemTemplate systemTemplate;
+        if (CommandHelper.isResourceIdentifier(this.systemTemplateIds.get(0))) {
+            systemTemplate = SystemTemplate.getSystemTemplateByReference(cimiClient, this.systemTemplateIds.get(0),
+                this.showParams.getQueryParams());
+        } else {
+            List<SystemTemplate> systemTemplates = SystemTemplate.getSystemTemplates(cimiClient, this.showParams
+                .getQueryParams().toBuilder().filter("name='" + this.systemTemplateIds.get(0) + "'").build());
+            if (systemTemplates.isEmpty()) {
+                java.lang.System.err.println("No system template with name " + this.systemTemplateIds.get(0));
+                java.lang.System.exit(-1);
+            }
+            systemTemplate = systemTemplates.get(0);
+        }
         SystemTemplateShowCommand.printSystemTemplate(systemTemplate, this.showParams);
     }
 

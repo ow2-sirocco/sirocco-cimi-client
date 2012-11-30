@@ -50,8 +50,19 @@ public class VolumeConfigShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        VolumeConfiguration volumeConfig = VolumeConfiguration.getVolumeConfigurationByReference(cimiClient,
-            this.volumeConfigIds.get(0), this.showParams.getQueryParams());
+        VolumeConfiguration volumeConfig = null;
+        if (CommandHelper.isResourceIdentifier(this.volumeConfigIds.get(0))) {
+            volumeConfig = VolumeConfiguration.getVolumeConfigurationByReference(cimiClient, this.volumeConfigIds.get(0),
+                this.showParams.getQueryParams());
+        } else {
+            List<VolumeConfiguration> volumeConfigs = VolumeConfiguration.getVolumeConfigurations(cimiClient, this.showParams
+                .getQueryParams().toBuilder().filter("name='" + this.volumeConfigIds.get(0) + "'").build());
+            if (volumeConfigs.isEmpty()) {
+                java.lang.System.err.println("No volume config with name " + this.volumeConfigIds.get(0));
+                java.lang.System.exit(-1);
+            }
+            volumeConfig = volumeConfigs.get(0);
+        }
         VolumeConfigShowCommand.printVolumeConfig(volumeConfig, this.showParams);
     }
 

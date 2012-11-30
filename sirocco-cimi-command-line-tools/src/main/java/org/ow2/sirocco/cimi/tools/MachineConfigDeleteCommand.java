@@ -29,6 +29,7 @@ import java.util.List;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.MachineConfiguration;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -45,8 +46,18 @@ public class MachineConfigDeleteCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        MachineConfiguration machineConfig = MachineConfiguration.getMachineConfigurationByReference(cimiClient,
-            this.machineConfigIds.get(0));
+        MachineConfiguration machineConfig;
+        if (CommandHelper.isResourceIdentifier(this.machineConfigIds.get(0))) {
+            machineConfig = MachineConfiguration.getMachineConfigurationByReference(cimiClient, this.machineConfigIds.get(0));
+        } else {
+            List<MachineConfiguration> configs = MachineConfiguration.getMachineConfigurations(cimiClient, QueryParams
+                .builder().filter("name='" + this.machineConfigIds.get(0) + "'").build());
+            if (configs.isEmpty()) {
+                System.err.println("No machine config with name " + this.machineConfigIds.get(0));
+                System.exit(-1);
+            }
+            machineConfig = configs.get(0);
+        }
         machineConfig.delete();
         System.out.println("MachineConfig " + this.machineConfigIds.get(0) + " deleted");
     }

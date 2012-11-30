@@ -164,4 +164,8 @@ public class CommandHelper {
         return result;
     }
 
+    public static boolean isResourceIdentifier(final String id) {
+        return (id.startsWith("http:") || id.indexOf("/") != -1);
+    }
+
 }

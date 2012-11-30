@@ -31,6 +31,7 @@ import java.util.Map;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.Machine;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 import org.ow2.sirocco.cimi.sdk.UpdateResult;
 
 import com.beust.jcommander.Parameter;
@@ -71,8 +72,19 @@ public class MachineUpdateCommand implements Command {
             }
             attributeValues.put("properties", props);
         }
-
-        UpdateResult<Machine> result = Machine.updateMachine(cimiClient, this.machineIds.get(0), attributeValues);
+        String machineId;
+        if (CommandHelper.isResourceIdentifier(this.machineIds.get(0))) {
+            machineId = this.machineIds.get(0);
+        } else {
+            List<Machine> machines = Machine.getMachines(cimiClient,
+                QueryParams.builder().filter("name='" + this.machineIds.get(0) + "'").build());
+            if (machines.isEmpty()) {
+                System.err.println("No machine with name " + this.machineIds.get(0));
+                System.exit(-1);
+            }
+            machineId = machines.get(0).getId();
+        }
+        UpdateResult<Machine> result = Machine.updateMachine(cimiClient, machineId, attributeValues);
         if (result.getJob() != null) {
             System.out.println("Machine " + this.machineIds.get(0) + " being updated");
             JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());

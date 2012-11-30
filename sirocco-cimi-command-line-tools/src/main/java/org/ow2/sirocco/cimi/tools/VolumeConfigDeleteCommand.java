@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 import org.ow2.sirocco.cimi.sdk.VolumeConfiguration;
 
 import com.beust.jcommander.Parameter;
@@ -45,8 +46,18 @@ public class VolumeConfigDeleteCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        VolumeConfiguration volumeConfig = VolumeConfiguration.getVolumeConfigurationByReference(cimiClient,
-            this.volumeConfigIds.get(0));
+        VolumeConfiguration volumeConfig;
+        if (CommandHelper.isResourceIdentifier(this.volumeConfigIds.get(0))) {
+            volumeConfig = VolumeConfiguration.getVolumeConfigurationByReference(cimiClient, this.volumeConfigIds.get(0));
+        } else {
+            List<VolumeConfiguration> volumeConfigs = VolumeConfiguration.getVolumeConfigurations(cimiClient, QueryParams
+                .builder().filter("name='" + this.volumeConfigIds.get(0) + "'").build());
+            if (volumeConfigs.isEmpty()) {
+                java.lang.System.err.println("No volume config with name " + this.volumeConfigIds.get(0));
+                java.lang.System.exit(-1);
+            }
+            volumeConfig = volumeConfigs.get(0);
+        }
         volumeConfig.delete();
         System.out.println("VolumeConfig " + this.volumeConfigIds.get(0) + " deleted");
     }

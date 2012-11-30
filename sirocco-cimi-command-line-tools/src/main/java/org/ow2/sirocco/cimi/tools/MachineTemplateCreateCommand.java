@@ -30,7 +30,11 @@ import java.util.List;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.CreateResult;
+import org.ow2.sirocco.cimi.sdk.Credential;
+import org.ow2.sirocco.cimi.sdk.MachineConfiguration;
+import org.ow2.sirocco.cimi.sdk.MachineImage;
 import org.ow2.sirocco.cimi.sdk.MachineTemplate;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -73,7 +77,25 @@ public class MachineTemplateCreateCommand implements Command {
                 machineTemplate.addProperty(this.properties.get(i * 2), this.properties.get(i * 2 + 1));
             }
         }
+        if (!CommandHelper.isResourceIdentifier(this.machineConfigId)) {
+            List<MachineConfiguration> configs = MachineConfiguration.getMachineConfigurations(cimiClient, QueryParams
+                .builder().filter("name='" + this.machineConfigId + "'").select("id").build());
+            if (configs.isEmpty()) {
+                System.err.println("No machine config with name " + this.machineConfigId);
+                System.exit(-1);
+            }
+            this.machineConfigId = configs.get(0).getId();
+        }
         machineTemplate.setMachineConfigRef(this.machineConfigId);
+        if (!CommandHelper.isResourceIdentifier(this.machineImageId)) {
+            List<MachineImage> images = MachineImage.getMachineImages(cimiClient,
+                QueryParams.builder().filter("name='" + this.machineImageId + "'").select("id").build());
+            if (images.isEmpty()) {
+                System.err.println("No machine image with name " + this.machineImageId);
+                System.exit(-1);
+            }
+            this.machineImageId = images.get(0).getId();
+        }
         machineTemplate.setMachineImageRef(this.machineImageId);
         List<MachineTemplate.NetworkInterface> nics = new ArrayList<MachineTemplate.NetworkInterface>();
         if (this.nicTypes != null) {
@@ -86,6 +108,15 @@ public class MachineTemplateCreateCommand implements Command {
         machineTemplate.setNetworkInterface(nics);
 
         if (this.credentialId != null) {
+            if (!CommandHelper.isResourceIdentifier(this.credentialId)) {
+                List<Credential> creds = Credential.getCredentials(cimiClient,
+                    QueryParams.builder().filter("name='" + this.credentialId + "'").select("id").build());
+                if (creds.isEmpty()) {
+                    System.err.println("No credential with name " + this.credentialId);
+                    System.exit(-1);
+                }
+                this.credentialId = creds.get(0).getId();
+            }
             machineTemplate.setCredentialRef(this.credentialId);
         }
 

@@ -30,6 +30,7 @@ import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.Job;
 import org.ow2.sirocco.cimi.sdk.MachineImage;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -46,7 +47,18 @@ public class MachineImageDeleteCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        MachineImage machineImage = MachineImage.getMachineImageByReference(cimiClient, this.machineImageIds.get(0));
+        MachineImage machineImage;
+        if (CommandHelper.isResourceIdentifier(this.machineImageIds.get(0))) {
+            machineImage = MachineImage.getMachineImageByReference(cimiClient, this.machineImageIds.get(0));
+        } else {
+            List<MachineImage> images = MachineImage.getMachineImages(cimiClient,
+                QueryParams.builder().filter("name='" + this.machineImageIds.get(0) + "'").build());
+            if (images.isEmpty()) {
+                System.err.println("No machine image with name " + this.machineImageIds.get(0));
+                System.exit(-1);
+            }
+            machineImage = images.get(0);
+        }
         Job job = machineImage.delete();
         if (job != null) {
             System.out.println("Job:");

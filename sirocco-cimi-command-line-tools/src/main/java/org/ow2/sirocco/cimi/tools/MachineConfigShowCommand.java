@@ -51,8 +51,19 @@ public class MachineConfigShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        MachineConfiguration machineConfig = MachineConfiguration.getMachineConfigurationByReference(cimiClient,
-            this.machineConfigId.get(0), this.selectParam.getQueryParams());
+        MachineConfiguration machineConfig;
+        if (CommandHelper.isResourceIdentifier(this.machineConfigId.get(0))) {
+            machineConfig = MachineConfiguration.getMachineConfigurationByReference(cimiClient, this.machineConfigId.get(0),
+                this.selectParam.getQueryParams());
+        } else {
+            List<MachineConfiguration> configs = MachineConfiguration.getMachineConfigurations(cimiClient, this.selectParam
+                .getQueryParams().toBuilder().filter("name='" + this.machineConfigId.get(0) + "'").build());
+            if (configs.isEmpty()) {
+                System.err.println("No machine config with name " + this.machineConfigId.get(0));
+                System.exit(-1);
+            }
+            machineConfig = configs.get(0);
+        }
         MachineConfigShowCommand.printMachineConfig(machineConfig, this.selectParam);
     }
 

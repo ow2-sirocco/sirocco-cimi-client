@@ -52,7 +52,19 @@ public class MachineShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        Machine machine = Machine.getMachineByReference(cimiClient, this.machineIds.get(0), this.showParams.getQueryParams());
+        Machine machine;
+        if (CommandHelper.isResourceIdentifier(this.machineIds.get(0))) {
+            machine = Machine.getMachineByReference(cimiClient, this.machineIds.get(0), this.showParams.getQueryParams());
+        } else {
+            List<Machine> machines = Machine.getMachines(cimiClient,
+                this.showParams.getQueryParams().toBuilder().filter("name='" + this.machineIds.get(0) + "'").build());
+            if (machines.isEmpty()) {
+                System.err.println("No machine with name " + this.machineIds.get(0));
+                System.exit(-1);
+            }
+            machine = machines.get(0);
+        }
+        machine = Machine.getMachineByReference(cimiClient, this.machineIds.get(0), this.showParams.getQueryParams());
         MachineShowCommand.printMachine(machine, this.showParams);
     }
 

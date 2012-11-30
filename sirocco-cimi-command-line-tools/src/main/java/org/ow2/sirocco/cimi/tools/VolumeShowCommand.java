@@ -50,7 +50,18 @@ public class VolumeShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        Volume volume = Volume.getVolumeByReference(cimiClient, this.volumeIds.get(0), this.showParams.getQueryParams());
+        Volume volume = null;
+        if (CommandHelper.isResourceIdentifier(this.volumeIds.get(0))) {
+            volume = Volume.getVolumeByReference(cimiClient, this.volumeIds.get(0), this.showParams.getQueryParams());
+        } else {
+            List<Volume> volumes = Volume.getVolumes(cimiClient,
+                this.showParams.getQueryParams().toBuilder().filter("name='" + this.volumeIds.get(0) + "'").build());
+            if (volumes.isEmpty()) {
+                java.lang.System.err.println("No volume with name " + this.volumeIds.get(0));
+                java.lang.System.exit(-1);
+            }
+            volume = volumes.get(0);
+        }
         VolumeShowCommand.printVolume(volume, this.showParams);
     }
 

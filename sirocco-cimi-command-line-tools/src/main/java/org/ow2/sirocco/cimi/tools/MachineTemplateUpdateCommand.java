@@ -31,6 +31,7 @@ import java.util.Map;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.MachineTemplate;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 import org.ow2.sirocco.cimi.sdk.UpdateResult;
 
 import com.beust.jcommander.Parameter;
@@ -89,9 +90,21 @@ public class MachineTemplateUpdateCommand implements Command {
         if (this.machineImageId != null) {
             attributeValues.put("machineImage", this.machineImageId);
         }
+        String machineTemplateId;
+        if (CommandHelper.isResourceIdentifier(this.machineTemplateIds.get(0))) {
+            machineTemplateId = this.machineTemplateIds.get(0);
+        } else {
+            List<MachineTemplate> templates = MachineTemplate.getMachineTemplates(cimiClient,
+                QueryParams.builder().filter("name='" + this.machineTemplateIds.get(0) + "'").select("id").build());
+            if (templates.isEmpty()) {
+                System.err.println("No machine template with name " + this.machineTemplateIds.get(0));
+                System.exit(-1);
+            }
+            machineTemplateId = templates.get(0).getId();
+        }
 
-        UpdateResult<MachineTemplate> result = MachineTemplate.updateMachineTemplate(cimiClient,
-            this.machineTemplateIds.get(0), attributeValues);
+        UpdateResult<MachineTemplate> result = MachineTemplate.updateMachineTemplate(cimiClient, machineTemplateId,
+            attributeValues);
         if (result.getJob() != null) {
             System.out.println("MachineTemplate " + this.machineTemplateIds.get(0) + " being updated");
             JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());

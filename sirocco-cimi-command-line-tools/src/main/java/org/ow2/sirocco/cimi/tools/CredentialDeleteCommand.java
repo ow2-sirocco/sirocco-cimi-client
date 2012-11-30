@@ -29,6 +29,7 @@ import java.util.List;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.Credential;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -45,7 +46,18 @@ public class CredentialDeleteCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        Credential cred = Credential.getCredentialByReference(cimiClient, this.credentialIds.get(0));
+        Credential cred;
+        if (CommandHelper.isResourceIdentifier(this.credentialIds.get(0))) {
+            cred = Credential.getCredentialByReference(cimiClient, this.credentialIds.get(0));
+        } else {
+            List<Credential> creds = Credential.getCredentials(cimiClient,
+                QueryParams.builder().filter("name='" + this.credentialIds.get(0) + "'").build());
+            if (creds.isEmpty()) {
+                System.err.println("No credential with name " + this.credentialIds.get(0));
+                System.exit(-1);
+            }
+            cred = creds.get(0);
+        }
         cred.delete();
         System.out.println("Credential " + this.credentialIds.get(0) + " deleted");
     }

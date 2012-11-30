@@ -51,12 +51,23 @@ public class CredentialShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        Credential cred = Credential.getCredentialByReference(cimiClient, this.credentialIds.get(0),
-            this.showParams.getQueryParams());
+        Credential cred;
+        if (CommandHelper.isResourceIdentifier(this.credentialIds.get(0))) {
+            cred = Credential.getCredentialByReference(cimiClient, this.credentialIds.get(0), this.showParams.getQueryParams());
+        } else {
+            List<Credential> creds = Credential.getCredentials(cimiClient,
+                this.showParams.getQueryParams().toBuilder().filter("name='" + this.credentialIds.get(0) + "'").build());
+            if (creds.isEmpty()) {
+                System.err.println("No credential with name " + this.credentialIds.get(0));
+                System.exit(-1);
+            }
+            cred = creds.get(0);
+        }
         CredentialShowCommand.printCredential(cred, this.showParams);
     }
 
-    public static void printCredential(final Credential cred, final ResourceSelectExpandParams showParams) throws CimiClientException {
+    public static void printCredential(final Credential cred, final ResourceSelectExpandParams showParams)
+        throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(cred, showParams);
         if (cred.getExtensionAttributes() != null) {
             for (Map.Entry<String, Object> entry : cred.getExtensionAttributes().entrySet()) {

@@ -29,6 +29,7 @@ import java.util.List;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.CreateResult;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 import org.ow2.sirocco.cimi.sdk.Volume;
 import org.ow2.sirocco.cimi.sdk.VolumeConfiguration;
 import org.ow2.sirocco.cimi.sdk.VolumeCreate;
@@ -73,6 +74,15 @@ public class VolumeCreateCommand implements Command {
         if (this.templateId != null) {
             volumeCreate.setVolumeTemplateRef(this.templateId);
         } else if (this.configId != null) {
+            if (!CommandHelper.isResourceIdentifier(this.configId)) {
+                List<VolumeConfiguration> volumeConfigs = VolumeConfiguration.getVolumeConfigurations(cimiClient, QueryParams
+                    .builder().filter("name='" + this.configId + "'").select("id").build());
+                if (volumeConfigs.isEmpty()) {
+                    System.err.println("No volume config with name " + this.configId);
+                    System.exit(-1);
+                }
+                this.configId = volumeConfigs.get(0).getId();
+            }
             volumeTemplate = new VolumeTemplate();
             volumeTemplate.setVolumeConfigRef(this.configId);
             volumeCreate.setVolumeTemplate(volumeTemplate);

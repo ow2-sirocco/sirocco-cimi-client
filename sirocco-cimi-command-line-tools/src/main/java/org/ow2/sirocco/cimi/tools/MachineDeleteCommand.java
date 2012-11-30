@@ -30,6 +30,7 @@ import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.Job;
 import org.ow2.sirocco.cimi.sdk.Machine;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -46,7 +47,19 @@ public class MachineDeleteCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        Machine machine = Machine.getMachineByReference(cimiClient, this.machineIds.get(0));
+        Machine machine;
+        if (CommandHelper.isResourceIdentifier(this.machineIds.get(0))) {
+            machine = Machine.getMachineByReference(cimiClient, this.machineIds.get(0));
+        } else {
+            List<Machine> machines = Machine.getMachines(cimiClient,
+                QueryParams.builder().filter("name='" + this.machineIds.get(0) + "'").build());
+            if (machines.isEmpty()) {
+                System.err.println("No machine with name " + this.machineIds.get(0));
+                System.exit(-1);
+            }
+            machine = machines.get(0);
+        }
+
         Job job = machine.delete();
         System.out.println("Machine " + this.machineIds.get(0) + " being deleted");
         if (job != null) {

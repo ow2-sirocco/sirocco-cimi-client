@@ -29,9 +29,13 @@ import java.util.List;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.CreateResult;
+import org.ow2.sirocco.cimi.sdk.Credential;
 import org.ow2.sirocco.cimi.sdk.Machine;
+import org.ow2.sirocco.cimi.sdk.MachineConfiguration;
 import org.ow2.sirocco.cimi.sdk.MachineCreate;
+import org.ow2.sirocco.cimi.sdk.MachineImage;
 import org.ow2.sirocco.cimi.sdk.MachineTemplate;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
@@ -76,13 +80,49 @@ public class MachineCreateCommand implements Command {
         MachineCreate machineCreate = new MachineCreate();
         MachineTemplate machineTemplate;
         if (this.templateId != null) {
+            if (!CommandHelper.isResourceIdentifier(this.templateId)) {
+                List<MachineTemplate> templates = MachineTemplate.getMachineTemplates(cimiClient,
+                    QueryParams.builder().filter("name='" + this.templateId + "'").select("id").build());
+                if (templates.isEmpty()) {
+                    System.err.println("No machine template with name " + this.templateId);
+                    System.exit(-1);
+                }
+                this.templateId = templates.get(0).getId();
+            }
             machineCreate.setMachineTemplateRef(this.templateId);
             machineTemplate = machineCreate.getMachineTemplate();
         } else {
             machineTemplate = new MachineTemplate();
+            if (!CommandHelper.isResourceIdentifier(this.configId)) {
+                List<MachineConfiguration> configs = MachineConfiguration.getMachineConfigurations(cimiClient, QueryParams
+                    .builder().filter("name='" + this.configId + "'").select("id").build());
+                if (configs.isEmpty()) {
+                    System.err.println("No machine config with name " + this.configId);
+                    System.exit(-1);
+                }
+                this.configId = configs.get(0).getId();
+            }
             machineTemplate.setMachineConfigRef(this.configId);
+            if (!CommandHelper.isResourceIdentifier(this.imageId)) {
+                List<MachineImage> images = MachineImage.getMachineImages(cimiClient,
+                    QueryParams.builder().filter("name='" + this.imageId + "'").select("id").build());
+                if (images.isEmpty()) {
+                    System.err.println("No machine image with name " + this.imageId);
+                    System.exit(-1);
+                }
+                this.imageId = images.get(0).getId();
+            }
             machineTemplate.setMachineImageRef(this.imageId);
             if (this.credId != null) {
+                if (!CommandHelper.isResourceIdentifier(this.credId)) {
+                    List<Credential> creds = Credential.getCredentials(cimiClient,
+                        QueryParams.builder().filter("name='" + this.credId + "'").select("id").build());
+                    if (creds.isEmpty()) {
+                        System.err.println("No credential with name " + this.credId);
+                        System.exit(-1);
+                    }
+                    this.credId = creds.get(0).getId();
+                }
                 machineTemplate.setCredentialRef(this.credId);
             }
         }

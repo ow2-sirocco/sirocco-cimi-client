@@ -29,6 +29,7 @@ import java.util.List;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.Job;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 import org.ow2.sirocco.cimi.sdk.Volume;
 
 import com.beust.jcommander.Parameter;
@@ -46,7 +47,18 @@ public class VolumeDeleteCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        Volume volume = Volume.getVolumeByReference(cimiClient, this.volumeIds.get(0));
+        Volume volume;
+        if (CommandHelper.isResourceIdentifier(this.volumeIds.get(0))) {
+            volume = Volume.getVolumeByReference(cimiClient, this.volumeIds.get(0));
+        } else {
+            List<Volume> volumes = Volume.getVolumes(cimiClient,
+                QueryParams.builder().filter("name='" + this.volumeIds.get(0) + "'").build());
+            if (volumes.isEmpty()) {
+                java.lang.System.err.println("No volume with name " + this.volumeIds.get(0));
+                java.lang.System.exit(-1);
+            }
+            volume = volumes.get(0);
+        }
         Job job = volume.delete();
         System.out.println("Volume " + this.volumeIds.get(0) + " being deleted");
         if (job != null) {

@@ -29,8 +29,10 @@ import java.util.List;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.CreateResult;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 import org.ow2.sirocco.cimi.sdk.System;
 import org.ow2.sirocco.cimi.sdk.SystemCreate;
+import org.ow2.sirocco.cimi.sdk.SystemTemplate;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -57,6 +59,15 @@ public class SystemCreateCommand implements Command {
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
         SystemCreate systemCreate = new SystemCreate();
+        if (!CommandHelper.isResourceIdentifier(this.templateId)) {
+            List<SystemTemplate> templates = SystemTemplate.getSystemTemplates(cimiClient,
+                QueryParams.builder().filter("name='" + this.templateId + "'").select("id").build());
+            if (templates.isEmpty()) {
+                java.lang.System.err.println("No system template with name " + this.templateId);
+                java.lang.System.exit(-1);
+            }
+            this.templateId = templates.get(0).getId();
+        }
         systemCreate.setSystemTemplateRef(this.templateId);
         systemCreate.setName(this.name);
         systemCreate.setDescription(this.description);

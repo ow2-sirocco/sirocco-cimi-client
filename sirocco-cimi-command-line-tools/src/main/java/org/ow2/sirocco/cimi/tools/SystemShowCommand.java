@@ -50,7 +50,18 @@ public class SystemShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        System system = System.getSystemByReference(cimiClient, this.systemIds.get(0), this.showParams.getQueryParams());
+        System system;
+        if (CommandHelper.isResourceIdentifier(this.systemIds.get(0))) {
+            system = System.getSystemByReference(cimiClient, this.systemIds.get(0), this.showParams.getQueryParams());
+        } else {
+            List<System> systems = System.getSystems(cimiClient,
+                this.showParams.getQueryParams().toBuilder().filter("name='" + this.systemIds.get(0) + "'").build());
+            if (systems.isEmpty()) {
+                java.lang.System.err.println("No system with name " + this.systemIds.get(0));
+                java.lang.System.exit(-1);
+            }
+            system = systems.get(0);
+        }
         SystemShowCommand.printSystem(system, this.showParams);
     }
 

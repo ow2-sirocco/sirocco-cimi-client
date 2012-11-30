@@ -31,6 +31,7 @@ import java.util.Map;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.MachineImage;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 import org.ow2.sirocco.cimi.sdk.UpdateResult;
 
 import com.beust.jcommander.Parameter;
@@ -78,8 +79,19 @@ public class MachineImageUpdateCommand implements Command {
             attributeValues.put("imageLocation", this.imageLocation);
         }
 
-        UpdateResult<MachineImage> result = MachineImage.updateMachineImage(cimiClient, this.machineImageId.get(0),
-            attributeValues);
+        String imageId;
+        if (CommandHelper.isResourceIdentifier(this.machineImageId.get(0))) {
+            imageId = this.machineImageId.get(0);
+        } else {
+            List<MachineImage> images = MachineImage.getMachineImages(cimiClient,
+                QueryParams.builder().filter("name='" + this.machineImageId.get(0) + "'").select("id").build());
+            if (images.isEmpty()) {
+                System.err.println("No machine image with name " + this.machineImageId.get(0));
+                System.exit(-1);
+            }
+            imageId = images.get(0).getId();
+        }
+        UpdateResult<MachineImage> result = MachineImage.updateMachineImage(cimiClient, imageId, attributeValues);
         if (result.getJob() != null) {
             System.out.println("MachineImage " + this.machineImageId.get(0) + " being updated");
             JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());

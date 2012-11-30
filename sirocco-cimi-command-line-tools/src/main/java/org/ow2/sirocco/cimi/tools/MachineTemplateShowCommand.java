@@ -50,8 +50,19 @@ public class MachineTemplateShowCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        MachineTemplate machineTemplate = MachineTemplate.getMachineTemplateByReference(cimiClient,
-            this.machineTemplateIds.get(0), this.showParams.getQueryParams());
+        MachineTemplate machineTemplate;
+        if (CommandHelper.isResourceIdentifier(this.machineTemplateIds.get(0))) {
+            machineTemplate = MachineTemplate.getMachineTemplateByReference(cimiClient, this.machineTemplateIds.get(0),
+                this.showParams.getQueryParams());
+        } else {
+            List<MachineTemplate> templates = MachineTemplate.getMachineTemplates(cimiClient, this.showParams.getQueryParams()
+                .toBuilder().filter("name='" + this.machineTemplateIds.get(0) + "'").build());
+            if (templates.isEmpty()) {
+                System.err.println("No machine template with name " + this.machineTemplateIds.get(0));
+                System.exit(-1);
+            }
+            machineTemplate = templates.get(0);
+        }
         MachineTemplateShowCommand.printMachineTemplate(machineTemplate, this.showParams);
     }
 

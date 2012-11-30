@@ -29,6 +29,7 @@ import java.util.List;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.Job;
+import org.ow2.sirocco.cimi.sdk.QueryParams;
 import org.ow2.sirocco.cimi.sdk.System;
 
 import com.beust.jcommander.Parameter;
@@ -46,7 +47,18 @@ public class SystemStartCommand implements Command {
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        System system = System.getSystemByReference(cimiClient, this.systemIds.get(0));
+        System system;
+        if (CommandHelper.isResourceIdentifier(this.systemIds.get(0))) {
+            system = System.getSystemByReference(cimiClient, this.systemIds.get(0));
+        } else {
+            List<System> systems = System.getSystems(cimiClient,
+                QueryParams.builder().filter("name='" + this.systemIds.get(0) + "'").build());
+            if (systems.isEmpty()) {
+                java.lang.System.err.println("No system with name " + this.systemIds.get(0));
+                java.lang.System.exit(-1);
+            }
+            system = systems.get(0);
+        }
         Job job = system.start();
         java.lang.System.out.println("Starting system " + this.systemIds.get(0));
         if (job != null) {
