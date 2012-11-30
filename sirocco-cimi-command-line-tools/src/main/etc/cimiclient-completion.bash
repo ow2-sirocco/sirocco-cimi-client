@@ -22,14 +22,30 @@
 #
 #
 
+_find_command()
+{
+	for ((i=1; i < ${#COMP_WORDS[@]}; i++)); do
+		word="${COMP_WORDS[$i]}" 
+		case "$word" in
+        	 -*)
+			;;
+		 *)
+			echo "$word"
+			return;
+			;;
+		esac
+	done
+}
+
 
 _cimiclient() 
 {
     local cur prev opts base
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[1]}"
+    #prev="${COMP_WORDS[1]}"
 
+    command=$(_find_command)
 
     commands="-xml -debug machine-list machine-show machine-create machine-delete machine-start machine-stop machine-update"
     commands="${commands} system-list system-show system-create system-delete system-start system-stop"
@@ -49,7 +65,7 @@ _cimiclient()
     commands="${commands} address-list address-show"
     commands="${commands} metadata-list metadata-show"
 
-    case "${prev}" in
+    case "${command}" in
 	machine-create)
 	    local opts="-name -description -properties -config -image -template -credential -userData"
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
