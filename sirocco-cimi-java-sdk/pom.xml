@@ -38,7 +38,7 @@
 
 	<properties>
 		<sirocco-cimi-library.version>0.6.3-SNAPSHOT</sirocco-cimi-library.version>
-    </properties>
+        </properties>
 
 
 	<dependencies>
