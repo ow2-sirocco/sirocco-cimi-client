@@ -32,7 +32,6 @@ import java.util.Map.Entry;
 
 import org.ow2.sirocco.cimi.domain.CimiJob;
 import org.ow2.sirocco.cimi.domain.CimiMachineImage;
-import org.ow2.sirocco.cimi.domain.ImageLocation;
 import org.ow2.sirocco.cimi.domain.collection.CimiMachineImageCollection;
 import org.ow2.sirocco.cimi.domain.collection.CimiMachineImageCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
@@ -104,11 +103,7 @@ public class MachineImage extends Resource<CimiMachineImage> {
      * @return the image location of this machine image
      */
     public String getImageLocation() {
-        if (this.cimiObject.getImageLocation() != null) {
-            return this.cimiObject.getImageLocation().getHref();
-        } else {
-            return null;
-        }
+        return this.cimiObject.getImageLocation();
     }
 
     /**
@@ -117,9 +112,7 @@ public class MachineImage extends Resource<CimiMachineImage> {
      * @param imageLocation the image location of this machine image
      */
     public void setImageLocation(final String imageLocation) {
-        ImageLocation loc = new ImageLocation();
-        loc.setHref(imageLocation);
-        this.cimiObject.setImageLocation(loc);
+        this.cimiObject.setImageLocation(imageLocation);
     }
 
     /**
@@ -217,8 +210,7 @@ public class MachineImage extends Resource<CimiMachineImage> {
             } else if (attribute.equals("properties")) {
                 cimiObject.setProperties((Map<String, String>) entry.getValue());
             } else if (attribute.equals("imageLocation")) {
-                ImageLocation location = new ImageLocation((String) entry.getValue());
-                cimiObject.setImageLocation(location);
+                cimiObject.setImageLocation((String) entry.getValue());
             }
         }
         CimiResult<CimiMachineImage> cimiResult = client.partialUpdateRequest(id, cimiObject, sb.toString());
