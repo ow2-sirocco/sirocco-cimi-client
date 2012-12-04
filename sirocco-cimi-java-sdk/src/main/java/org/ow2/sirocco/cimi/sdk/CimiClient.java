@@ -25,6 +25,7 @@
 
 package org.ow2.sirocco.cimi.sdk;
 
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -38,10 +39,11 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
+import com.sun.jersey.client.apache.ApacheHttpClient;
+import com.sun.jersey.client.apache.config.ApacheHttpClientConfig;
+import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
 
 /**
  * Root handle representing a session with a CIMI provider and through which all
@@ -270,15 +272,29 @@ public class CimiClient {
         return builder;
     }
 
+    private Client createClient() {
+        final String proxyHost = java.lang.System.getProperty("http.proxyHost");
+        final String proxyPort = java.lang.System.getProperty("http.proxyPort");
+
+        final DefaultApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
+        if (proxyHost != null && proxyPort != null) {
+            config.getProperties().put(ApacheHttpClientConfig.PROPERTY_PROXY_URI, "http://" + proxyHost + ":" + proxyPort);
+        }
+        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        return ApacheHttpClient.create(config);
+    }
+
     private CimiClient(final String cimiEndpointUrl, final String userName, final String password, final Options... optionList)
         throws CimiClientException, CimiProviderException {
         this.cimiEndpointUrl = cimiEndpointUrl;
         this.userName = userName;
         this.password = password;
         this.initAuthenticationHeaders(userName, password);
-        ClientConfig config = new DefaultClientConfig();
-        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-        Client client = Client.create(config);
+        // ClientConfig config = new DefaultClientConfig();
+        // config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
+        // Boolean.TRUE);
+        // Client client = Client.create(config);
+        Client client = this.createClient();
         for (Options options : optionList) {
             if (options.debug) {
                 client.addFilter(this.loggingFilter);
@@ -297,7 +313,8 @@ public class CimiClient {
 
             this.webResource = client.resource(this.cloudEntryPoint.getBaseURI());
         } catch (ClientHandlerException e) {
-            String message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
+            String message = (e.getCause() != null && !(e.getCause() instanceof UnknownHostException)) ? e.getCause()
+                .getMessage() : e.getMessage();
             throw new CimiClientException(message, e);
         }
     }
