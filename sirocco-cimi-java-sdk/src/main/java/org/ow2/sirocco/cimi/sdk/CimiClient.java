@@ -304,7 +304,7 @@ public class CimiClient {
             }
         }
         try {
-            WebResource cepWebResource = client.resource(cimiEndpointUrl).path("/");
+            WebResource cepWebResource = client.resource(cimiEndpointUrl);
 
             ClientResponse response = this.addAuthenticationHeaders(cepWebResource).accept(this.mediaType)
                 .get(ClientResponse.class);
