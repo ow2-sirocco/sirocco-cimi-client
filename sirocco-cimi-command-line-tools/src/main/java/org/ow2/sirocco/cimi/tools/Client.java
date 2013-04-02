@@ -27,9 +27,9 @@ package org.ow2.sirocco.cimi.tools;
 import javax.ws.rs.core.MediaType;
 
 import org.ow2.sirocco.cimi.sdk.CimiClient;
+import org.ow2.sirocco.cimi.sdk.CimiClient.Options;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.CimiProviderException;
-import org.ow2.sirocco.cimi.sdk.CimiClient.Options;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -65,7 +65,8 @@ public class Client {
         new VolumeListCommand(), new VolumeDeleteCommand(), new SystemCreateCommand(), new SystemDeleteCommand(),
         new SystemListCommand(), new SystemShowCommand(), new SystemStartCommand(), new SystemStopCommand(),
         new SystemTemplateListCommand(), new SystemTemplateShowCommand(), new AddressListCommand(), new AddressShowCommand(),
-        new NetworkListCommand(), new NetworkShowCommand(), new ResourceMetadataListCommand(),
+        new NetworkListCommand(), new NetworkShowCommand(), new NetworkCreateCommand(), new NetworkConfigShowCommand(),
+        new NetworkConfigCreateCommand(), new NetworkConfigListCommand(), new ResourceMetadataListCommand(),
         new ResourceMetadataShowCommand()};
 
     private Client(final String[] args) {
