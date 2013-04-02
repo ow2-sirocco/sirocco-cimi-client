@@ -98,6 +98,14 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
         return result;
     }
 
+    public void setComponentDescriptors(final List<ComponentDescriptor> components) {
+        CimiComponentDescriptor cimiComponentDescriptors[] = new CimiComponentDescriptor[components.size()];
+        for (int i = 0; i < components.size(); i++) {
+            cimiComponentDescriptors[i] = components.get(i).getCimiComponentDescriptor();
+        }
+        this.cimiObject.setComponentDescriptors(cimiComponentDescriptors);
+    }
+
     /**
      * Creates a new system template.
      * 
