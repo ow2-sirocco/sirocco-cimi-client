@@ -92,7 +92,12 @@ public class MachineTemplateShowCommand implements Command {
             if (machineTemplate.getNetworkInterface() != null) {
                 int i = 0;
                 for (MachineTemplate.NetworkInterface nic : machineTemplate.getNetworkInterface()) {
-                    sb.append("NIC#" + (i++) + ": " + nic.getNetworkType() + "  ");
+                    sb.append("NIC#" + (i++) + " network: ");
+                    if (nic.getNetwork() != null) {
+                        sb.append(nic.getNetwork().getId() + "  ");
+                    } else if (nic.getNetworkType() != null) {
+                        sb.append(nic.getNetworkType() + " ");
+                    }
                 }
             }
             table.addCell(sb.toString());
