@@ -30,6 +30,7 @@ import java.util.List;
 import org.ow2.sirocco.cimi.domain.CimiNetwork;
 import org.ow2.sirocco.cimi.domain.collection.CimiNetworkCollection;
 import org.ow2.sirocco.cimi.domain.collection.CimiNetworkCollectionRoot;
+import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
 
 /**
  * L2 Network.
@@ -44,6 +45,10 @@ public class Network extends Resource<CimiNetwork> {
      */
     public static enum State {
         CREATING, STARTING, STARTED, STOPPING, STOPPED, DELETING, DELETED, ERROR
+    }
+
+    public Network() {
+        super(null, new CimiNetwork());
     }
 
     Network(final CimiClient cimiClient, final String id) {
@@ -84,6 +89,36 @@ public class Network extends Resource<CimiNetwork> {
      */
     public void setNetworkType(final String networkType) {
         this.cimiObject.setNetworkType(networkType);
+    }
+
+    /**
+     * Creates a new network.
+     * 
+     * @param client the client
+     * @param networkCreate creation parameters
+     * @return creation result
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public static CreateResult<Network> createNetwork(final CimiClient client, final NetworkCreate networkCreate)
+        throws CimiClientException, CimiProviderException {
+        if (client.cloudEntryPoint.getNetworks() == null) {
+            throw new CimiClientException("Unsupported operation");
+        }
+        CimiNetworkCollection networksCollection = client.getRequest(
+            client.extractPath(client.cloudEntryPoint.getNetworks().getHref()), CimiNetworkCollectionRoot.class);
+        String addRef = Helper.findOperation("add", networksCollection);
+        if (addRef == null) {
+            throw new CimiClientException("Unsupported operation");
+        }
+        CimiResult<CimiNetwork> result = client.postCreateRequest(addRef, networkCreate.cimiNetworkCreate, CimiNetwork.class);
+        Job job = result.getJob() != null ? new Job(client, result.getJob()) : null;
+        Network network = result.getResource() != null ? new Network(client, result.getResource()) : null;
+        return new CreateResult<Network>(job, network);
     }
 
     /**
