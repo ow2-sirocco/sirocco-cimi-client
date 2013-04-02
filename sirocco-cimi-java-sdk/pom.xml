@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
 
    SIROCCO
@@ -22,7 +21,9 @@
    USA
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -30,7 +31,7 @@
 		<artifactId>sirocco-cimi-client</artifactId>
 		<version>0.6.3-SNAPSHOT</version>
 	</parent>
-	
+
 	<groupId>org.ow2.sirocco.cimi</groupId>
 	<artifactId>sirocco-cimi-java-sdk</artifactId>
 	<packaging>jar</packaging>
@@ -38,7 +39,7 @@
 
 	<properties>
 		<sirocco-cimi-library.version>0.6.3-SNAPSHOT</sirocco-cimi-library.version>
-        </properties>
+	</properties>
 
 
 	<dependencies>
@@ -67,9 +68,9 @@
 			<version>1.12</version>
 		</dependency>
 		<dependency>
-    		<groupId>com.sun.jersey.contribs</groupId>
-    		<artifactId>jersey-apache-client</artifactId>
-    		<version>1.16</version>
+			<groupId>com.sun.jersey.contribs</groupId>
+			<artifactId>jersey-apache-client</artifactId>
+			<version>1.16</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-httpclient</groupId>
@@ -132,7 +133,7 @@
 					<downloadJavadocs>true</downloadJavadocs>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -159,9 +160,10 @@
 				</executions>
 			</plugin>
 			<plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-      </plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.4</version>
@@ -178,11 +180,46 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>			
-
+			</plugin>
 		</plugins>
 
 	</build>
 
+	<profiles>
+		<profile>
+            <id>default</id>
+            <activation>
+      			<activeByDefault>true</activeByDefault>
+    		</activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.14</version>
+                        <configuration>
+                       	 	<excludes>
+								<exclude>**/itest/*.java</exclude>
+							</excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>itest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.14</version>
+                        <configuration>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
