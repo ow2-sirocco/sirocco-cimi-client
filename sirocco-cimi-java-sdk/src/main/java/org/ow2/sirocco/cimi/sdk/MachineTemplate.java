@@ -73,6 +73,10 @@ public class MachineTemplate extends Resource<CimiMachineTemplate> {
             this.network = network;
         }
 
+        public void setNetworkRef(final String id) {
+            this.network = new Network(null, id);
+        }
+
         /**
          * Gets the addresses of this network interface.
          * 
