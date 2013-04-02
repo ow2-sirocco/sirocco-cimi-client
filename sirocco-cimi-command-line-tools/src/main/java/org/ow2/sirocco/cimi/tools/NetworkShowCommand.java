@@ -57,11 +57,11 @@ public class NetworkShowCommand implements Command {
     public static void printNetwork(final Network net, final ResourceSelectExpandParams showParams) throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(net, showParams);
 
-        if (showParams.isSelected("state")) {
+        if (showParams.isSelected("state") && net.getState() != null) {
             table.addCell("state");
             table.addCell(net.getState().toString());
         }
-        if (showParams.isSelected("networkType")) {
+        if (showParams.isSelected("networkType") && net.getNetworkType() != null) {
             table.addCell("network type");
             table.addCell(net.getNetworkType());
         }
