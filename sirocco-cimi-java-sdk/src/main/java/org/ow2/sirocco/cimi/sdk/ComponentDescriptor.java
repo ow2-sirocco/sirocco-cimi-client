@@ -61,6 +61,10 @@ public class ComponentDescriptor {
         }
     }
 
+    CimiComponentDescriptor getCimiComponentDescriptor() {
+        return this.cimiComponentDescriptor;
+    }
+
     /**
      * Gets the number of component instances to be created from this component
      * descriptor.
@@ -161,6 +165,10 @@ public class ComponentDescriptor {
             this.componentTemplate = componentTemplate;
             this.cimiComponentDescriptor.setComponent(((MachineTemplate) componentTemplate).cimiObject);
             this.cimiComponentDescriptor.setType(Machine.TYPE_URI);
+        } else if (componentTemplate instanceof NetworkTemplate) {
+            this.componentTemplate = componentTemplate;
+            this.cimiComponentDescriptor.setComponent(((NetworkTemplate) componentTemplate).cimiObject);
+            this.cimiComponentDescriptor.setType(Network.TYPE_URI);
         } else if (componentTemplate instanceof VolumeTemplate) {
             this.componentTemplate = componentTemplate;
             this.cimiComponentDescriptor.setComponent(((VolumeTemplate) componentTemplate).cimiObject);
