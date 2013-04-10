@@ -144,7 +144,8 @@ public class Machine extends Resource<CimiMachine> {
             String machineNicsRef = this.cimiObject.getNetworkInterfaces().getHref();
             if (machineNicsRef != null) {
                 CimiMachineNetworkInterfaceCollectionRoot cimiNics = this.cimiClient.getRequest(
-                    this.cimiClient.extractPath(machineNicsRef), CimiMachineNetworkInterfaceCollectionRoot.class);
+                    this.cimiClient.extractPath(machineNicsRef), CimiMachineNetworkInterfaceCollectionRoot.class, QueryParams
+                        .builder().expand("network").build());
                 this.cimiObject.getNetworkInterfaces().setArray(cimiNics.getArray());
             }
         }
