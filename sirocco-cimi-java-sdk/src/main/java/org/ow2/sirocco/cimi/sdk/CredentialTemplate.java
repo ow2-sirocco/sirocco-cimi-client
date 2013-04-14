@@ -143,7 +143,7 @@ public class CredentialTemplate extends Resource<CimiCredentialTemplate> {
 
         if (credentialTemplateCollection.getCollection() != null) {
             for (CimiCredentialTemplate cimiCredentialTemplate : credentialTemplateCollection.getCollection().getArray()) {
-                result.add(CredentialTemplate.getCredentialTemplateByReference(client, cimiCredentialTemplate.getHref()));
+                result.add(new CredentialTemplate(client, cimiCredentialTemplate));
             }
         }
         return result;
