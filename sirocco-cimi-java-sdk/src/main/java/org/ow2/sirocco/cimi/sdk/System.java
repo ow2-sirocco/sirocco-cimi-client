@@ -33,9 +33,13 @@ import org.ow2.sirocco.cimi.domain.CimiAction;
 import org.ow2.sirocco.cimi.domain.CimiJob;
 import org.ow2.sirocco.cimi.domain.CimiSystem;
 import org.ow2.sirocco.cimi.domain.CimiSystemMachine;
+import org.ow2.sirocco.cimi.domain.CimiSystemNetwork;
+import org.ow2.sirocco.cimi.domain.CimiSystemVolume;
 import org.ow2.sirocco.cimi.domain.collection.CimiSystemCollection;
 import org.ow2.sirocco.cimi.domain.collection.CimiSystemCollectionRoot;
 import org.ow2.sirocco.cimi.domain.collection.CimiSystemMachineCollectionRoot;
+import org.ow2.sirocco.cimi.domain.collection.CimiSystemNetworkCollectionRoot;
+import org.ow2.sirocco.cimi.domain.collection.CimiSystemVolumeCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
 
 /**
@@ -178,6 +182,60 @@ public class System extends Resource<CimiSystem> {
         }
         return machines;
 
+    }
+
+    /**
+     * Gets the volumes of this system.
+     * 
+     * @return the volumes of this system
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public List<SystemVolume> getVolumes() throws CimiClientException, CimiProviderException {
+        String systemVolumeCollection = this.cimiObject.getVolumes().getHref();
+        CimiSystemVolumeCollectionRoot sysVolumes = this.cimiClient.getRequest(
+            this.cimiClient.extractPath(systemVolumeCollection), CimiSystemVolumeCollectionRoot.class, QueryParams.builder()
+                .expand("volume").build());
+        this.cimiObject.getVolumes().setArray(sysVolumes.getArray());
+        List<SystemVolume> volumes = new ArrayList<SystemVolume>();
+        if (this.cimiObject.getVolumes().getArray() != null) {
+            for (CimiSystemVolume cimiSystemVolume : this.cimiObject.getVolumes().getArray()) {
+                SystemVolume systemVolume = new SystemVolume(this.cimiClient, cimiSystemVolume);
+                volumes.add(systemVolume);
+            }
+        }
+        return volumes;
+    }
+
+    /**
+     * Gets the networks of this system.
+     * 
+     * @return the network of this system
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public List<SystemNetwork> getNetworks() throws CimiClientException, CimiProviderException {
+        String systemNetworkCollection = this.cimiObject.getNetworks().getHref();
+        CimiSystemNetworkCollectionRoot sysNetworks = this.cimiClient.getRequest(
+            this.cimiClient.extractPath(systemNetworkCollection), CimiSystemNetworkCollectionRoot.class, QueryParams.builder()
+                .expand("network").build());
+        this.cimiObject.getNetworks().setArray(sysNetworks.getArray());
+        List<SystemNetwork> networks = new ArrayList<SystemNetwork>();
+        if (this.cimiObject.getNetworks().getArray() != null) {
+            for (CimiSystemNetwork cimiSystemNetwork : this.cimiObject.getNetworks().getArray()) {
+                SystemNetwork systemNetwork = new SystemNetwork(this.cimiClient, cimiSystemNetwork);
+                networks.add(systemNetwork);
+            }
+        }
+        return networks;
     }
 
     /**
