@@ -29,6 +29,7 @@ import java.util.Map;
 import org.ow2.sirocco.cimi.domain.CimiComponentDescriptor;
 import org.ow2.sirocco.cimi.domain.CimiCredentialTemplate;
 import org.ow2.sirocco.cimi.domain.CimiMachineTemplate;
+import org.ow2.sirocco.cimi.domain.CimiNetworkTemplate;
 import org.ow2.sirocco.cimi.domain.CimiVolumeTemplate;
 
 /**
@@ -176,6 +177,43 @@ public class ComponentDescriptor {
         } else if (componentTemplate instanceof CredentialTemplate) {
             this.componentTemplate = componentTemplate;
             this.cimiComponentDescriptor.setComponent(((CredentialTemplate) componentTemplate).cimiObject);
+            this.cimiComponentDescriptor.setType(Credential.TYPE_URI);
+        } else {
+            throw new CimiClientException("Illegal template type");
+        }
+
+    }
+
+    /**
+     * Sets the component template.
+     * 
+     * @param componentTemplate the new component template
+     * @throws Exception the exception
+     */
+    public void setComponentTemplateRef(final Object componentTemplate) throws Exception {
+        if (componentTemplate instanceof MachineTemplate) {
+            this.componentTemplate = componentTemplate;
+            CimiMachineTemplate template = new CimiMachineTemplate();
+            template.setHref(((MachineTemplate) componentTemplate).getId());
+            this.cimiComponentDescriptor.setComponent(template);
+            this.cimiComponentDescriptor.setType(Machine.TYPE_URI);
+        } else if (componentTemplate instanceof NetworkTemplate) {
+            this.componentTemplate = componentTemplate;
+            CimiNetworkTemplate template = new CimiNetworkTemplate();
+            template.setHref(((NetworkTemplate) componentTemplate).getId());
+            this.cimiComponentDescriptor.setComponent(template);
+            this.cimiComponentDescriptor.setType(Network.TYPE_URI);
+        } else if (componentTemplate instanceof VolumeTemplate) {
+            this.componentTemplate = componentTemplate;
+            CimiVolumeTemplate template = new CimiVolumeTemplate();
+            template.setHref(((VolumeTemplate) componentTemplate).getId());
+            this.cimiComponentDescriptor.setComponent(template);
+            this.cimiComponentDescriptor.setType(Volume.TYPE_URI);
+        } else if (componentTemplate instanceof CredentialTemplate) {
+            this.componentTemplate = componentTemplate;
+            CimiCredentialTemplate template = new CimiCredentialTemplate();
+            template.setHref(((CredentialTemplate) componentTemplate).getId());
+            this.cimiComponentDescriptor.setComponent(template);
             this.cimiComponentDescriptor.setType(Credential.TYPE_URI);
         } else {
             throw new CimiClientException("Illegal template type");
