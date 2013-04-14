@@ -36,6 +36,7 @@ import org.ow2.sirocco.cimi.domain.CimiMachineConfiguration;
 import org.ow2.sirocco.cimi.domain.CimiMachineImage;
 import org.ow2.sirocco.cimi.domain.CimiMachineTemplate;
 import org.ow2.sirocco.cimi.domain.CimiMachineTemplateNetworkInterface;
+import org.ow2.sirocco.cimi.domain.CimiMachineTemplateVolume;
 import org.ow2.sirocco.cimi.domain.collection.CimiMachineTemplateCollection;
 import org.ow2.sirocco.cimi.domain.collection.CimiMachineTemplateCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
@@ -111,6 +112,28 @@ public class MachineTemplate extends Resource<CimiMachineTemplate> {
          */
         public void setNetworkType(final String networkType) {
             this.networkType = networkType;
+        }
+    }
+
+    public static class Volume {
+        private String initialLocation;
+
+        private String volumeRef;
+
+        public String getInitialLocation() {
+            return this.initialLocation;
+        }
+
+        public void setInitialLocation(final String initialLocation) {
+            this.initialLocation = initialLocation;
+        }
+
+        public String getVolumeRef() {
+            return this.volumeRef;
+        }
+
+        public void setVolumeRef(final String volumeRef) {
+            this.volumeRef = volumeRef;
         }
     }
 
@@ -307,6 +330,17 @@ public class MachineTemplate extends Resource<CimiMachineTemplate> {
             templateNics.add(templateNic);
         }
         this.cimiObject.setListNetworkInterfaces(templateNics);
+    }
+
+    public void setVolumes(final List<MachineTemplate.Volume> volumes) {
+        List<CimiMachineTemplateVolume> templateVolumes = new ArrayList<CimiMachineTemplateVolume>();
+        for (Volume vol : volumes) {
+            CimiMachineTemplateVolume templateVolume = new CimiMachineTemplateVolume();
+            templateVolume.setInitialLocation(vol.getInitialLocation());
+            templateVolume.setHref(vol.getVolumeRef());
+            templateVolumes.add(templateVolume);
+        }
+        this.cimiObject.setListVolumes(templateVolumes);
     }
 
     /**
