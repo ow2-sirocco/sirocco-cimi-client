@@ -31,7 +31,7 @@ _cimiclient()
     prev="${COMP_WORDS[1]}"
 
 
-    commands="-xml -debug machine-list machine-show machine-create machine-delete machine-start machine-stop machine-update"
+    commands="-xml -debug machine-list machine-show machine-create machine-delete machine-start machine-stop machine-capture machine-update"
     commands="${commands} system-list system-show system-create system-delete system-start system-stop"
     commands="${commands} systemtemplate-list systemtemplate-show"
     commands="${commands} job-list job-show"
@@ -96,6 +96,11 @@ _cimiclient()
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;
+	machine-capture)
+	    local opts="-name -description -properties"
+	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;;		
 	machinetemplate-create |  machinetemplate-update)
 	    local opts="-name -description -properties -config -image -cred"
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )

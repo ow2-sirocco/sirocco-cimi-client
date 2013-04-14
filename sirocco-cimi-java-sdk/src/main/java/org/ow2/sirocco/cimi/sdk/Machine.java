@@ -35,10 +35,13 @@ import org.ow2.sirocco.cimi.domain.CimiAction;
 import org.ow2.sirocco.cimi.domain.CimiJob;
 import org.ow2.sirocco.cimi.domain.CimiMachine;
 import org.ow2.sirocco.cimi.domain.CimiMachineDisk;
+import org.ow2.sirocco.cimi.domain.CimiMachineImage;
 import org.ow2.sirocco.cimi.domain.CimiMachineNetworkInterface;
 import org.ow2.sirocco.cimi.domain.collection.CimiMachineCollection;
 import org.ow2.sirocco.cimi.domain.collection.CimiMachineCollectionRoot;
 import org.ow2.sirocco.cimi.domain.collection.CimiMachineDiskCollectionRoot;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineImageCollection;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineImageCollectionRoot;
 import org.ow2.sirocco.cimi.domain.collection.CimiMachineNetworkInterfaceAddressCollectionRoot;
 import org.ow2.sirocco.cimi.domain.collection.CimiMachineNetworkInterfaceCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
@@ -217,6 +220,44 @@ public class Machine extends Resource<CimiMachine> {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Captures this machine into a Machine Image.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public CreateResult<MachineImage> capture(final MachineImage machineImage) throws CimiClientException,
+        CimiProviderException {
+        String captureRef = Helper.findOperation(ActionType.CAPTURE.getPath(), this.cimiObject);
+        if (captureRef == null) {
+            throw new CimiClientException("Illegal operation");
+        }
+        if (this.cimiClient.cloudEntryPoint.getMachineImages() == null) {
+            throw new CimiClientException("Unsupported operation");
+        }
+        CimiMachineImageCollection machineImagesCollection = this.cimiClient.getRequest(
+            this.cimiClient.extractPath(this.cimiClient.cloudEntryPoint.getMachineImages().getHref()),
+            CimiMachineImageCollectionRoot.class);
+        String addRef = Helper.findOperation("add", machineImagesCollection);
+        if (addRef == null) {
+            throw new CimiClientException("Unsupported operation");
+        }
+        String machineRef = this.cimiObject.getHref() != null ? this.cimiObject.getHref() : this.cimiObject.getId();
+        machineImage.setImageLocation(machineRef);
+        CimiResult<CimiMachineImage> result = this.cimiClient.postCreateRequest(addRef, machineImage.cimiObject,
+            CimiMachineImage.class);
+        Job job = result.getJob() != null ? new Job(this.cimiClient, result.getJob()) : null;
+        MachineImage createdMachineImage = result.getResource() != null ? new MachineImage(this.cimiClient,
+            result.getResource()) : null;
+        return new CreateResult<MachineImage>(job, createdMachineImage);
     }
 
     /**
