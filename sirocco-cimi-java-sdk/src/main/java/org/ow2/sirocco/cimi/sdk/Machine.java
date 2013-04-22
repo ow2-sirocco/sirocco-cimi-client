@@ -223,6 +223,34 @@ public class Machine extends Resource<CimiMachine> {
     }
 
     /**
+     * Restarts this machine.
+     * 
+     * @return the job representing this operation or null if the CIMI provider
+     *         does not support Jobs
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public Job restart(final boolean force) throws CimiClientException, CimiProviderException {
+        String startRef = Helper.findOperation(ActionType.RESTART.getPath(), this.cimiObject);
+        if (startRef == null) {
+            throw new CimiClientException("Illegal operation");
+        }
+        CimiAction actionRestart = new CimiAction();
+        actionRestart.setAction(ActionType.RESTART.getPath());
+        actionRestart.setForce(force);
+        CimiJob cimiJob = this.cimiClient.actionRequest(startRef, actionRestart);
+        if (cimiJob != null) {
+            return new Job(this.cimiClient, cimiJob);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Captures this machine into a Machine Image.
      * 
      * @return the job representing this operation or null if the CIMI provider
