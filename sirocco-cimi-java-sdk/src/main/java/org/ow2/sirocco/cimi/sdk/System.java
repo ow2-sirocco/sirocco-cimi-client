@@ -32,9 +32,11 @@ import org.ow2.sirocco.cimi.domain.ActionType;
 import org.ow2.sirocco.cimi.domain.CimiAction;
 import org.ow2.sirocco.cimi.domain.CimiJob;
 import org.ow2.sirocco.cimi.domain.CimiSystem;
+import org.ow2.sirocco.cimi.domain.CimiSystemAddress;
 import org.ow2.sirocco.cimi.domain.CimiSystemMachine;
 import org.ow2.sirocco.cimi.domain.CimiSystemNetwork;
 import org.ow2.sirocco.cimi.domain.CimiSystemVolume;
+import org.ow2.sirocco.cimi.domain.collection.CimiSystemAddressCollectionRoot;
 import org.ow2.sirocco.cimi.domain.collection.CimiSystemCollection;
 import org.ow2.sirocco.cimi.domain.collection.CimiSystemCollectionRoot;
 import org.ow2.sirocco.cimi.domain.collection.CimiSystemMachineCollectionRoot;
@@ -214,7 +216,7 @@ public class System extends Resource<CimiSystem> {
     /**
      * Gets the networks of this system.
      * 
-     * @return the network of this system
+     * @return the networks of this system
      * @throws CimiClientException If any internal errors are encountered inside
      *         the client while attempting to make the request or handle the
      *         response. For example if a network connection is not available.
@@ -236,6 +238,33 @@ public class System extends Resource<CimiSystem> {
             }
         }
         return networks;
+    }
+
+    /**
+     * Gets the addresses of this system.
+     * 
+     * @return the addresses of this system
+     * @throws CimiClientException If any internal errors are encountered inside
+     *         the client while attempting to make the request or handle the
+     *         response. For example if a network connection is not available.
+     * @throws CimiProviderException If an error response is returned by the
+     *         CIMI provider indicating either a problem with the data in the
+     *         request, or a server side issue.
+     */
+    public List<SystemAddress> getAddresses() throws CimiClientException, CimiProviderException {
+        String systemAddressCollection = this.cimiObject.getAddresses().getHref();
+        CimiSystemAddressCollectionRoot sysAddresses = this.cimiClient.getRequest(
+            this.cimiClient.extractPath(systemAddressCollection), CimiSystemAddressCollectionRoot.class, QueryParams.builder()
+                .expand("address").build());
+        this.cimiObject.getAddresses().setArray(sysAddresses.getArray());
+        List<SystemAddress> addresses = new ArrayList<SystemAddress>();
+        if (this.cimiObject.getAddresses().getArray() != null) {
+            for (CimiSystemAddress cimiSystemAddress : this.cimiObject.getAddresses().getArray()) {
+                SystemAddress systemAddress = new SystemAddress(this.cimiClient, cimiSystemAddress);
+                addresses.add(systemAddress);
+            }
+        }
+        return addresses;
     }
 
     /**
