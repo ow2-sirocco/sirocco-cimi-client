@@ -32,7 +32,7 @@
 	</parent>
 	<groupId>org.ow2.sirocco.cimi</groupId>
 	<artifactId>sirocco-cimi-client</artifactId>
-	<version>0.6.3-SNAPSHOT</version>
+	<version>0.6.3</version>
 	<packaging>pom</packaging>
 	<name>SIROCCO :: CIMI  :: Client</name>
 
@@ -53,6 +53,7 @@
 		<connection>scm:git:git://gitorious.ow2.org/ow2-sirocco/sirocco-cimi-client.git</connection>
                 <developerConnection>scm:git:git@gitorious.ow2.org:ow2-sirocco/sirocco-cimi-client.git</developerConnection>
                 <url>http://gitorious.ow2.org/ow2-sirocco/sirocco-cimi-client/trees</url>
-	</scm>
+	  <tag>sirocco-cimi-client-0.6.3</tag>
+  </scm>
 
 </project>
