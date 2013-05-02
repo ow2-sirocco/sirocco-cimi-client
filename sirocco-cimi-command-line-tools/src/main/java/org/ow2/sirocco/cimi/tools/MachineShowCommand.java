@@ -64,7 +64,6 @@ public class MachineShowCommand implements Command {
             }
             machine = machines.get(0);
         }
-        machine = Machine.getMachineByReference(cimiClient, this.machineIds.get(0), this.showParams.getQueryParams());
         MachineShowCommand.printMachine(machine, this.showParams);
     }
 
