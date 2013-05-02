@@ -48,6 +48,9 @@ public class MachineImageCreateCommand implements Command {
     @Parameter(names = "-location", description = "image location", required = true)
     private String imageLocation;
 
+    @Parameter(names = "-v", description = "verbose", required = false)
+    private boolean verbose;
+
     @Override
     public String getName() {
         return "machineimage-create";
@@ -67,12 +70,16 @@ public class MachineImageCreateCommand implements Command {
         machineImage.setImageLocation(this.imageLocation);
 
         CreateResult<MachineImage> result = MachineImage.createMachineImage(cimiClient, machineImage);
-        if (result.getJob() != null) {
-            System.out.println("Job:");
-            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+        if (this.verbose) {
+            if (result.getJob() != null) {
+                System.out.println("Job:");
+                JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+            }
+            System.out.println("Machine Image:");
+            MachineImageShowCommand.printMachineImage(result.getResource(), new ResourceSelectExpandParams());
+        } else {
+            System.out.println(result.getResource().getId());
         }
-        System.out.println("Machine Image:");
-        MachineImageShowCommand.printMachineImage(result.getResource(), new ResourceSelectExpandParams());
     }
 
 }

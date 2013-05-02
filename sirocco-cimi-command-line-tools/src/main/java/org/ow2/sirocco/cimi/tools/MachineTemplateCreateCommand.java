@@ -62,6 +62,9 @@ public class MachineTemplateCreateCommand implements Command {
     @Parameter(names = "-nic", description = "network interface", required = false)
     private List<String> nicTypes;
 
+    @Parameter(names = "-v", description = "verbose", required = false)
+    private boolean verbose;
+
     @Override
     public String getName() {
         return "machinetemplate-create";
@@ -121,12 +124,16 @@ public class MachineTemplateCreateCommand implements Command {
         }
 
         CreateResult<MachineTemplate> result = MachineTemplate.createMachineTemplate(cimiClient, machineTemplate);
-        if (result.getJob() != null) {
-            System.out.println("Job:");
-            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+        if (this.verbose) {
+            if (result.getJob() != null) {
+                System.out.println("Job:");
+                JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+            }
+            System.out.println("Machine Template:");
+            MachineTemplateShowCommand.printMachineTemplate(result.getResource(), new ResourceSelectExpandParams());
+        } else {
+            System.out.println(result.getResource().getId());
         }
-        System.out.println("Machine Template:");
-        MachineTemplateShowCommand.printMachineTemplate(result.getResource(), new ResourceSelectExpandParams());
     }
 
 }

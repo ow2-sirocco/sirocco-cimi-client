@@ -51,6 +51,9 @@ public class VolumeConfigCreateCommand implements Command {
     @Parameter(names = "-format", description = "format", required = true)
     private String format;
 
+    @Parameter(names = "-v", description = "verbose", required = false)
+    private boolean verbose;
+
     @Override
     public String getName() {
         return "volumeconfig-create";
@@ -72,11 +75,15 @@ public class VolumeConfigCreateCommand implements Command {
         volumeConfig.setType(""); // XXX
 
         CreateResult<VolumeConfiguration> result = VolumeConfiguration.createVolumeConfiguration(cimiClient, volumeConfig);
-        if (result.getJob() != null) {
-            System.out.println("Job:");
-            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+        if (this.verbose) {
+            if (result.getJob() != null) {
+                System.out.println("Job:");
+                JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+            }
+            System.out.println("VolumeConfiguration:");
+            VolumeConfigShowCommand.printVolumeConfig(result.getResource(), new ResourceSelectExpandParams());
+        } else {
+            System.out.println(result.getResource().getId());
         }
-        System.out.println("VolumeConfiguration:");
-        VolumeConfigShowCommand.printVolumeConfig(result.getResource(), new ResourceSelectExpandParams());
     }
 }

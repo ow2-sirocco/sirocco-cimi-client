@@ -56,6 +56,9 @@ public class MachineConfigCreateCommand implements Command {
     @Parameter(names = "-disk", description = "add disk with size in KB", required = true)
     private List<Integer> diskSizes = new ArrayList<Integer>();
 
+    @Parameter(names = "-v", description = "verbose", required = false)
+    private boolean verbose;
+
     @Override
     public String getName() {
         return "machineconfig-create";
@@ -83,11 +86,15 @@ public class MachineConfigCreateCommand implements Command {
         machineConfig.setDisks(disks);
 
         CreateResult<MachineConfiguration> result = MachineConfiguration.createMachineConfiguration(cimiClient, machineConfig);
-        if (result.getJob() != null) {
-            System.out.println("MachineConfig " + result.getJob().getTargetResourceRef() + " being created");
-            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+        if (this.verbose) {
+            if (result.getJob() != null) {
+                System.out.println("MachineConfig " + result.getJob().getTargetResourceRef() + " being created");
+                JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+            } else {
+                MachineConfigShowCommand.printMachineConfig(result.getResource(), new ResourceSelectParam());
+            }
         } else {
-            MachineConfigShowCommand.printMachineConfig(result.getResource(), new ResourceSelectParam());
+            System.out.println(result.getResource().getId());
         }
     }
 

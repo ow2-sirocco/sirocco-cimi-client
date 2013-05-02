@@ -46,6 +46,9 @@ public class NetworkConfigCreateCommand implements Command {
     @Parameter(names = "-properties", variableArity = true, description = "key value pairs", required = false)
     private List<String> properties;
 
+    @Parameter(names = "-v", description = "verbose", required = false)
+    private boolean verbose;
+
     @Override
     public String getName() {
         return "networkconfig-create";
@@ -63,11 +66,15 @@ public class NetworkConfigCreateCommand implements Command {
             }
         }
         CreateResult<NetworkConfiguration> result = NetworkConfiguration.createNetworkConfiguration(cimiClient, networkConfig);
-        if (result.getJob() != null) {
-            System.out.println("Job:");
-            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+        if (this.verbose) {
+            if (result.getJob() != null) {
+                System.out.println("Job:");
+                JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+            }
+            System.out.println("Network config being created:");
+            NetworkConfigShowCommand.printNetworkConfig(result.getResource(), new ResourceSelectExpandParams());
+        } else {
+            System.out.println(result.getResource().getId());
         }
-        System.out.println("Network config being created:");
-        NetworkConfigShowCommand.printNetworkConfig(result.getResource(), new ResourceSelectExpandParams());
     }
 }

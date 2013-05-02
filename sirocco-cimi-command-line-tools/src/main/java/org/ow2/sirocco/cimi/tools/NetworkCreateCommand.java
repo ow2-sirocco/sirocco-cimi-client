@@ -50,6 +50,9 @@ public class NetworkCreateCommand implements Command {
     @Parameter(names = "-properties", variableArity = true, description = "key value pairs", required = false)
     private List<String> properties;
 
+    @Parameter(names = "-v", description = "verbose", required = false)
+    private boolean verbose;
+
     @Override
     public String getName() {
         return "network-create";
@@ -79,11 +82,15 @@ public class NetworkCreateCommand implements Command {
             }
         }
         CreateResult<Network> result = Network.createNetwork(cimiClient, networkCreate);
-        if (result.getJob() != null) {
-            System.out.println("Job:");
-            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+        if (this.verbose) {
+            if (result.getJob() != null) {
+                System.out.println("Job:");
+                JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+            }
+            System.out.println("Network being created:");
+            NetworkShowCommand.printNetwork(result.getResource(), new ResourceSelectExpandParams());
+        } else {
+            System.out.println(result.getResource().getId());
         }
-        System.out.println("Network being created:");
-        NetworkShowCommand.printNetwork(result.getResource(), new ResourceSelectExpandParams());
     }
 }

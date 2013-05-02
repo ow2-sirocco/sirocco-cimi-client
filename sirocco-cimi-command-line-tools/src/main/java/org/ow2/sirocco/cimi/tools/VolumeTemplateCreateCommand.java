@@ -51,6 +51,9 @@ public class VolumeTemplateCreateCommand implements Command {
     @Parameter(names = "-image", description = "volume image id", required = false)
     private String volumeImageId;
 
+    @Parameter(names = "-v", description = "verbose", required = false)
+    private boolean verbose;
+
     @Override
     public String getName() {
         return "volumetemplate-create";
@@ -72,12 +75,16 @@ public class VolumeTemplateCreateCommand implements Command {
         }
 
         CreateResult<VolumeTemplate> result = VolumeTemplate.createVolumeTemplate(cimiClient, volumeTemplate);
-        if (result.getJob() != null) {
-            System.out.println("Job:");
-            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+        if (this.verbose) {
+            if (result.getJob() != null) {
+                System.out.println("Job:");
+                JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+            }
+            System.out.println("VolumeTemplate:");
+            VolumeTemplateShowCommand.printVolumeTemplate(result.getResource(), new ResourceSelectExpandParams());
+        } else {
+            System.out.println(result.getResource().getId());
         }
-        System.out.println("VolumeTemplate:");
-        VolumeTemplateShowCommand.printVolumeTemplate(result.getResource(), new ResourceSelectExpandParams());
     }
 
 }

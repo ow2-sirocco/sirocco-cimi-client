@@ -50,6 +50,9 @@ public class CredentialCreateCommand implements Command {
     @Parameter(names = "-ext", variableArity = true, description = "extended attributes", required = false)
     private List<String> extendedAttributes;
 
+    @Parameter(names = "-v", description = "verbose", required = false)
+    private boolean verbose;
+
     @Override
     public String getName() {
         return "credential-create";
@@ -74,11 +77,15 @@ public class CredentialCreateCommand implements Command {
             }
         }
         CreateResult<Credential> result = Credential.createCredential(cimiClient, credentialCreate);
-        if (result.getJob() != null) {
-            System.out.println("Credential " + result.getJob().getTargetResourceRef() + " being created");
-            JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+        if (this.verbose) {
+            if (result.getJob() != null) {
+                System.out.println("Credential " + result.getJob().getTargetResourceRef() + " being created");
+                JobShowCommand.printJob(result.getJob(), new ResourceSelectExpandParams());
+            } else {
+                CredentialShowCommand.printCredential(result.getResource(), new ResourceListParams());
+            }
         } else {
-            CredentialShowCommand.printCredential(result.getResource(), new ResourceListParams());
+            System.out.println(result.getResource().getId());
         }
     }
 }
