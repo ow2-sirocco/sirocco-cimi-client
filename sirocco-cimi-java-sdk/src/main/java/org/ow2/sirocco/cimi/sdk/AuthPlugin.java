@@ -39,5 +39,5 @@ public interface AuthPlugin {
      * @return a map of HTTP headers
      * @throws CimiClientException if the authentication cannot proceed
      */
-    Map<String, String> authenticate(String user, String password) throws CimiClientException;
+    Map<String, String> authenticate(String user, String password, String tenantId) throws CimiClientException;
 }

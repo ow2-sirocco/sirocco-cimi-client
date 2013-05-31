@@ -39,6 +39,8 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.client.apache.ApacheHttpClient;
@@ -80,6 +82,10 @@ public class CimiClient {
 
         private MediaType mediaType;
 
+        private String httpProxyHost;
+
+        private String httpProxyPort;
+
         private Options() {
 
         }
@@ -112,6 +118,16 @@ public class CimiClient {
          */
         public Options setMediaType(final MediaType mediaType) {
             this.mediaType = mediaType;
+            return this;
+        }
+
+        public Options setHttpProxyHost(final String httpProxyHost) {
+            this.httpProxyHost = httpProxyHost;
+            return this;
+        }
+
+        public Options setHttpProxyPort(final String httpProxyPort) {
+            this.httpProxyPort = httpProxyPort;
             return this;
         }
 
@@ -244,7 +260,8 @@ public class CimiClient {
         }
     }
 
-    private void initAuthenticationHeaders(final String userName, final String password) throws CimiClientException {
+    private void initAuthenticationHeaders(final String userName, final String password, final String tenantId)
+        throws CimiClientException {
         String authPluginClassName = java.lang.System.getProperty(CimiClient.CIMICLIENT_AUTH_PLUGIN_CLASS_PROP);
         if (authPluginClassName == null) {
             authPluginClassName = CimiClient.DEFAULT_CIMICLIENT_AUTH_PLUGIN_CLASS;
@@ -261,7 +278,7 @@ public class CimiClient {
         } catch (Exception ex) {
             throw new CimiClientException("Cannot create auth plugin " + authPluginClassName + " " + ex.getMessage());
         }
-        this.authenticationHeaders = authPlugin.authenticate(userName, password);
+        this.authenticationHeaders = authPlugin.authenticate(userName, password, tenantId);
     }
 
     private WebResource.Builder addAuthenticationHeaders(final WebResource resource) {
@@ -272,29 +289,47 @@ public class CimiClient {
         return builder;
     }
 
-    private Client createClient() {
-        final String proxyHost = java.lang.System.getProperty("http.proxyHost");
-        final String proxyPort = java.lang.System.getProperty("http.proxyPort");
-
-        final DefaultApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
-        if (proxyHost != null && proxyPort != null) {
-            config.getProperties().put(ApacheHttpClientConfig.PROPERTY_PROXY_URI, "http://" + proxyHost + ":" + proxyPort);
+    private Client createClient(final Options... optionList) {
+        String proxyHost = null;
+        String proxyPort = null;
+        if (optionList.length > 0) {
+            Options options = optionList[0];
+            proxyHost = options.httpProxyHost;
+            proxyPort = options.httpProxyPort;
         }
-        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-        return ApacheHttpClient.create(config);
+
+        if (proxyHost == null) {
+            proxyHost = java.lang.System.getProperty("http.proxyHost");
+        }
+        if (proxyPort == null) {
+            proxyPort = java.lang.System.getProperty("http.proxyPort");
+        }
+
+        if (proxyHost != null && proxyPort == null) {
+            final DefaultApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
+            if (proxyHost != null && proxyPort != null) {
+                config.getProperties().put(ApacheHttpClientConfig.PROPERTY_PROXY_URI, "http://" + proxyHost + ":" + proxyPort);
+            }
+            config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+            return ApacheHttpClient.create(config);
+        } else {
+            ClientConfig config = new DefaultClientConfig();
+            config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+            return Client.create(config);
+        }
     }
 
-    private CimiClient(final String cimiEndpointUrl, final String userName, final String password, final Options... optionList)
-        throws CimiClientException, CimiProviderException {
+    private CimiClient(final String cimiEndpointUrl, final String userName, final String password, final String tenantId,
+        final Options... optionList) throws CimiClientException, CimiProviderException {
         this.cimiEndpointUrl = cimiEndpointUrl;
         this.userName = userName;
         this.password = password;
-        this.initAuthenticationHeaders(userName, password);
+        this.initAuthenticationHeaders(userName, password, tenantId);
         // ClientConfig config = new DefaultClientConfig();
         // config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
         // Boolean.TRUE);
         // Client client = Client.create(config);
-        Client client = this.createClient();
+        Client client = this.createClient(optionList);
         for (Options options : optionList) {
             if (options.debug) {
                 client.addFilter(this.loggingFilter);
@@ -339,8 +374,8 @@ public class CimiClient {
      * @throws CimiClientException raised if login operation fails
      */
     public static CimiClient login(final String cimiEndpointUrl, final String userName, final String password,
-        final Options... options) throws CimiClientException {
-        return new CimiClient(cimiEndpointUrl, userName, password, options);
+        final String tenantId, final Options... options) throws CimiClientException {
+        return new CimiClient(cimiEndpointUrl, userName, password, tenantId, options);
     }
 
     <U> U getRequest(final String path, final Class<U> clazz, final QueryParams... queryParams) throws CimiClientException {

@@ -37,12 +37,12 @@ public class NoAuthPlugin implements AuthPlugin {
 
     /*
      * (non-Javadoc)
-     * @see
-     * org.ow2.sirocco.cimi.server.sdk.AuthPlugin#authenticate(java.lang.
+     * @see org.ow2.sirocco.cimi.server.sdk.AuthPlugin#authenticate(java.lang.
      * String, java.lang.String)
      */
     @Override
-    public Map<String, String> authenticate(final String user, final String password) throws CimiClientException {
+    public Map<String, String> authenticate(final String user, final String password, final String tenantId)
+        throws CimiClientException {
         return Collections.emptyMap();
     }
 

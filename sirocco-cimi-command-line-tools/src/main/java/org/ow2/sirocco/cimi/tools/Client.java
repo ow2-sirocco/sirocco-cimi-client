@@ -40,6 +40,8 @@ public class Client {
 
     private static String SIROCCO_PASSWORD_ENV_NAME = "CIMICLIENT_PASSWORD";
 
+    private static String SIROCCO_TENANT_ID_ENV_NAME = "CIMICLIENT_TENANT_ID";
+
     private static String SIROCCO_ENDPOINT_URL_ENV_NAME = "CIMICLIENT_ENDPOINT_URL";
 
     @Parameter(names = "-debug", description = "turn on debug mode", required = false)
@@ -79,6 +81,11 @@ public class Client {
         String password = System.getenv(Client.SIROCCO_PASSWORD_ENV_NAME);
         if (password == null) {
             System.err.println(Client.SIROCCO_PASSWORD_ENV_NAME + " environment variable not set");
+            System.exit(1);
+        }
+        String tenantId = System.getenv(Client.SIROCCO_TENANT_ID_ENV_NAME);
+        if (tenantId == null) {
+            System.err.println(Client.SIROCCO_TENANT_ID_ENV_NAME + " environment variable not set");
             System.exit(1);
         }
         String endpointUrl = System.getenv(Client.SIROCCO_ENDPOINT_URL_ENV_NAME);
@@ -121,7 +128,7 @@ public class Client {
             } else {
                 options.setMediaType(MediaType.APPLICATION_JSON_TYPE);
             }
-            CimiClient cimiClient = CimiClient.login(endpointUrl, userName, password, options);
+            CimiClient cimiClient = CimiClient.login(endpointUrl, userName, password, tenantId, options);
 
             command.execute(cimiClient);
         } catch (ParameterException ex) {

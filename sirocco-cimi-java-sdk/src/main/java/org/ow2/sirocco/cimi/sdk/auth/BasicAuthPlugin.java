@@ -24,7 +24,7 @@
  */
 package org.ow2.sirocco.cimi.sdk.auth;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.ow2.sirocco.cimi.sdk.AuthPlugin;
@@ -39,17 +39,22 @@ public class BasicAuthPlugin implements AuthPlugin {
 
     /*
      * (non-Javadoc)
-     * @see
-     * org.ow2.sirocco.cimi.server.sdk.AuthPlugin#authenticate(java.lang.
+     * @see org.ow2.sirocco.cimi.server.sdk.AuthPlugin#authenticate(java.lang.
      * String, java.lang.String)
      */
     @Override
-    public Map<String, String> authenticate(final String user, final String password) throws CimiClientException {
+    public Map<String, String> authenticate(final String user, final String password, final String tenantId)
+        throws CimiClientException {
         StringBuilder sbToEncode = new StringBuilder();
         sbToEncode.append(user).append(':').append(password);
         StringBuilder sb = new StringBuilder();
         sb.append("Basic ").append(new String(Base64.encode(sbToEncode.toString())));
-        return Collections.singletonMap("Authorization", sb.toString());
+        Map<String, String> result = new HashMap<String, String>();
+        result.put("Authorization", sb.toString());
+        if (tenantId != null) {
+            result.put("tenantId", tenantId);
+        }
+        return result;
     }
 
 }
