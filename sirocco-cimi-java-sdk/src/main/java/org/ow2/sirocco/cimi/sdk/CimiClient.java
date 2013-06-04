@@ -369,6 +369,7 @@ public class CimiClient {
      * @param cimiEndpointUrl URL of the CIMI provider endpoint
      * @param userName user name
      * @param password password
+     * @param tenantId tenant Id
      * @param options options
      * @return the cimi client
      * @throws CimiClientException raised if login operation fails
