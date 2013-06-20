@@ -56,6 +56,9 @@ public class MachineConfigCreateCommand implements Command {
     @Parameter(names = "-disk", description = "add disk with size in KB", required = true)
     private List<Integer> diskSizes = new ArrayList<Integer>();
 
+    @Parameter(names = "-public", description = "public image", required = false)
+    private boolean isPublic = false;
+
     @Parameter(names = "-v", description = "verbose", required = false)
     private boolean verbose;
 
@@ -84,6 +87,7 @@ public class MachineConfigCreateCommand implements Command {
             disks[i].capacity = this.diskSizes.get(i);
         }
         machineConfig.setDisks(disks);
+        machineConfig.setIsPublic(this.isPublic);
 
         CreateResult<MachineConfiguration> result = MachineConfiguration.createMachineConfiguration(cimiClient, machineConfig);
         if (this.verbose) {

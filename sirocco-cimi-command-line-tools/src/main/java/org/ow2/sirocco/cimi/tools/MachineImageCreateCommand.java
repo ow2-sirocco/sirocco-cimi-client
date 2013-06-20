@@ -48,6 +48,9 @@ public class MachineImageCreateCommand implements Command {
     @Parameter(names = "-location", description = "image location", required = true)
     private String imageLocation;
 
+    @Parameter(names = "-public", description = "public image", required = false)
+    private boolean isPublic = false;
+
     @Parameter(names = "-v", description = "verbose", required = false)
     private boolean verbose;
 
@@ -68,6 +71,7 @@ public class MachineImageCreateCommand implements Command {
         }
         machineImage.setType(MachineImage.Type.IMAGE);
         machineImage.setImageLocation(this.imageLocation);
+        machineImage.setIsPublic(this.isPublic);
 
         CreateResult<MachineImage> result = MachineImage.createMachineImage(cimiClient, machineImage);
         if (this.verbose) {

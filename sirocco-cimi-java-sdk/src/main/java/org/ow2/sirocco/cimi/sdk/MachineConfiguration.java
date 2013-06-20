@@ -158,6 +158,14 @@ public class MachineConfiguration extends Resource<CimiMachineConfiguration> {
         this.cimiObject.setDisks(MachineConfiguration.diskArrayToCimiDiskConfigurationArray(disks));
     }
 
+    public void setIsPublic(final boolean isPublic) {
+        if (isPublic) {
+            this.cimiObject.setVisibility("PUBLIC");
+        } else {
+            this.cimiObject.setVisibility("PRIVATE");
+        }
+    }
+
     /**
      * Deletes this configuration.
      * 

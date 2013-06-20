@@ -58,6 +58,14 @@ public class SystemTemplate extends Resource<CimiSystemTemplate> {
         super(cimiClient, cimiObject);
     }
 
+    public void setIsPublic(final boolean isPublic) {
+        if (isPublic) {
+            this.cimiObject.setVisibility("PUBLIC");
+        } else {
+            this.cimiObject.setVisibility("PRIVATE");
+        }
+    }
+
     /**
      * Deletes this system template.
      * 

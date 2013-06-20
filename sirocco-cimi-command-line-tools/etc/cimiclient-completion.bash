@@ -87,12 +87,12 @@ _cimiclient()
             return 0
             ;;
 	machineconfig-create | machineconfig-update)
-	    local opts="-name -description -properties -cpu -disk -memory"
+	    local opts="-name -description -properties -cpu -disk -memory -public"
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;
 	machineimage-create | machineimage-update)
-	    local opts="-name -description -properties -location"
+	    local opts="-name -description -properties -location -public"
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;

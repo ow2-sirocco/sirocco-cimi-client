@@ -124,6 +124,14 @@ public class MachineImage extends Resource<CimiMachineImage> {
         this.cimiObject.setType(type.toString());
     }
 
+    public void setIsPublic(final boolean isPublic) {
+        if (isPublic) {
+            this.cimiObject.setVisibility("PUBLIC");
+        } else {
+            this.cimiObject.setVisibility("PRIVATE");
+        }
+    }
+
     /**
      * Deletes this machine image.
      * 
