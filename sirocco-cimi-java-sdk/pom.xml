@@ -37,7 +37,7 @@
 	<name>SIROCCO ::  CIMI :: Java :: SDK</name>
 
 	<properties>
-		<sirocco-cimi-library.version>0.6.3</sirocco-cimi-library.version>
+		<sirocco-cimi-library.version>0.6.4-SNAPSHOT</sirocco-cimi-library.version>
 	</properties>
 
 
