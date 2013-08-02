@@ -128,6 +128,9 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
      * @return the type of this network interface
      */
     public Type getType() {
+        if (this.cimiObject.getNetworkType() == null) {
+            return null;
+        }
         return Type.valueOf(this.cimiObject.getNetworkType());
     }
 

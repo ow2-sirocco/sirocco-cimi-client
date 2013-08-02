@@ -107,8 +107,10 @@ public class MachineShowCommand implements Command {
                     if (!nic.getAddresses().isEmpty()) {
                         if (nic.getNetwork() != null) {
                             table.addCell(nic.getNetwork().getNetworkType().toLowerCase() + " IP");
-                        } else {
+                        } else if (nic.getType() != null) {
                             table.addCell(nic.getType().toString().toLowerCase() + " IP");
+                        } else {
+                            table.addCell("IP");
                         }
                         table.addCell(nic.getAddresses().get(0).getIp());
                     }
