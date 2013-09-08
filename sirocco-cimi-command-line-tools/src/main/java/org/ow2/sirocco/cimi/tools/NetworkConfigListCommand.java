@@ -39,7 +39,7 @@ public class NetworkConfigListCommand implements Command {
     public static String COMMAND_NAME = "networkconfig-list";
 
     @ParametersDelegate
-    private ResourceListParams listParams = new ResourceListParams("id", "type");
+    private ResourceListParams listParams = new ResourceListParams("id", "networkType");
 
     @Override
     public String getName() {
@@ -52,11 +52,11 @@ public class NetworkConfigListCommand implements Command {
             this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
-            "properties", "type");
+            "properties", "networkType");
 
         for (NetworkConfiguration networkConfig : networkConfigs) {
             CommandHelper.printResourceCommonAttributes(table, networkConfig, this.listParams);
-            if (this.listParams.isSelected("type")) {
+            if (this.listParams.isSelected("networkType")) {
                 table.addCell(networkConfig.getNetworkType());
             }
         }
