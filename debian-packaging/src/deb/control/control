@@ -1,5 +1,5 @@
 Package: sirocco-cimi-cli
-Version: [[version]]
+Version: [[version]]-1
 Section: misc
 Priority: optional
 Architecture: all
