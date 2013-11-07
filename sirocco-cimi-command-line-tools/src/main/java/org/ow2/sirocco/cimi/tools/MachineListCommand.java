@@ -31,6 +31,7 @@ import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.Disk;
 import org.ow2.sirocco.cimi.sdk.Machine;
+import org.ow2.sirocco.cimi.sdk.ProviderInfo;
 
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
@@ -40,7 +41,7 @@ public class MachineListCommand implements Command {
     public static String COMMAND_NAME = "machine-list";
 
     @ParametersDelegate
-    private ResourceListParams listParams = new ResourceListParams("id", "name", "created", "state");
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "created", "state", "provider");
 
     @Override
     public String getName() {
@@ -52,7 +53,7 @@ public class MachineListCommand implements Command {
         List<Machine> machines = Machine.getMachines(cimiClient, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
-            "properties", "state", "cpu", "memory", "disks");
+            "properties", "state", "cpu", "memory", "disks", "provider");
 
         for (Machine machine : machines) {
             CommandHelper.printResourceCommonAttributes(table, machine, this.listParams);
@@ -76,6 +77,16 @@ public class MachineListCommand implements Command {
                     sb.append(CommandHelper.printKilobytesValue(disks.get(i).getCapacity()));
                 }
                 table.addCell((sb.toString()));
+            }
+            if (this.listParams.isSelected("provider")) {
+                if (machine.getProviderInfo() != null) {
+                    ProviderInfo info = machine.getProviderInfo();
+                    StringBuffer sb = new StringBuffer();
+                    sb.append("account=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
+                    table.addCell((sb.toString()));
+                } else {
+                    table.addCell("");
+                }
             }
         }
         System.out.println(table.render());

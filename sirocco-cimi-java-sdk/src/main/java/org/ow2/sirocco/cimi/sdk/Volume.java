@@ -100,6 +100,13 @@ public class Volume extends Resource<CimiVolume> {
         return this.cimiObject.getBootable();
     }
 
+    public ProviderInfo getProviderInfo() {
+        if (this.cimiObject.getProviderInfo() == null) {
+            return null;
+        }
+        return new ProviderInfo(this.cimiObject.getProviderInfo());
+    }
+
     /**
      * Deletes this volume.
      * 

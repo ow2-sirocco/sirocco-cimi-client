@@ -30,6 +30,7 @@ import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.MachineImage;
+import org.ow2.sirocco.cimi.sdk.ProviderInfo;
 
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
@@ -39,7 +40,7 @@ public class MachineImageListCommand implements Command {
     public static String COMMAND_NAME = "machineimage-list";
 
     @ParametersDelegate
-    private ResourceListParams listParams = new ResourceListParams("id", "name", "state", "type", "imageLocation");
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "state", "type", "imageLocation", "provider");
 
     @Override
     public String getName() {
@@ -51,7 +52,7 @@ public class MachineImageListCommand implements Command {
         List<MachineImage> machineImages = MachineImage.getMachineImages(cimiClient, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
-            "properties", "state", "type", "imageLocation", "relatedImage");
+            "properties", "state", "type", "imageLocation", "relatedImage", "provider");
 
         for (MachineImage machineImage : machineImages) {
             CommandHelper.printResourceCommonAttributes(table, machineImage, this.listParams);
@@ -70,6 +71,16 @@ public class MachineImageListCommand implements Command {
             }
             if (this.listParams.isSelected("relatedImage")) {
                 // TODO
+            }
+            if (this.listParams.isSelected("provider")) {
+                if (machineImage.getProviderInfos() != null && machineImage.getProviderInfos().length > 0) {
+                    ProviderInfo info = machineImage.getProviderInfos()[0];
+                    StringBuffer sb = new StringBuffer();
+                    sb.append("account=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
+                    table.addCell((sb.toString()));
+                } else {
+                    table.addCell("");
+                }
             }
 
         }

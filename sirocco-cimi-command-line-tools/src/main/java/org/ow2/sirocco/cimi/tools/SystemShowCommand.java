@@ -29,6 +29,7 @@ import java.util.List;
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
+import org.ow2.sirocco.cimi.sdk.ProviderInfo;
 import org.ow2.sirocco.cimi.sdk.System;
 
 import com.beust.jcommander.Parameter;
@@ -67,6 +68,16 @@ public class SystemShowCommand implements Command {
 
     public static void printSystem(final System system, final ResourceSelectExpandParams showParams) throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(system, showParams);
+
+        if (showParams.isSelected("provider")) {
+            if (system.getProviderInfo() != null) {
+                ProviderInfo info = system.getProviderInfo();
+                table.addCell("provider");
+                table.addCell("account id=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
+                table.addCell("provider-assigned id");
+                table.addCell(info.getProviderAssignedId());
+            }
+        }
 
         if (showParams.isSelected("state") && system.getState() != null) {
             table.addCell("state");

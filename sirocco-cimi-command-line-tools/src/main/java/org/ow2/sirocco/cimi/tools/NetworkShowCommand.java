@@ -30,6 +30,7 @@ import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.Network;
+import org.ow2.sirocco.cimi.sdk.ProviderInfo;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -56,6 +57,16 @@ public class NetworkShowCommand implements Command {
 
     public static void printNetwork(final Network net, final ResourceSelectExpandParams showParams) throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(net, showParams);
+
+        if (showParams.isSelected("provider")) {
+            if (net.getProviderInfo() != null) {
+                ProviderInfo info = net.getProviderInfo();
+                table.addCell("provider");
+                table.addCell("account id=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
+                table.addCell("provider-assigned id");
+                table.addCell(info.getProviderAssignedId());
+            }
+        }
 
         if (showParams.isSelected("state") && net.getState() != null) {
             table.addCell("state");

@@ -30,6 +30,7 @@ import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.MachineImage;
+import org.ow2.sirocco.cimi.sdk.ProviderInfo;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -68,6 +69,16 @@ public class MachineImageShowCommand implements Command {
 
     public static void printMachineImage(final MachineImage machineImage, final ResourceSelectExpandParams showParams) {
         Table table = CommandHelper.createResourceShowTable(machineImage, showParams);
+
+        if (showParams.isSelected("provider")) {
+            if (machineImage.getProviderInfos() != null && machineImage.getProviderInfos().length > 0) {
+                ProviderInfo info = machineImage.getProviderInfos()[0];
+                table.addCell("provider");
+                table.addCell("account id=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
+                table.addCell("provider-assigned id");
+                table.addCell(info.getProviderAssignedId());
+            }
+        }
 
         if (showParams.isSelected("state") && machineImage.getState() != null) {
             table.addCell("state");

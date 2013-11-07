@@ -32,6 +32,7 @@ import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.Disk;
 import org.ow2.sirocco.cimi.sdk.Machine;
 import org.ow2.sirocco.cimi.sdk.MachineNetworkInterface;
+import org.ow2.sirocco.cimi.sdk.ProviderInfo;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -70,6 +71,16 @@ public class MachineShowCommand implements Command {
     public static void printMachine(final Machine machine, final ResourceSelectExpandParams showParams)
         throws CimiClientException {
         Table table = CommandHelper.createResourceShowTable(machine, showParams);
+
+        if (showParams.isSelected("provider")) {
+            if (machine.getProviderInfo() != null) {
+                ProviderInfo info = machine.getProviderInfo();
+                table.addCell("provider");
+                table.addCell("account id=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
+                table.addCell("provider-assigned id");
+                table.addCell(info.getProviderAssignedId());
+            }
+        }
 
         if (showParams.isSelected("state") && machine.getState() != null) {
             table.addCell("state");

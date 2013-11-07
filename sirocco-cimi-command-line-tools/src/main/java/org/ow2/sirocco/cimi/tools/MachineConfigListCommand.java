@@ -30,6 +30,7 @@ import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.MachineConfiguration;
+import org.ow2.sirocco.cimi.sdk.ProviderInfo;
 
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
@@ -39,7 +40,7 @@ public class MachineConfigListCommand implements Command {
     public static final String COMMAND_NAME = "machineconfig-list";
 
     @ParametersDelegate
-    private ResourceListParams listParams = new ResourceListParams("id", "name", "cpu", "memory", "disks");
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "cpu", "memory", "disks", "provider");
 
     @Override
     public String getName() {
@@ -52,7 +53,7 @@ public class MachineConfigListCommand implements Command {
             this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
-            "properties", "cpu", "memory", "disks", "cpuArch");
+            "properties", "cpu", "memory", "disks", "cpuArch", "provider");
 
         for (MachineConfiguration machineConfig : machineConfigs) {
             CommandHelper.printResourceCommonAttributes(table, machineConfig, this.listParams);
@@ -72,6 +73,16 @@ public class MachineConfigListCommand implements Command {
                     sb.append(CommandHelper.printKilobytesValue(machineConfig.getDisks()[i].capacity));
                 }
                 table.addCell((sb.toString()));
+            }
+            if (this.listParams.isSelected("provider")) {
+                if (machineConfig.getProviderInfos() != null && machineConfig.getProviderInfos().length > 0) {
+                    ProviderInfo info = machineConfig.getProviderInfos()[0];
+                    StringBuffer sb = new StringBuffer();
+                    sb.append("account=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
+                    table.addCell((sb.toString()));
+                } else {
+                    table.addCell("");
+                }
             }
         }
         System.out.println(table.render());

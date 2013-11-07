@@ -79,6 +79,13 @@ public class System extends Resource<CimiSystem> {
         }
     }
 
+    public ProviderInfo getProviderInfo() {
+        if (this.cimiObject.getProviderInfo() == null) {
+            return null;
+        }
+        return new ProviderInfo(this.cimiObject.getProviderInfo());
+    }
+
     /**
      * Starts this system.
      * 
