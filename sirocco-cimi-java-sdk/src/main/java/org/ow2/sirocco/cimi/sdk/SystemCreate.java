@@ -145,4 +145,26 @@ public class SystemCreate {
         this.cimiSystemCreate.setSystemTemplate(this.systemTemplate.cimiObject);
     }
 
+    /**
+     * Sets the provider account id where the resource will be created
+     */
+    public void setProviderAccountId(final String providerAccountId) {
+        this.cimiSystemCreate.setProviderAccountId(providerAccountId);
+    }
+
+    /**
+     * Gets the location constraint
+     */
+    public String getLocation() {
+        return this.cimiSystemCreate.getLocation();
+    }
+
+    /**
+     * Sets the location constraint. If null, the resource will be placed on any
+     * location available to the provider account.
+     */
+    public void setLocation(final String location) {
+        this.cimiSystemCreate.setLocation(location);
+    }
+
 }

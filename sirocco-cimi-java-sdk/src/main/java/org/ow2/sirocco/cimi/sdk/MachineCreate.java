@@ -146,4 +146,33 @@ public class MachineCreate {
         this.cimiMachineCreate.setMachineTemplate(this.machineTemplate.cimiObject);
     }
 
+    /**
+     * Gets the provider account id where the resource will be created
+     */
+    public String getProviderAccountId() {
+        return this.cimiMachineCreate.getProviderAccountId();
+    }
+
+    /**
+     * Sets the provider account id where the resource will be created
+     */
+    public void setProviderAccountId(final String providerAccountId) {
+        this.cimiMachineCreate.setProviderAccountId(providerAccountId);
+    }
+
+    /**
+     * Gets the location constraint
+     */
+    public String getLocation() {
+        return this.cimiMachineCreate.getLocation();
+    }
+
+    /**
+     * Sets the location constraint. If null, the resource will be placed on any
+     * location available to the provider account.
+     */
+    public void setLocation(final String location) {
+        this.cimiMachineCreate.setLocation(location);
+    }
+
 }

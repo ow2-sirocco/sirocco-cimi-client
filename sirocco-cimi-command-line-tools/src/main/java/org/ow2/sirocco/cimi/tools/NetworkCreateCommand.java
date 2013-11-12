@@ -41,6 +41,12 @@ public class NetworkCreateCommand implements Command {
     @Parameter(names = "-config", description = "id of the config", required = true)
     private String configId;
 
+    @Parameter(names = "-providerAccountId", description = "id of the provider account", required = true)
+    private String providerAccountId;
+
+    @Parameter(names = "-location", description = "location", required = false)
+    private String location;
+
     @Parameter(names = "-name", description = "name of the template", required = false)
     private String name;
 
@@ -81,6 +87,8 @@ public class NetworkCreateCommand implements Command {
                 networkCreate.addProperty(this.properties.get(i * 2), this.properties.get(i * 2 + 1));
             }
         }
+        networkCreate.setProviderAccountId(this.providerAccountId);
+        networkCreate.setLocation(this.location);
         CreateResult<Network> result = Network.createNetwork(cimiClient, networkCreate);
         if (this.verbose) {
             if (result.getJob() != null) {

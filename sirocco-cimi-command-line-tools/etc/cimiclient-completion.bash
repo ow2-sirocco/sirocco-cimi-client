@@ -52,12 +52,12 @@ _cimiclient()
 
     case "${prev}" in
 	machine-create)
-	    local opts="-name -description -properties -config -image -template -credential -userData"
+	    local opts="-name -description -properties -config -image -template -credential -userData -providerAccountId -location"
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;
 	system-create)
-	    local opts="-name -description -properties -template"
+	    local opts="-name -description -properties -template -providerAccountId -location"
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;
@@ -67,7 +67,7 @@ _cimiclient()
             return 0
             ;;
 	volume-create)
-	    local opts="-name -description -properties -capacity -config -template"
+	    local opts="-name -description -properties -capacity -config -template -providerAccountId -location"
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;
@@ -117,7 +117,7 @@ _cimiclient()
             return 0
             ;;
 	network-create)
-	    local opts="-name -description -properties -config"
+	    local opts="-name -description -properties -config -providerAccountId -location"
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;

@@ -42,6 +42,12 @@ public class SystemCreateCommand implements Command {
     @Parameter(names = "-template", description = "id of the template", required = true)
     private String templateId;
 
+    @Parameter(names = "-providerAccountId", description = "id of the provider account", required = true)
+    private String providerAccountId;
+
+    @Parameter(names = "-location", description = "location", required = false)
+    private String location;
+
     @Parameter(names = "-name", description = "name of the template", required = false)
     private String name;
 
@@ -76,6 +82,8 @@ public class SystemCreateCommand implements Command {
                 systemCreate.addProperty(this.properties.get(i * 2), this.properties.get(i * 2 + 1));
             }
         }
+        systemCreate.setProviderAccountId(this.providerAccountId);
+        systemCreate.setLocation(this.location);
         CreateResult<System> result = System.createSystem(cimiClient, systemCreate);
         if (result.getJob() != null) {
             java.lang.System.out.println("Job:");

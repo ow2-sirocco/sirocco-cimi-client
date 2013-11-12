@@ -44,6 +44,12 @@ public class VolumeCreateCommand implements Command {
     @Parameter(names = "-template", description = "id of the template", required = false)
     private String templateId;
 
+    @Parameter(names = "-providerAccountId", description = "id of the provider account", required = true)
+    private String providerAccountId;
+
+    @Parameter(names = "-location", description = "location", required = false)
+    private String location;
+
     @Parameter(names = "-config", description = "id of the config", required = false)
     private String configId;
 
@@ -103,6 +109,8 @@ public class VolumeCreateCommand implements Command {
                 volumeCreate.addProperty(this.properties.get(i * 2), this.properties.get(i * 2 + 1));
             }
         }
+        volumeCreate.setProviderAccountId(this.providerAccountId);
+        volumeCreate.setLocation(this.location);
         CreateResult<Volume> result = Volume.createVolume(cimiClient, volumeCreate);
         if (result.getJob() != null) {
             System.out.println("Job:");
