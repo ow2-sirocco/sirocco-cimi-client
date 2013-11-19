@@ -54,7 +54,7 @@ public class MachineCreateCommand implements Command {
     @Parameter(names = "-image", description = "id of the image", required = false)
     private String imageId;
 
-    @Parameter(names = "-providerAccountId", description = "id of the provider account", required = true)
+    @Parameter(names = "-providerAccountId", description = "id of the provider account", required = false)
     private String providerAccountId;
 
     @Parameter(names = "-location", description = "location", required = false)
