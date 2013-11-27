@@ -31,6 +31,7 @@ import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.MachineConfiguration;
 import org.ow2.sirocco.cimi.sdk.MachineConfiguration.Disk;
+import org.ow2.sirocco.cimi.sdk.ProviderInfo;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -69,6 +70,16 @@ public class MachineConfigShowCommand implements Command {
 
     public static void printMachineConfig(final MachineConfiguration machineConfig, final ResourceSelectParam selectParam) {
         Table table = CommandHelper.createResourceShowTable(machineConfig, selectParam);
+
+        if (selectParam.isSelected("provider")) {
+            if (machineConfig.getProviderInfos() != null && machineConfig.getProviderInfos().length > 0) {
+                ProviderInfo info = machineConfig.getProviderInfos()[0];
+                table.addCell("provider");
+                table.addCell("account id=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
+                table.addCell("provider-assigned id");
+                table.addCell(info.getProviderAssignedId());
+            }
+        }
 
         if (selectParam.isSelected("cpu")) {
             table.addCell("cpu");

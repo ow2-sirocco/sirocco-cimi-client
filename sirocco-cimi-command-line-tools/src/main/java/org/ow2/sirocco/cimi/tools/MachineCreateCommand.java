@@ -24,6 +24,7 @@
  */
 package org.ow2.sirocco.cimi.tools;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.ow2.sirocco.cimi.sdk.CimiClient;
@@ -35,6 +36,7 @@ import org.ow2.sirocco.cimi.sdk.MachineConfiguration;
 import org.ow2.sirocco.cimi.sdk.MachineCreate;
 import org.ow2.sirocco.cimi.sdk.MachineImage;
 import org.ow2.sirocco.cimi.sdk.MachineTemplate;
+import org.ow2.sirocco.cimi.sdk.MachineTemplate.NetworkInterface;
 import org.ow2.sirocco.cimi.sdk.QueryParams;
 
 import com.beust.jcommander.Parameter;
@@ -52,11 +54,20 @@ public class MachineCreateCommand implements Command {
     @Parameter(names = "-image", description = "id of the image", required = false)
     private String imageId;
 
+    @Parameter(names = "-providerAccountId", description = "id of the provider account", required = false)
+    private String providerAccountId;
+
+    @Parameter(names = "-location", description = "location", required = false)
+    private String location;
+
     @Parameter(names = "-credential", description = "id of the credential", required = false)
     private String credId;
 
     @Parameter(names = "-userData", description = "user data", required = false)
     private String userData;
+
+    @Parameter(names = "-nic", description = "attach nic to network id", required = false)
+    private List<String> networkIds;
 
     @Parameter(names = "-name", description = "name of the template", required = false)
     private String name;
@@ -125,6 +136,13 @@ public class MachineCreateCommand implements Command {
                 }
                 machineTemplate.setCredentialRef(this.credId);
             }
+            List<NetworkInterface> nics = new ArrayList<>();
+            for (String networkId : this.networkIds) {
+                NetworkInterface nic = new NetworkInterface();
+                nic.setNetworkRef(networkId);
+                nics.add(nic);
+            }
+            machineTemplate.setNetworkInterface(nics);
         }
         machineTemplate.setUserData(this.userData);
         machineCreate.setMachineTemplate(machineTemplate);
@@ -135,6 +153,8 @@ public class MachineCreateCommand implements Command {
                 machineCreate.addProperty(this.properties.get(i * 2), this.properties.get(i * 2 + 1));
             }
         }
+        machineCreate.setProviderAccountId(this.providerAccountId);
+        machineCreate.setLocation(this.location);
         CreateResult<Machine> result = Machine.createMachine(cimiClient, machineCreate);
         if (result.getJob() != null) {
             System.out.println("Job:");

@@ -91,6 +91,13 @@ public class Network extends Resource<CimiNetwork> {
         this.cimiObject.setNetworkType(networkType);
     }
 
+    public ProviderInfo getProviderInfo() {
+        if (this.cimiObject.getProviderInfo() == null) {
+            return null;
+        }
+        return new ProviderInfo(this.cimiObject.getProviderInfo());
+    }
+
     /**
      * Creates a new network.
      * 

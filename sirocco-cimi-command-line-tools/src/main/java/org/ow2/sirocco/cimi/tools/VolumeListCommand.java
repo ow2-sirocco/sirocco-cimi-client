@@ -29,6 +29,7 @@ import java.util.List;
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
+import org.ow2.sirocco.cimi.sdk.ProviderInfo;
 import org.ow2.sirocco.cimi.sdk.Volume;
 
 import com.beust.jcommander.Parameters;
@@ -66,6 +67,16 @@ public class VolumeListCommand implements Command {
             }
             if (this.listParams.isSelected("bootable")) {
                 table.addCell(Boolean.toString(volume.isBootable()));
+            }
+            if (this.listParams.isSelected("provider")) {
+                if (volume.getProviderInfo() != null) {
+                    ProviderInfo info = volume.getProviderInfo();
+                    StringBuffer sb = new StringBuffer();
+                    sb.append("account=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
+                    table.addCell((sb.toString()));
+                } else {
+                    table.addCell("");
+                }
             }
         }
         System.out.println(table.render());

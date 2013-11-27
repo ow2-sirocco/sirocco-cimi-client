@@ -166,6 +166,18 @@ public class MachineConfiguration extends Resource<CimiMachineConfiguration> {
         }
     }
 
+    public ProviderInfo[] getProviderInfos() {
+        if (this.cimiObject.getProviderInfos() == null) {
+            return new ProviderInfo[0];
+        }
+        ProviderInfo[] result = new ProviderInfo[this.cimiObject.getProviderInfos().length];
+        int i = 0;
+        for (org.ow2.sirocco.cimi.domain.ProviderInfo info : this.cimiObject.getProviderInfos()) {
+            result[i++] = new ProviderInfo(info);
+        }
+        return result;
+    }
+
     /**
      * Deletes this configuration.
      * 

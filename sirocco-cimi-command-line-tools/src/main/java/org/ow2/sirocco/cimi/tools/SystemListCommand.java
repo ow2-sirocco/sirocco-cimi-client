@@ -29,6 +29,7 @@ import java.util.List;
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
+import org.ow2.sirocco.cimi.sdk.ProviderInfo;
 import org.ow2.sirocco.cimi.sdk.System;
 
 import com.beust.jcommander.Parameters;
@@ -39,7 +40,7 @@ public class SystemListCommand implements Command {
     public static String COMMAND_NAME = "system-list";
 
     @ParametersDelegate
-    private ResourceListParams listParams = new ResourceListParams("id", "name", "state");
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "state", "provider");
 
     @Override
     public String getName() {
@@ -51,12 +52,22 @@ public class SystemListCommand implements Command {
         List<System> systems = System.getSystems(cimiClient, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
-            "properties", "state");
+            "properties", "state", "provider");
 
         for (System system : systems) {
             CommandHelper.printResourceCommonAttributes(table, system, this.listParams);
             if (this.listParams.isSelected("state")) {
                 table.addCell(system.getState().toString());
+            }
+            if (this.listParams.isSelected("provider")) {
+                if (system.getProviderInfo() != null) {
+                    ProviderInfo info = system.getProviderInfo();
+                    StringBuffer sb = new StringBuffer();
+                    sb.append("account=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
+                    table.addCell((sb.toString()));
+                } else {
+                    table.addCell("");
+                }
             }
         }
         java.lang.System.out.println(table.render());

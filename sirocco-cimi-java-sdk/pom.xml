@@ -28,7 +28,7 @@
 	<parent>
 		<groupId>org.ow2.sirocco.cimi</groupId>
 		<artifactId>sirocco-cimi-client</artifactId>
-		<version>0.6.5-SNAPSHOT</version>
+		<version>0.6.6-SNAPSHOT</version>
 	</parent>
 
 	<groupId>org.ow2.sirocco.cimi</groupId>
@@ -37,7 +37,7 @@
 	<name>SIROCCO ::  CIMI :: Java :: SDK</name>
 
 	<properties>
-		<sirocco-cimi-library.version>0.6.4-SNAPSHOT</sirocco-cimi-library.version>
+		<sirocco-cimi-library.version>0.6.4</sirocco-cimi-library.version>
 	</properties>
 
 

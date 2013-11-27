@@ -168,6 +168,13 @@ public class Machine extends Resource<CimiMachine> {
         return nics;
     }
 
+    public ProviderInfo getProviderInfo() {
+        if (this.cimiObject.getProviderInfo() == null) {
+            return null;
+        }
+        return new ProviderInfo(this.cimiObject.getProviderInfo());
+    }
+
     /**
      * Starts this machine.
      * 
