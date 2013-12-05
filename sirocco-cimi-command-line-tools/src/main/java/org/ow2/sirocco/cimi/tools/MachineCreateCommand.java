@@ -137,10 +137,12 @@ public class MachineCreateCommand implements Command {
                 machineTemplate.setCredentialRef(this.credId);
             }
             List<NetworkInterface> nics = new ArrayList<>();
-            for (String networkId : this.networkIds) {
-                NetworkInterface nic = new NetworkInterface();
-                nic.setNetworkRef(networkId);
-                nics.add(nic);
+            if (this.networkIds != null) {
+                for (String networkId : this.networkIds) {
+                    NetworkInterface nic = new NetworkInterface();
+                    nic.setNetworkRef(networkId);
+                    nics.add(nic);
+                }
             }
             machineTemplate.setNetworkInterface(nics);
         }
