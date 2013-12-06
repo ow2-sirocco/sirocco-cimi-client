@@ -36,13 +36,25 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 
 public class Client {
-    private static String SIROCCO_USERNAME_ENV_NAME = "CIMICLIENT_USERNAME";
+    private static final String CIMI_USERNAME_ENV_NAME = "CIMICLIENT_USERNAME";
 
-    private static String SIROCCO_PASSWORD_ENV_NAME = "CIMICLIENT_PASSWORD";
+    private static final String CIMI_PASSWORD_ENV_NAME = "CIMICLIENT_PASSWORD";
 
-    private static String SIROCCO_TENANT_ID_ENV_NAME = "CIMICLIENT_TENANT_ID";
+    private static final String CIMI_TENANT_ID_ENV_NAME = "CIMICLIENT_TENANT_ID";
 
-    private static String SIROCCO_ENDPOINT_URL_ENV_NAME = "CIMICLIENT_ENDPOINT_URL";
+    private static final String CIMI_TENANT_NAME_ENV_NAME = "CIMICLIENT_TENANT_NAME";
+
+    private static final String CIMI_ENDPOINT_URL_ENV_NAME = "CIMICLIENT_ENDPOINT_URL";
+
+    private static final String SIROCCO_USERNAME_ENV_NAME = "SIROCCO_USERNAME";
+
+    private static final String SIROCCO_PASSWORD_ENV_NAME = "SIROCCO_PASSWORD";
+
+    private static final String SIROCCO_TENANT_ID_ENV_NAME = "SIROCCO_TENANT_ID";
+
+    private static final String SIROCCO_TENANT_NAME_ENV_NAME = "SIROCCO_TENANT_NAME";
+
+    private static final String SIROCCO_ENDPOINT_URL_ENV_NAME = "SIROCCO_ENDPOINT_URL";
 
     @Parameter(names = "-debug", description = "turn on debug mode", required = false)
     private boolean debug;
@@ -73,22 +85,40 @@ public class Client {
         new ResourceMetadataShowCommand()};
 
     private Client(final String[] args) {
-        String userName = System.getenv(Client.SIROCCO_USERNAME_ENV_NAME);
+        String userName = System.getenv(Client.CIMI_USERNAME_ENV_NAME);
+        if (userName == null) {
+            userName = System.getenv(Client.SIROCCO_USERNAME_ENV_NAME);
+        }
         if (userName == null) {
             System.err.println(Client.SIROCCO_USERNAME_ENV_NAME + " environment variable not set");
             System.exit(1);
         }
-        String password = System.getenv(Client.SIROCCO_PASSWORD_ENV_NAME);
+        String password = System.getenv(Client.CIMI_PASSWORD_ENV_NAME);
+        if (password == null) {
+            password = System.getenv(Client.SIROCCO_PASSWORD_ENV_NAME);
+        }
         if (password == null) {
             System.err.println(Client.SIROCCO_PASSWORD_ENV_NAME + " environment variable not set");
             System.exit(1);
         }
-        String tenantId = System.getenv(Client.SIROCCO_TENANT_ID_ENV_NAME);
-        if (tenantId == null) {
-            System.err.println(Client.SIROCCO_TENANT_ID_ENV_NAME + " environment variable not set");
+        String tenantId = System.getenv(Client.CIMI_TENANT_ID_ENV_NAME);
+        String tenantName = System.getenv(Client.CIMI_TENANT_NAME_ENV_NAME);
+        if (tenantId == null && tenantName == null) {
+            tenantId = System.getenv(Client.SIROCCO_TENANT_ID_ENV_NAME);
+            tenantName = System.getenv(Client.SIROCCO_TENANT_NAME_ENV_NAME);
+        }
+        if (tenantId == null && tenantName == null) {
+            System.err.println(Client.SIROCCO_TENANT_ID_ENV_NAME + " or " + Client.SIROCCO_TENANT_NAME_ENV_NAME
+                + " environment variables not set");
             System.exit(1);
         }
-        String endpointUrl = System.getenv(Client.SIROCCO_ENDPOINT_URL_ENV_NAME);
+        String endpointUrl = System.getenv(Client.CIMI_ENDPOINT_URL_ENV_NAME);
+        if (endpointUrl == null) {
+            endpointUrl = System.getenv(Client.SIROCCO_ENDPOINT_URL_ENV_NAME);
+            if (endpointUrl != null) {
+                endpointUrl += "/cloudEntryPoint";
+            }
+        }
         if (endpointUrl == null) {
             System.err.println(Client.SIROCCO_ENDPOINT_URL_ENV_NAME + " environment variable not set");
             System.exit(1);
@@ -128,7 +158,7 @@ public class Client {
             } else {
                 options.setMediaType(MediaType.APPLICATION_JSON_TYPE);
             }
-            CimiClient cimiClient = CimiClient.login(endpointUrl, userName, password, tenantId, options);
+            CimiClient cimiClient = CimiClient.login(endpointUrl, userName, password, tenantId, tenantName, options);
 
             command.execute(cimiClient);
         } catch (ParameterException ex) {
