@@ -110,8 +110,8 @@ public class OpenStackKeystoneAuthPlugin implements AuthPlugin {
      * java.lang.String)
      */
     @Override
-    public Map<String, String> authenticate(final String user, final String password, final String tenantId)
-        throws CimiClientException {
+    public Map<String, String> authenticate(final String user, final String password, final String tenantId,
+        final String tenantName) throws CimiClientException {
         String[] tenantAndUser = user.split(":");
         if (tenantAndUser.length != 2) {
             throw new CimiClientException("Invalid tenant:user value");

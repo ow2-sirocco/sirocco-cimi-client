@@ -34,8 +34,8 @@ public class MachineTests {
         if (cimiEndpointUrl == null) {
             throw new Exception("Missing test.endpoint property");
         }
-        MachineTests.client = CimiClient.login(cimiEndpointUrl, userName, password, tenantId, Options.build().setDebug(true)
-            .setMediaType(MediaType.APPLICATION_XML_TYPE));
+        MachineTests.client = CimiClient.login(cimiEndpointUrl, userName, password, tenantId, null,
+            Options.build().setDebug(true).setMediaType(MediaType.APPLICATION_XML_TYPE));
     }
 
     private Machine waitForMachineState(final String machineId, final int seconds, final Machine.State... expectedStates)

@@ -55,8 +55,8 @@ public class SystemTest {
         if (cimiEndpointUrl == null) {
             throw new Exception("Missing test.endpoint property");
         }
-        SystemTest.client = CimiClient.login(cimiEndpointUrl, userName, password, tenantId, Options.build().setDebug(true)
-            .setMediaType(MediaType.APPLICATION_JSON_TYPE));
+        SystemTest.client = CimiClient.login(cimiEndpointUrl, userName, password, tenantId, null, Options.build()
+            .setDebug(true).setMediaType(MediaType.APPLICATION_JSON_TYPE));
     }
 
     private ComponentDescriptor createMachineComponentDescriptor(final MachineConfiguration config, final MachineImage image,

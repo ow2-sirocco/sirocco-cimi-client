@@ -260,8 +260,8 @@ public class CimiClient {
         }
     }
 
-    private void initAuthenticationHeaders(final String userName, final String password, final String tenantId)
-        throws CimiClientException {
+    private void initAuthenticationHeaders(final String userName, final String password, final String tenantId,
+        final String tenantName) throws CimiClientException {
         String authPluginClassName = java.lang.System.getProperty(CimiClient.CIMICLIENT_AUTH_PLUGIN_CLASS_PROP);
         if (authPluginClassName == null) {
             authPluginClassName = CimiClient.DEFAULT_CIMICLIENT_AUTH_PLUGIN_CLASS;
@@ -278,7 +278,7 @@ public class CimiClient {
         } catch (Exception ex) {
             throw new CimiClientException("Cannot create auth plugin " + authPluginClassName + " " + ex.getMessage());
         }
-        this.authenticationHeaders = authPlugin.authenticate(userName, password, tenantId);
+        this.authenticationHeaders = authPlugin.authenticate(userName, password, tenantId, tenantName);
     }
 
     private WebResource.Builder addAuthenticationHeaders(final WebResource resource) {
@@ -320,11 +320,11 @@ public class CimiClient {
     }
 
     private CimiClient(final String cimiEndpointUrl, final String userName, final String password, final String tenantId,
-        final Options... optionList) throws CimiClientException, CimiProviderException {
+        final String tenantName, final Options... optionList) throws CimiClientException, CimiProviderException {
         this.cimiEndpointUrl = cimiEndpointUrl;
         this.userName = userName;
         this.password = password;
-        this.initAuthenticationHeaders(userName, password, tenantId);
+        this.initAuthenticationHeaders(userName, password, tenantId, tenantName);
         // ClientConfig config = new DefaultClientConfig();
         // config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
         // Boolean.TRUE);
@@ -375,8 +375,8 @@ public class CimiClient {
      * @throws CimiClientException raised if login operation fails
      */
     public static CimiClient login(final String cimiEndpointUrl, final String userName, final String password,
-        final String tenantId, final Options... options) throws CimiClientException {
-        return new CimiClient(cimiEndpointUrl, userName, password, tenantId, options);
+        final String tenantId, final String tenantName, final Options... options) throws CimiClientException {
+        return new CimiClient(cimiEndpointUrl, userName, password, tenantId, tenantName, options);
     }
 
     <U> U getRequest(final String path, final Class<U> clazz, final QueryParams... queryParams) throws CimiClientException {

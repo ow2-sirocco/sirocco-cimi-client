@@ -43,8 +43,8 @@ public class BasicAuthPlugin implements AuthPlugin {
      * String, java.lang.String)
      */
     @Override
-    public Map<String, String> authenticate(final String user, final String password, final String tenantId)
-        throws CimiClientException {
+    public Map<String, String> authenticate(final String user, final String password, final String tenantId,
+        final String tenantName) throws CimiClientException {
         StringBuilder sbToEncode = new StringBuilder();
         sbToEncode.append(user).append(':').append(password);
         StringBuilder sb = new StringBuilder();
@@ -53,6 +53,9 @@ public class BasicAuthPlugin implements AuthPlugin {
         result.put("Authorization", sb.toString());
         if (tenantId != null) {
             result.put("tenantId", tenantId);
+        }
+        if (tenantName != null) {
+            result.put("tenantName", tenantName);
         }
         return result;
     }
