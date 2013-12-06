@@ -45,8 +45,8 @@ public class MachineImageCreateCommand implements Command {
     @Parameter(names = "-properties", variableArity = true, description = "key value pairs", required = false)
     private List<String> properties;
 
-    @Parameter(names = "-location", description = "image location", required = true)
-    private String imageLocation;
+    @Parameter(names = "-location", description = "image location", required = false)
+    private String imageLocation = "";
 
     @Parameter(names = "-public", description = "public image", required = false)
     private boolean isPublic = false;
