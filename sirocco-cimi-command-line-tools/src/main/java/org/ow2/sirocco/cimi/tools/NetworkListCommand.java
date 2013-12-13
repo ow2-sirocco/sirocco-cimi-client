@@ -30,7 +30,6 @@ import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.Network;
-import org.ow2.sirocco.cimi.sdk.ProviderInfo;
 
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
@@ -40,7 +39,7 @@ public class NetworkListCommand implements Command {
     public static String COMMAND_NAME = "network-list";
 
     @ParametersDelegate
-    private ResourceListParams listParams = new ResourceListParams("id", "name", "state", "networkType", "provider");
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "state", "networkType", "provider", "location");
 
     @Override
     public String getName() {
@@ -52,7 +51,7 @@ public class NetworkListCommand implements Command {
         List<Network> nets = Network.getNetworks(cimiClient, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
-            "properties", "state", "networkType", "provider");
+            "properties", "state", "networkType", "provider", "location");
 
         for (Network net : nets) {
             CommandHelper.printResourceCommonAttributes(table, net, this.listParams);
@@ -64,10 +63,14 @@ public class NetworkListCommand implements Command {
             }
             if (this.listParams.isSelected("provider")) {
                 if (net.getProviderInfo() != null) {
-                    ProviderInfo info = net.getProviderInfo();
-                    StringBuffer sb = new StringBuffer();
-                    sb.append("account=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
-                    table.addCell((sb.toString()));
+                    table.addCell(net.getProviderInfo().getProviderName());
+                } else {
+                    table.addCell("");
+                }
+            }
+            if (this.listParams.isSelected("location")) {
+                if (net.getProviderInfo() != null) {
+                    table.addCell(net.getProviderInfo().getLocation());
                 } else {
                     table.addCell("");
                 }

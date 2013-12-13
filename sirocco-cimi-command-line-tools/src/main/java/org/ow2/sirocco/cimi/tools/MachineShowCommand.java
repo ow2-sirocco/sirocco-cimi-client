@@ -79,6 +79,8 @@ public class MachineShowCommand implements Command {
                 table.addCell("account id=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
                 table.addCell("provider-assigned id");
                 table.addCell(info.getProviderAssignedId());
+                table.addCell("location");
+                table.addCell(info.getLocation());
             }
         }
 

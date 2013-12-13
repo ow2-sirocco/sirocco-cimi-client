@@ -29,7 +29,6 @@ import java.util.List;
 import org.nocrala.tools.texttablefmt.Table;
 import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
-import org.ow2.sirocco.cimi.sdk.ProviderInfo;
 import org.ow2.sirocco.cimi.sdk.Volume;
 
 import com.beust.jcommander.Parameters;
@@ -40,7 +39,7 @@ public class VolumeListCommand implements Command {
     public static String COMMAND_NAME = "volume-list";
 
     @ParametersDelegate
-    private ResourceListParams listParams = new ResourceListParams("id", "state", "capacity");
+    private ResourceListParams listParams = new ResourceListParams("id", "state", "capacity", "provider", "location");
 
     @Override
     public String getName() {
@@ -70,10 +69,14 @@ public class VolumeListCommand implements Command {
             }
             if (this.listParams.isSelected("provider")) {
                 if (volume.getProviderInfo() != null) {
-                    ProviderInfo info = volume.getProviderInfo();
-                    StringBuffer sb = new StringBuffer();
-                    sb.append("account=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
-                    table.addCell((sb.toString()));
+                    table.addCell(volume.getProviderInfo().getProviderName());
+                } else {
+                    table.addCell("");
+                }
+            }
+            if (this.listParams.isSelected("location")) {
+                if (volume.getProviderInfo() != null) {
+                    table.addCell(volume.getProviderInfo().getLocation());
                 } else {
                     table.addCell("");
                 }

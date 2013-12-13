@@ -40,7 +40,8 @@ public class MachineImageListCommand implements Command {
     public static String COMMAND_NAME = "machineimage-list";
 
     @ParametersDelegate
-    private ResourceListParams listParams = new ResourceListParams("id", "name", "state", "type", "imageLocation", "provider");
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "state", "type", "imageLocation", "provider",
+        "location");
 
     @Override
     public String getName() {
@@ -52,7 +53,7 @@ public class MachineImageListCommand implements Command {
         List<MachineImage> machineImages = MachineImage.getMachineImages(cimiClient, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
-            "properties", "state", "type", "imageLocation", "relatedImage", "provider");
+            "properties", "state", "type", "imageLocation", "relatedImage", "provider", "location");
 
         for (MachineImage machineImage : machineImages) {
             CommandHelper.printResourceCommonAttributes(table, machineImage, this.listParams);
@@ -76,8 +77,16 @@ public class MachineImageListCommand implements Command {
                 if (machineImage.getProviderInfos() != null && machineImage.getProviderInfos().length > 0) {
                     ProviderInfo info = machineImage.getProviderInfos()[0];
                     StringBuffer sb = new StringBuffer();
-                    sb.append("account=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
+                    sb.append(info.getProviderName());
                     table.addCell((sb.toString()));
+                } else {
+                    table.addCell("");
+                }
+            }
+            if (this.listParams.isSelected("location")) {
+                if (machineImage.getProviderInfos() != null && machineImage.getProviderInfos().length > 0) {
+                    ProviderInfo info = machineImage.getProviderInfos()[0];
+                    table.addCell(info.getLocation());
                 } else {
                     table.addCell("");
                 }

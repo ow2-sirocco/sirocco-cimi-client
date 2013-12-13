@@ -31,7 +31,6 @@ import org.ow2.sirocco.cimi.sdk.CimiClient;
 import org.ow2.sirocco.cimi.sdk.CimiClientException;
 import org.ow2.sirocco.cimi.sdk.Disk;
 import org.ow2.sirocco.cimi.sdk.Machine;
-import org.ow2.sirocco.cimi.sdk.ProviderInfo;
 
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
@@ -41,7 +40,7 @@ public class MachineListCommand implements Command {
     public static String COMMAND_NAME = "machine-list";
 
     @ParametersDelegate
-    private ResourceListParams listParams = new ResourceListParams("id", "name", "created", "state", "provider");
+    private ResourceListParams listParams = new ResourceListParams("id", "name", "created", "state", "provider", "location");
 
     @Override
     public String getName() {
@@ -53,7 +52,7 @@ public class MachineListCommand implements Command {
         List<Machine> machines = Machine.getMachines(cimiClient, this.listParams.getQueryParams());
 
         Table table = CommandHelper.createResourceListTable(this.listParams, "id", "name", "description", "created", "updated",
-            "properties", "state", "cpu", "memory", "disks", "provider");
+            "properties", "state", "cpu", "memory", "disks", "provider", "location");
 
         for (Machine machine : machines) {
             CommandHelper.printResourceCommonAttributes(table, machine, this.listParams);
@@ -80,10 +79,14 @@ public class MachineListCommand implements Command {
             }
             if (this.listParams.isSelected("provider")) {
                 if (machine.getProviderInfo() != null) {
-                    ProviderInfo info = machine.getProviderInfo();
-                    StringBuffer sb = new StringBuffer();
-                    sb.append("account=" + info.getProviderAccountId() + " (" + info.getProviderName() + ")");
-                    table.addCell((sb.toString()));
+                    table.addCell(machine.getProviderInfo().getProviderName());
+                } else {
+                    table.addCell("");
+                }
+            }
+            if (this.listParams.isSelected("location")) {
+                if (machine.getProviderInfo() != null) {
+                    table.addCell(machine.getProviderInfo().getLocation());
                 } else {
                     table.addCell("");
                 }
