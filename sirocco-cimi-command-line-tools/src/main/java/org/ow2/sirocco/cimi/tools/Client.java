@@ -80,9 +80,10 @@ public class Client {
         new VolumeListCommand(), new VolumeDeleteCommand(), new SystemCreateCommand(), new SystemDeleteCommand(),
         new SystemListCommand(), new SystemShowCommand(), new SystemStartCommand(), new SystemStopCommand(),
         new SystemTemplateListCommand(), new SystemTemplateShowCommand(), new AddressListCommand(), new AddressShowCommand(),
-        new NetworkListCommand(), new NetworkShowCommand(), new NetworkCreateCommand(), new NetworkConfigShowCommand(),
-        new NetworkConfigCreateCommand(), new NetworkConfigListCommand(), new ResourceMetadataListCommand(),
-        new ResourceMetadataShowCommand()};
+        new NetworkListCommand(), new NetworkShowCommand(), new NetworkCreateCommand(), new NetworkDeleteCommand(),
+        new NetworkConfigShowCommand(), new NetworkConfigCreateCommand(), new NetworkConfigListCommand(),
+        new ResourceMetadataListCommand(), new ResourceMetadataShowCommand(), new ForwardingGroupListCommand(),
+        new ForwardingGroupCreateCommand(), new ForwardingGroupShowCommand(), new ForwardingGroupDeleteCommand()};
 
     private Client(final String[] args) {
         String userName = System.getenv(Client.CIMI_USERNAME_ENV_NAME);

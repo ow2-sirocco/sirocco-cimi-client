@@ -45,10 +45,11 @@ _cimiclient()
     commands="${commands} volumeconfig-list volumeconfig-show volumeconfig-create volumeconfig-delete"
     commands="${commands} volumetemplate-list volumetemplate-show volumetemplate-create volumetemplate-delete"
     commands="${commands} credential-list credential-show credential-create credential-delete"
-    commands="${commands} network-create network-list network-show"
+    commands="${commands} network-create network-list network-show network-delete"
     commands="${commands} networkconfig-create networkconfig-list networkconfig-show"
     commands="${commands} address-list address-show"
     commands="${commands} metadata-list metadata-show"
+    commands="${commands} forwarding-group-list forwarding-group-show forwarding-group-create forwarding-group-delete"
 
     case "${prev}" in
 	machine-create)
@@ -117,7 +118,7 @@ _cimiclient()
             return 0
             ;;
 	network-create)
-	    local opts="-name -description -properties -config -providerAccountId -location"
+	    local opts="-name -description -properties -config -cidr -providerAccountId -location"
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;
@@ -126,18 +127,23 @@ _cimiclient()
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;
-	machine-list | machineconfig-list | machineimage-list | machinetemplate-list | machinevolume-list | nic-list | disk-list | volume-list | volumeconfig-list | volumetemplate-list | job-list | system-list | systemtemplate-list | metadata-list | network-list | networkconfig-list | address-list | credential-list)
+	machine-list | machineconfig-list | machineimage-list | machinetemplate-list | machinevolume-list | nic-list | disk-list | volume-list | volumeconfig-list | volumetemplate-list | job-list | system-list | systemtemplate-list | metadata-list | network-list | networkconfig-list | address-list | credential-list | forwarding-group-list)
 	    local opts="-select -first -last -filter -expand"
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;
-	machine-show | machineconfig-show | machineimage-show | machinetemplate-show | machinevolume-show | nic-show | disk-show | volume-show | volumeconfig-show | volumetemplate-show | job-show | system-show | systemtemplate-show | metadata-show | network-show | networkconfig-show | address-show | credential-show)
+	machine-show | machineconfig-show | machineimage-show | machinetemplate-show | machinevolume-show | nic-show | disk-show | volume-show | volumeconfig-show | volumetemplate-show | job-show | system-show | systemtemplate-show | metadata-show | network-show | networkconfig-show | address-show | credential-show | forwarding-group-show)
 	    local opts="-select -expand"
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;
-        *)
-        ;;
+    forwarding-group-create)
+	    local opts="-name -description -properties -net -providerAccountId -location"
+	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;;    
+     *)
+        ;;       
     esac
 
    COMPREPLY=($(compgen -W "${commands}" -- ${cur}))  
