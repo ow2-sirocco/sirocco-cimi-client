@@ -27,6 +27,7 @@ package org.ow2.sirocco.cimi.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ow2.sirocco.cimi.domain.CimiJob;
 import org.ow2.sirocco.cimi.domain.CimiNetwork;
 import org.ow2.sirocco.cimi.domain.collection.CimiNetworkCollection;
 import org.ow2.sirocco.cimi.domain.collection.CimiNetworkCollectionRoot;
@@ -96,6 +97,19 @@ public class Network extends Resource<CimiNetwork> {
             return null;
         }
         return new ProviderInfo(this.cimiObject.getProviderInfo());
+    }
+
+    public Job delete() throws CimiClientException, CimiProviderException {
+        String deleteRef = Helper.findOperation("delete", this.cimiObject);
+        if (deleteRef == null) {
+            throw new CimiClientException("Unsupported operation");
+        }
+        CimiJob job = this.cimiClient.deleteRequest(deleteRef);
+        if (job != null) {
+            return new Job(this.cimiClient, job);
+        } else {
+            return null;
+        }
     }
 
     /**

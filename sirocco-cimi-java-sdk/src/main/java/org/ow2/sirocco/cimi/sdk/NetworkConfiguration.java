@@ -68,6 +68,14 @@ public class NetworkConfiguration extends Resource<CimiNetworkConfiguration> {
         return this.cimiObject.getNetworkType();
     }
 
+    public void setCidr(final String cidr) {
+        this.cimiObject.setCidr(cidr);
+    }
+
+    public String getCidr() {
+        return this.cimiObject.getCidr();
+    }
+
     /**
      * Deletes this network config.
      * 

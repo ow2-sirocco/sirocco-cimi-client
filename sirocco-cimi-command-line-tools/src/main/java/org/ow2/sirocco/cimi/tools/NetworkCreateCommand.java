@@ -38,8 +38,11 @@ import com.beust.jcommander.Parameters;
 
 @Parameters(commandDescription = "create network")
 public class NetworkCreateCommand implements Command {
-    @Parameter(names = "-config", description = "id of the config", required = true)
+    @Parameter(names = "-config", description = "id of the config", required = false)
     private String configId;
+
+    @Parameter(names = "-cidr", description = "cidr of the subnet associated with the network", required = false)
+    private String cidr;
 
     @Parameter(names = "-providerAccountId", description = "id of the provider account", required = true)
     private String providerAccountId;
@@ -69,16 +72,24 @@ public class NetworkCreateCommand implements Command {
         NetworkCreate networkCreate = new NetworkCreate();
         NetworkTemplate networkTemplate = new NetworkTemplate();
 
-        if (!CommandHelper.isResourceIdentifier(this.configId)) {
-            List<NetworkConfiguration> netConfigs = NetworkConfiguration.getNetworkConfigurations(cimiClient, QueryParams
-                .builder().filter("name='" + this.configId + "'").select("id").build());
-            if (netConfigs.isEmpty()) {
-                System.err.println("No network config with name " + this.configId);
-                System.exit(-1);
+        if (this.configId != null) {
+            if (!CommandHelper.isResourceIdentifier(this.configId)) {
+                List<NetworkConfiguration> netConfigs = NetworkConfiguration.getNetworkConfigurations(cimiClient, QueryParams
+                    .builder().filter("name='" + this.configId + "'").select("id").build());
+                if (netConfigs.isEmpty()) {
+                    System.err.println("No network config with name " + this.configId);
+                    System.exit(-1);
+                }
+                this.configId = netConfigs.get(0).getId();
             }
-            this.configId = netConfigs.get(0).getId();
+            networkTemplate.setNetworkConfigRef(this.configId);
+        } else if (this.cidr != null) {
+            NetworkConfiguration networkConfig = new NetworkConfiguration();
+            networkConfig.setCidr(this.cidr);
+            networkConfig.setNetworkType("PRIVATE");
+            networkTemplate.setNetworkConfig(networkConfig);
         }
-        networkTemplate.setNetworkConfigRef(this.configId);
+
         networkCreate.setNetworkTemplate(networkTemplate);
         networkCreate.setName(this.name);
         networkCreate.setDescription(this.description);
