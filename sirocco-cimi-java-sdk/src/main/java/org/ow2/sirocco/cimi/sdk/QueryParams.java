@@ -80,6 +80,17 @@ public class QueryParams {
         }
 
         /**
+         * Return entities whose name is equals to the provided argument
+         * 
+         * @param name entity name to match
+         * @return the builder
+         */
+        public Builder filterByName(final String name) {
+            this.filter = "name='" + name + "'";
+            return this;
+        }
+
+        /**
          * Comma-seperated list of reference attributes to be expanded.
          * 
          * @param expand the expand
