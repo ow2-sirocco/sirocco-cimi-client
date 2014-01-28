@@ -123,7 +123,7 @@ _cimiclient()
             return 0
             ;;
 	networkconfig-create)
-	    local opts="-name -description -properties -type"
+	    local opts="-name -description -properties -type -cidr"
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;

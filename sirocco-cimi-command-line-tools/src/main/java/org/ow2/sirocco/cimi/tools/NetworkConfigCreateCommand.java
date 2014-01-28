@@ -40,6 +40,9 @@ public class NetworkConfigCreateCommand implements Command {
     @Parameter(names = "-name", description = "name of the template", required = false)
     private String name;
 
+    @Parameter(names = "-cidr", description = "cidr of the subnet associated with the network", required = false)
+    private String cidr;
+
     @Parameter(names = "-description", description = "description of the template", required = false)
     private String description;
 
@@ -58,6 +61,7 @@ public class NetworkConfigCreateCommand implements Command {
     public void execute(final CimiClient cimiClient) throws CimiClientException {
         NetworkConfiguration networkConfig = new NetworkConfiguration();
         networkConfig.setNetworkType(this.type);
+        networkConfig.setCidr(this.cidr);
         networkConfig.setName(this.name);
         networkConfig.setDescription(this.description);
         if (this.properties != null) {
