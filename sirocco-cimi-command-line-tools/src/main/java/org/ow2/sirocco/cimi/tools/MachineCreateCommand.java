@@ -37,6 +37,7 @@ import org.ow2.sirocco.cimi.sdk.MachineCreate;
 import org.ow2.sirocco.cimi.sdk.MachineImage;
 import org.ow2.sirocco.cimi.sdk.MachineTemplate;
 import org.ow2.sirocco.cimi.sdk.MachineTemplate.NetworkInterface;
+import org.ow2.sirocco.cimi.sdk.Network;
 import org.ow2.sirocco.cimi.sdk.QueryParams;
 
 import com.beust.jcommander.Parameter;
@@ -139,6 +140,15 @@ public class MachineCreateCommand implements Command {
             List<NetworkInterface> nics = new ArrayList<>();
             if (this.networkIds != null) {
                 for (String networkId : this.networkIds) {
+                    if (!CommandHelper.isResourceIdentifier(networkId)) {
+                        List<Network> nets = Network.getNetworks(cimiClient,
+                            QueryParams.builder().filter("name='" + networkId + "'").select("id").build());
+                        if (nets.isEmpty()) {
+                            System.err.println("No net with name " + networkId);
+                            System.exit(-1);
+                        }
+                        networkId = nets.get(0).getId();
+                    }
                     NetworkInterface nic = new NetworkInterface();
                     nic.setNetworkRef(networkId);
                     nics.add(nic);
