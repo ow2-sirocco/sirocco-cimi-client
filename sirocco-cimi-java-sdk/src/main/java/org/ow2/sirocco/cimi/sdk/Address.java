@@ -30,6 +30,9 @@ import java.util.List;
 import org.ow2.sirocco.cimi.domain.CimiAddress;
 import org.ow2.sirocco.cimi.domain.collection.CimiAddressCollection;
 import org.ow2.sirocco.cimi.domain.collection.CimiAddressCollectionRoot;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineCollection;
+import org.ow2.sirocco.cimi.domain.collection.CimiMachineCollectionRoot;
+import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
 
 /**
  * IP address, and its associated metadata, for a particular Network.
@@ -93,7 +96,7 @@ public class Address extends Resource<CimiAddress> {
      * @return the allocation mode of this address
      */
     public Allocation getAllocation() {
-        return Allocation.valueOf(this.cimiObject.getAllocation());
+        return Allocation.valueOf(this.cimiObject.getAllocation().toUpperCase());
     }
 
     /**
@@ -197,6 +200,24 @@ public class Address extends Resource<CimiAddress> {
      */
     public void setNetwork(final Network network) {
         this.cimiObject.setNetwork(network.cimiObject);
+    }
+
+    public static CreateResult<Address> createAddress(final CimiClient client, final AddressCreate addressCreate)
+        throws CimiClientException, CimiProviderException {
+        if (client.cloudEntryPoint.getAddresses() == null) {
+            throw new CimiClientException("Unsupported operation");
+        }
+        CimiMachineCollection machinesCollection = client.getRequest(
+            client.extractPath(client.cloudEntryPoint.getMachines().getHref()), CimiMachineCollectionRoot.class);
+        String addRef = Helper.findOperation("add", machinesCollection);
+        if (addRef == null) {
+            throw new CimiClientException("Unsupported operation");
+        }
+        CimiResult<CimiAddress> result = client.postCreateRequest(addRef, addressCreate.cimiAddressCreate, CimiAddress.class);
+        Job job = result.getJob() != null ? new Job(client, result.getJob()) : null;
+        Address address = result.getResource() != null ? Address.getAddressByReference(client, result.getResource().getId())
+            : null;
+        return new CreateResult<Address>(job, address);
     }
 
     /**

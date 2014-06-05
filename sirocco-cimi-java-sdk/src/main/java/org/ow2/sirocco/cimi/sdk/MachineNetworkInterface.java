@@ -31,6 +31,7 @@ import java.util.List;
 import org.ow2.sirocco.cimi.domain.CimiJob;
 import org.ow2.sirocco.cimi.domain.CimiMachineNetworkInterface;
 import org.ow2.sirocco.cimi.domain.CimiMachineNetworkInterfaceAddress;
+import org.ow2.sirocco.cimi.domain.CimiMachineVolume;
 import org.ow2.sirocco.cimi.domain.collection.CimiMachineNetworkInterfaceAddressCollectionRoot;
 import org.ow2.sirocco.cimi.domain.collection.CimiMachineNetworkInterfaceCollection;
 import org.ow2.sirocco.cimi.domain.collection.CimiMachineNetworkInterfaceCollectionRoot;
@@ -102,6 +103,24 @@ public class MachineNetworkInterface extends Resource<CimiMachineNetworkInterfac
             }
         }
         return result;
+    }
+
+    public void addAddress(final Address address) throws CimiClientException, CimiProviderException {
+        String href = this.cimiObject.getAddresses().getHref();
+        if (href == null) {
+            href = this.cimiObject.getAddresses().getId();
+        }
+        CimiMachineNetworkInterfaceAddressCollectionRoot addresses = this.cimiClient.getRequest(
+            this.cimiClient.extractPath(href), CimiMachineNetworkInterfaceAddressCollectionRoot.class, QueryParams.builder()
+                .expand("address").build());
+        String addRef = Helper.findOperation("add", addresses);
+        if (addRef == null) {
+            throw new CimiClientException("Unsupported operation");
+        }
+        CimiMachineNetworkInterfaceAddress addr = new CimiMachineNetworkInterfaceAddress();
+        Address addressByRef = new Address(this.cimiClient, address.getId());
+        addr.setAddress(addressByRef.cimiObject);
+        CimiResult<CimiMachineVolume> result = this.cimiClient.postCreateRequest(addRef, addr, CimiMachineVolume.class);
     }
 
     /**

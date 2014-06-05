@@ -47,13 +47,13 @@ _cimiclient()
     commands="${commands} credential-list credential-show credential-create credential-delete"
     commands="${commands} network-create network-list network-show network-delete"
     commands="${commands} networkconfig-create networkconfig-list networkconfig-show"
-    commands="${commands} address-list address-show"
+    commands="${commands} address-create address-list address-show address-associate address-dissociate"
     commands="${commands} metadata-list metadata-show"
     commands="${commands} forwarding-group-list forwarding-group-show forwarding-group-create forwarding-group-delete"
 
     case "${prev}" in
 	machine-create)
-	    local opts="-name -description -properties -config -image -template -credential -userData -providerAccountId -location"
+	    local opts="-name -description -properties -config -image -nic -template -credential -userData -providerAccountId -location"
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;
@@ -77,6 +77,16 @@ _cimiclient()
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
             return 0
             ;;
+    address-create)
+	    local opts="-providerAccountId -location"
+	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;;  
+    address-associate | address-dissociate)
+	    local opts="-machine"
+	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+            return 0
+            ;;                
 	volumetemplate-create)
 	    local opts="-name -description -properties -config -image"
 	    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
