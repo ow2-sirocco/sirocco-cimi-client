@@ -44,16 +44,16 @@ public class AddressCreateCommand implements Command {
 
     @Override
     public String getName() {
-        return "Address-create";
+        return "address-create";
     }
 
     @Override
     public void execute(final CimiClient cimiClient) throws CimiClientException {
-        AddressCreate AddressCreate = new AddressCreate();
+        AddressCreate addressCreate = new AddressCreate();
 
-        AddressCreate.setProviderAccountId(this.providerAccountId);
-        AddressCreate.setLocation(this.location);
-        CreateResult<Address> result = Address.createAddress(cimiClient, AddressCreate);
+        addressCreate.setProviderAccountId(this.providerAccountId);
+        addressCreate.setLocation(this.location);
+        CreateResult<Address> result = Address.createAddress(cimiClient, addressCreate);
         if (this.verbose) {
             if (result.getJob() != null) {
                 System.out.println("Job:");

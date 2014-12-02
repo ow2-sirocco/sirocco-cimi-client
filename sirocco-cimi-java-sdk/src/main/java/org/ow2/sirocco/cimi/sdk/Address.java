@@ -28,10 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ow2.sirocco.cimi.domain.CimiAddress;
+import org.ow2.sirocco.cimi.domain.CimiJob;
 import org.ow2.sirocco.cimi.domain.collection.CimiAddressCollection;
 import org.ow2.sirocco.cimi.domain.collection.CimiAddressCollectionRoot;
-import org.ow2.sirocco.cimi.domain.collection.CimiMachineCollection;
-import org.ow2.sirocco.cimi.domain.collection.CimiMachineCollectionRoot;
 import org.ow2.sirocco.cimi.sdk.CimiClient.CimiResult;
 
 /**
@@ -207,9 +206,9 @@ public class Address extends Resource<CimiAddress> {
         if (client.cloudEntryPoint.getAddresses() == null) {
             throw new CimiClientException("Unsupported operation");
         }
-        CimiMachineCollection machinesCollection = client.getRequest(
-            client.extractPath(client.cloudEntryPoint.getMachines().getHref()), CimiMachineCollectionRoot.class);
-        String addRef = Helper.findOperation("add", machinesCollection);
+        CimiAddressCollection addressesCollection = client.getRequest(
+            client.extractPath(client.cloudEntryPoint.getAddresses().getHref()), CimiAddressCollectionRoot.class);
+        String addRef = Helper.findOperation("add", addressesCollection);
         if (addRef == null) {
             throw new CimiClientException("Unsupported operation");
         }
@@ -218,6 +217,19 @@ public class Address extends Resource<CimiAddress> {
         Address address = result.getResource() != null ? Address.getAddressByReference(client, result.getResource().getId())
             : null;
         return new CreateResult<Address>(job, address);
+    }
+
+    public Job delete() throws CimiClientException, CimiProviderException {
+        String deleteRef = Helper.findOperation("delete", this.cimiObject);
+        if (deleteRef == null) {
+            throw new CimiClientException("Unsupported operation");
+        }
+        CimiJob job = this.cimiClient.deleteRequest(deleteRef);
+        if (job != null) {
+            return new Job(this.cimiClient, job);
+        } else {
+            return null;
+        }
     }
 
     /**

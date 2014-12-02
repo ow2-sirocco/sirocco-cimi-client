@@ -1,6 +1,7 @@
 package org.ow2.sirocco.cimi.sdk;
 
 import org.ow2.sirocco.cimi.domain.CimiAddressCreate;
+import org.ow2.sirocco.cimi.domain.CimiAddressTemplate;
 
 public class AddressCreate {
     CimiAddressCreate cimiAddressCreate;
@@ -10,6 +11,7 @@ public class AddressCreate {
      */
     public AddressCreate() {
         this.cimiAddressCreate = new CimiAddressCreate();
+        this.cimiAddressCreate.setAddressTemplate(new CimiAddressTemplate());
     }
 
     /**

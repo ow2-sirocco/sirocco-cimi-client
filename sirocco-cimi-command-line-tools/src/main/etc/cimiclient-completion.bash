@@ -62,7 +62,7 @@ _cimiclient()
     commands="${commands} volumetemplate-list volumetemplate-show volumetemplate-create volumetemplate-delete"
     commands="${commands} credential-list credential-show credential-create credential-delete"
     commands="${commands} network-list network-show"
-    commands="${commands} address-list address-show"
+    commands="${commands} address-list address-show address-delete"
     commands="${commands} metadata-list metadata-show"
 
     case "${command}" in

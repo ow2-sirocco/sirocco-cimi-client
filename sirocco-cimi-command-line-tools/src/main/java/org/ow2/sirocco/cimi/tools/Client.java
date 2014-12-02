@@ -80,8 +80,8 @@ public class Client {
         new VolumeListCommand(), new VolumeDeleteCommand(), new SystemCreateCommand(), new SystemDeleteCommand(),
         new SystemListCommand(), new SystemShowCommand(), new SystemStartCommand(), new SystemStopCommand(),
         new SystemTemplateListCommand(), new SystemTemplateShowCommand(), new AddressCreateCommand(), new AddressListCommand(),
-        new AddressShowCommand(), new AssociateAddressToMachine(), new NetworkListCommand(), new NetworkShowCommand(),
-        new NetworkCreateCommand(), new NetworkDeleteCommand(), new NetworkConfigShowCommand(),
+        new AddressShowCommand(), new AddressDeleteCommand(), new AssociateAddressToMachine(), new NetworkListCommand(),
+        new NetworkShowCommand(), new NetworkCreateCommand(), new NetworkDeleteCommand(), new NetworkConfigShowCommand(),
         new NetworkConfigCreateCommand(), new NetworkConfigListCommand(), new ResourceMetadataListCommand(),
         new ResourceMetadataShowCommand(), new ForwardingGroupListCommand(), new ForwardingGroupCreateCommand(),
         new ForwardingGroupShowCommand(), new ForwardingGroupDeleteCommand()};
